@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build *)",
+      "Bash(pnpm -r build)",
+      "Bash(pnpm --filter api test)",
+      "Bash(git branch *)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m 'chore: init monorepo base \\(NestJS api, React+Vite web, Postgres/Redis compose\\) *)",
+      "Bash(git remote *)",
+      "Bash(git push *)"
+    ]
+  }
+}
