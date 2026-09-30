@@ -1,0 +1,82 @@
+{
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "submit": "Sign in",
+      "google": "Sign in with Google",
+      "noAccount": "Don't have an account? Sign up",
+      "forgotPassword": "Forgot password?"
+    },
+    "register": {
+      "title": "Create account",
+      "submit": "Sign up",
+      "google": "Sign up with Google",
+      "haveAccount": "Have an account? Sign in"
+    },
+    "forgot": {
+      "title": "Forgot password",
+      "subtitle": "Enter your email and we'll send you a 6-digit code",
+      "submit": "Send code",
+      "backToLogin": "Back to sign in"
+    },
+    "verifyOtp": {
+      "title": "Enter verification code",
+      "sentTo": "We sent a code to {{email}}",
+      "submit": "Verify",
+      "invalid": "The code is incorrect or has expired",
+      "hint": "For testing, use 123456",
+      "resend": "Resend code",
+      "resendIn": "Resend code in {{seconds}}s",
+      "resent": "A new code has been sent"
+    },
+    "reset": {
+      "title": "Set a new password",
+      "subtitle": "Choose a strong password for {{email}}",
+      "submit": "Update password",
+      "success": "Your password has been updated. Please sign in."
+    },
+    "layout": {
+      "tagline": "Learn a language, one day at a time.",
+      "description": "Vocabulary, flashcards and spaced repetition for English, German, Japanese and Korean — all in one place.",
+      "copyright": "© {{year}} UnYoWo"
+    },
+    "google": {
+      "signingIn": "Signing you in with Google…",
+      "failed": "Google sign-in failed. Please try again."
+    },
+    "fields": {
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "John Doe",
+      "email": "Email",
+      "emailPlaceholder": "email@example.com",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "newPassword": "New password",
+      "confirmNewPassword": "Confirm new password"
+    }
+  },
+  "validation": {
+    "fullNameRequired": "Full name is required",
+    "emailRequired": "Please enter your email",
+    "emailInvalid": "Invalid email address",
+    "passwordRequired": "Please enter your password",
+    "passwordMin": "Password must be at least {{min}} characters",
+    "confirmRequired": "Please confirm your password",
+    "passwordMismatch": "Passwords do not match",
+    "captchaRequired": "Please complete the verification"
+  },
+  "common": {
+    "processing": "Processing…",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "captchaError": "Verification failed. Please try again.",
+    "toggleTheme": "Toggle dark mode",
+    "language": "Language"
+  },
+  "notFound": {
+    "title": "Lost in translation",
+    "description": "The page you are looking for does not exist or has been moved. Let’s get you back on track.",
+    "home": "Go to home",
+    "back": "Go back"
+  }
+}

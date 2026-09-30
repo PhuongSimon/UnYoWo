@@ -1,0 +1,82 @@
+{
+  "auth": {
+    "login": {
+      "title": "Đăng nhập",
+      "submit": "Đăng nhập",
+      "google": "Đăng nhập với Google",
+      "noAccount": "Chưa có tài khoản? Đăng ký",
+      "forgotPassword": "Quên mật khẩu?"
+    },
+    "register": {
+      "title": "Tạo tài khoản",
+      "submit": "Đăng ký",
+      "google": "Đăng ký với Google",
+      "haveAccount": "Đã có tài khoản? Đăng nhập"
+    },
+    "forgot": {
+      "title": "Quên mật khẩu",
+      "subtitle": "Nhập email, chúng tôi sẽ gửi cho bạn mã 6 số",
+      "submit": "Gửi mã",
+      "backToLogin": "Quay lại đăng nhập"
+    },
+    "verifyOtp": {
+      "title": "Nhập mã xác thực",
+      "sentTo": "Mã đã được gửi tới {{email}}",
+      "submit": "Xác nhận",
+      "invalid": "Mã không đúng hoặc đã hết hạn",
+      "hint": "Để test, dùng mã 123456",
+      "resend": "Gửi lại mã",
+      "resendIn": "Gửi lại mã sau {{seconds}} giây",
+      "resent": "Đã gửi mã mới"
+    },
+    "reset": {
+      "title": "Đặt mật khẩu mới",
+      "subtitle": "Chọn mật khẩu mạnh cho {{email}}",
+      "submit": "Cập nhật mật khẩu",
+      "success": "Đổi mật khẩu thành công. Vui lòng đăng nhập lại."
+    },
+    "layout": {
+      "tagline": "Học ngoại ngữ, mỗi ngày một chút.",
+      "description": "Từ vựng, flashcard và ôn tập ngắt quãng cho tiếng Anh, Đức, Nhật và Hàn — tất cả ở một nơi.",
+      "copyright": "© {{year}} UnYoWo"
+    },
+    "google": {
+      "signingIn": "Đang đăng nhập bằng Google…",
+      "failed": "Đăng nhập Google thất bại. Vui lòng thử lại."
+    },
+    "fields": {
+      "fullName": "Họ và tên",
+      "fullNamePlaceholder": "Nguyễn Văn A",
+      "email": "Email",
+      "emailPlaceholder": "email@example.com",
+      "password": "Mật khẩu",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "newPassword": "Mật khẩu mới",
+      "confirmNewPassword": "Nhập lại mật khẩu mới"
+    }
+  },
+  "validation": {
+    "fullNameRequired": "Vui lòng nhập họ và tên",
+    "emailRequired": "Vui lòng nhập email",
+    "emailInvalid": "Email không hợp lệ",
+    "passwordRequired": "Vui lòng nhập mật khẩu",
+    "passwordMin": "Mật khẩu tối thiểu {{min}} ký tự",
+    "confirmRequired": "Vui lòng nhập lại mật khẩu",
+    "passwordMismatch": "Mật khẩu nhập lại không khớp",
+    "captchaRequired": "Vui lòng hoàn tất xác minh"
+  },
+  "common": {
+    "processing": "Đang xử lý…",
+    "showPassword": "Hiện mật khẩu",
+    "hidePassword": "Ẩn mật khẩu",
+    "captchaError": "Xác minh thất bại. Vui lòng thử lại.",
+    "toggleTheme": "Chuyển chế độ sáng/tối",
+    "language": "Ngôn ngữ"
+  },
+  "notFound": {
+    "title": "Lạc giữa các ngôn ngữ rồi",
+    "description": "Trang bạn tìm không tồn tại hoặc đã được chuyển đi. Cùng quay lại đúng hướng nhé.",
+    "home": "Về trang chủ",
+    "back": "Quay lại"
+  }
+}
