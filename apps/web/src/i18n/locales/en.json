@@ -95,10 +95,110 @@
     "ThrottlerException": "Too many requests. Please slow down.",
     "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again."
   },
-  "dashboard": {
+  "home": {
     "greeting": "Hi, {{name}} 👋",
-    "comingSoon": "Your learning dashboard is coming soon.",
+    "subtitle": "Pick a language and start with the essentials: the writing system, pronunciation and core grammar.",
+    "languagesTitle": "Choose a language",
+    "start": "Start learning",
+    "roadmapTitle": "Your beginner roadmap",
+    "roadmapSubtitle": "The same four steps work for every language.",
+    "roadmap": {
+      "writing": {
+        "title": "Learn the script",
+        "description": "Letters, kana or Hangul — tap any character to hear it."
+      },
+      "pronunciation": {
+        "title": "Train your ear",
+        "description": "IPA symbols, the tricky sounds and the rules that change them."
+      },
+      "grammar": {
+        "title": "Build sentences",
+        "description": "Core grammar from the very first lesson, with examples you can listen to."
+      },
+      "practice": {
+        "title": "Practise every day",
+        "description": "Read the examples aloud for 15 minutes a day — consistency beats long sessions."
+      }
+    }
+  },
+  "userMenu": {
+    "open": "Open account menu",
     "logout": "Sign out"
+  },
+  "learn": {
+    "languagesNav": "Languages",
+    "sectionsNav": "Lesson sections",
+    "allLanguages": "All languages",
+    "jumpTo": "Jump to",
+    "listen": "Listen: {{text}}",
+    "noVoice": "Your device has no voice for this language yet. Install one in your system's speech settings or try another browser.",
+    "loading": "Loading lessons…",
+    "loadError": "We couldn't load these lessons. Check your connection and try again.",
+    "retry": "Try again",
+    "tabs": {
+      "overview": "Overview",
+      "pronunciation": "Pronunciation",
+      "grammar": "Grammar"
+    },
+    "notFound": {
+      "title": "Nothing here yet",
+      "description": "This page doesn't exist. Pick a language or a section from the menu.",
+      "back": "Back to languages"
+    },
+    "overview": {
+      "about": "About this language",
+      "start": "Where to start",
+      "tips": "Study tips",
+      "writingDescription": "Every character with its sound, an example word and tips. Tap to listen.",
+      "pronunciationDescription": "IPA symbols, the sounds learners find hardest and the rules that change them.",
+      "grammarDescription": "Core grammar from the first lesson, explained with tables and examples.",
+      "charStat_one": "{{count}} character",
+      "charStat_other": "{{count}} characters",
+      "soundStat_one": "{{count}} sound",
+      "soundStat_other": "{{count}} sounds",
+      "ruleStat_one": "{{count}} rule",
+      "ruleStat_other": "{{count}} rules"
+    },
+    "writing": {
+      "notes": "Good to know",
+      "consonant": "Consonant"
+    },
+    "glyph": {
+      "on": "On",
+      "kun": "Kun"
+    },
+    "pronunciation": {
+      "rules": "Pronunciation rules"
+    },
+    "grammar": {
+      "searchLabel": "Search lessons",
+      "searchPlaceholder": "Search a lesson…",
+      "levelFilter": "Filter by level",
+      "all": "All",
+      "lessonCount_one": "{{count}} lesson",
+      "lessonCount_other": "{{count}} lessons",
+      "level": {
+        "A1": "Beginner",
+        "A2": "Elementary"
+      },
+      "empty": "No lesson matches “{{query}}”.",
+      "clear": "Clear filters",
+      "lessonOf": "Lesson {{current}} of {{total}}",
+      "tips": "Tips",
+      "previous": "Previous",
+      "next": "Next",
+      "pagination": "Lesson navigation",
+      "backToList": "All lessons",
+      "contents": "Lessons",
+      "notFound": "This lesson doesn't exist"
+    },
+    "builder": {
+      "initial": "Initial consonant",
+      "vowel": "Vowel",
+      "final": "Final consonant (batchim)",
+      "none": "None",
+      "romanization": "Romanization"
+    }
   },
   "mascot": {
     "name": "Box Bunny"
