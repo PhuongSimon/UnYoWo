@@ -8,15 +8,16 @@ const SIZE_CLASSES = {
   md: 'size-4',
 }
 
-const DELAYS = ['[animation-delay:.7s]', '[animation-delay:.3s]', '[animation-delay:.7s]']
+const DOT_DELAYS_MS = [0, 150, 300]
 
 function DotsLoader({ size = 'md', className = '' }: DotsLoaderProps) {
   return (
     <span aria-hidden="true" className={`inline-flex items-center gap-2 ${className}`}>
-      {DELAYS.map((delay, index) => (
+      {DOT_DELAYS_MS.map((delay) => (
         <span
-          key={index}
-          className={`rounded-full bg-current motion-safe:animate-bounce ${SIZE_CLASSES[size]} ${delay}`}
+          key={delay}
+          className={`rounded-full bg-current motion-safe:animate-dot-wave ${SIZE_CLASSES[size]}`}
+          style={{ animationDelay: `${delay}ms` }}
         />
       ))}
     </span>
