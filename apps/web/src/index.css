@@ -92,6 +92,7 @@
   --line-soft: var(--color-secondary-300);
   --accent: var(--color-primary-700);
   --danger: var(--color-red-600);
+  --float-glow: rgb(252 108 38 / 0.25);
 }
 
 .dark {
@@ -105,6 +106,7 @@
   --line-soft: var(--color-espresso-700);
   --accent: var(--color-primary-400);
   --danger: var(--color-red-400);
+  --float-glow: rgb(0 0 0 / 0.6);
 }
 
 @theme inline {
@@ -117,6 +119,21 @@
   --color-line-soft: var(--line-soft);
   --color-accent: var(--accent);
   --color-danger: var(--danger);
+}
+
+/* The "floating" card from the auth screens: a solid orange edge plus a soft glow */
+@utility shadow-float {
+  box-shadow:
+    0 6px 0 0 var(--color-primary-500),
+    0 24px 40px -12px var(--float-glow);
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer base {

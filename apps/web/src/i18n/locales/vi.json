@@ -95,10 +95,110 @@
     "ThrottlerException": "Bạn thao tác quá nhanh. Vui lòng thử lại sau.",
     "NETWORK_ERROR": "Không kết nối được máy chủ. Vui lòng kiểm tra mạng và thử lại."
   },
-  "dashboard": {
+  "home": {
     "greeting": "Chào {{name}} 👋",
-    "comingSoon": "Bảng học tập của bạn sẽ sớm ra mắt.",
+    "subtitle": "Chọn một ngôn ngữ và bắt đầu từ những điều cơ bản nhất: chữ viết, phát âm và ngữ pháp nền tảng.",
+    "languagesTitle": "Chọn ngôn ngữ",
+    "start": "Bắt đầu học",
+    "roadmapTitle": "Lộ trình cho người mới",
+    "roadmapSubtitle": "Bốn bước này áp dụng được cho mọi ngôn ngữ.",
+    "roadmap": {
+      "writing": {
+        "title": "Làm quen chữ viết",
+        "description": "Bảng chữ cái, kana hay Hangul — bấm vào chữ bất kỳ để nghe."
+      },
+      "pronunciation": {
+        "title": "Luyện tai và phát âm",
+        "description": "Ký hiệu IPA, những âm khó và các quy tắc biến âm."
+      },
+      "grammar": {
+        "title": "Ghép câu với ngữ pháp",
+        "description": "Ngữ pháp cốt lõi từ bài đầu tiên, có ví dụ để nghe và đọc theo."
+      },
+      "practice": {
+        "title": "Luyện tập mỗi ngày",
+        "description": "Đọc to các ví dụ 15 phút mỗi ngày — đều đặn quan trọng hơn học dồn."
+      }
+    }
+  },
+  "userMenu": {
+    "open": "Mở menu tài khoản",
     "logout": "Đăng xuất"
+  },
+  "learn": {
+    "languagesNav": "Ngôn ngữ",
+    "sectionsNav": "Các phần bài học",
+    "allLanguages": "Tất cả ngôn ngữ",
+    "jumpTo": "Đi tới",
+    "listen": "Nghe: {{text}}",
+    "noVoice": "Thiết bị của bạn chưa có giọng đọc cho ngôn ngữ này. Hãy cài thêm giọng đọc trong cài đặt hệ thống hoặc thử trình duyệt khác.",
+    "loading": "Đang tải bài học…",
+    "loadError": "Không tải được bài học. Hãy kiểm tra kết nối và thử lại.",
+    "retry": "Thử lại",
+    "tabs": {
+      "overview": "Tổng quan",
+      "pronunciation": "Phát âm",
+      "grammar": "Ngữ pháp"
+    },
+    "notFound": {
+      "title": "Chưa có gì ở đây",
+      "description": "Trang này không tồn tại. Hãy chọn một ngôn ngữ hoặc mục khác trên menu.",
+      "back": "Về danh sách ngôn ngữ"
+    },
+    "overview": {
+      "about": "Giới thiệu",
+      "start": "Bắt đầu từ đâu",
+      "tips": "Mẹo học",
+      "writingDescription": "Từng chữ cái kèm cách đọc, từ ví dụ và mẹo ghi nhớ. Bấm để nghe.",
+      "pronunciationDescription": "Ký hiệu IPA, những âm khó với người Việt và các quy tắc biến âm.",
+      "grammarDescription": "Ngữ pháp cốt lõi từ bài đầu tiên, giải thích bằng bảng và ví dụ.",
+      "charStat_one": "{{count}} ký tự",
+      "charStat_other": "{{count}} ký tự",
+      "soundStat_one": "{{count}} âm",
+      "soundStat_other": "{{count}} âm",
+      "ruleStat_one": "{{count}} quy tắc",
+      "ruleStat_other": "{{count}} quy tắc"
+    },
+    "writing": {
+      "notes": "Cần biết",
+      "consonant": "Phụ âm"
+    },
+    "glyph": {
+      "on": "On",
+      "kun": "Kun"
+    },
+    "pronunciation": {
+      "rules": "Quy tắc phát âm"
+    },
+    "grammar": {
+      "searchLabel": "Tìm bài học",
+      "searchPlaceholder": "Tìm bài học…",
+      "levelFilter": "Lọc theo trình độ",
+      "all": "Tất cả",
+      "lessonCount_one": "{{count}} bài",
+      "lessonCount_other": "{{count}} bài",
+      "level": {
+        "A1": "Mới bắt đầu",
+        "A2": "Sơ cấp"
+      },
+      "empty": "Không có bài nào khớp với “{{query}}”.",
+      "clear": "Xoá bộ lọc",
+      "lessonOf": "Bài {{current}}/{{total}}",
+      "tips": "Mẹo",
+      "previous": "Bài trước",
+      "next": "Bài tiếp",
+      "pagination": "Chuyển bài",
+      "backToList": "Danh sách bài học",
+      "contents": "Mục lục",
+      "notFound": "Bài học này không tồn tại"
+    },
+    "builder": {
+      "initial": "Phụ âm đầu",
+      "vowel": "Nguyên âm",
+      "final": "Phụ âm cuối (patchim)",
+      "none": "Không",
+      "romanization": "Phiên âm"
+    }
   },
   "mascot": {
     "name": "Bé Hộp"
