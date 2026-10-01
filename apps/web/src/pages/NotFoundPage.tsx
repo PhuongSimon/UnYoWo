@@ -6,7 +6,7 @@ import Logo from '@/components/Logo'
 import ThemeToggle from '@/components/ThemeToggle'
 import Button from '@/components/ui/Button'
 
-const HOME_PATH = '/login'
+const HOME_PATH = '/'
 
 const TRANSLATIONS = [
   { text: 'Not found', lang: 'en' },

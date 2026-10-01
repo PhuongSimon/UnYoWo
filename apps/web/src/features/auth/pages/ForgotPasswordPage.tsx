@@ -1,9 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import { Link, useNavigate } from 'react-router'
 import Button from '@/components/ui/Button'
 import TextField from '@/components/ui/TextField'
+import { authApi } from '@/features/auth/api'
+import { apiErrorKey, getApiError } from '@/lib/api-error'
 import { forgotPasswordSchema, type ForgotPasswordInput } from '@/features/auth/schemas'
 
 function ForgotPasswordPage() {
@@ -18,7 +21,12 @@ function ForgotPasswordPage() {
   })
 
   async function onSubmit(data: ForgotPasswordInput) {
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      await authApi.forgotPassword(data.email)
+    } catch (error) {
+      toast.error(t(apiErrorKey(getApiError(error).code)))
+      return
+    }
 
     const params = new URLSearchParams({ email: data.email, purpose: 'reset' })
     navigate(`/verify-otp?${params.toString()}`)

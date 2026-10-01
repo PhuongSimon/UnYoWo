@@ -1,32 +1,41 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
-import { useAuthStore } from '@/stores/auth.store'
+import i18n from '@/i18n'
+import { useAuthStore, type AuthUser } from '@/stores/auth.store'
 
 export const http = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  // Gửi kèm cookie (refresh token httpOnly) trong mọi request
   withCredentials: true,
 })
 
-// 1) Trước mỗi request: gắn access token vào header
 http.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken
   if (token) config.headers.Authorization = `Bearer ${token}`
+  config.headers['Accept-Language'] = i18n.language
   return config
 })
 
-// 2) Khi API trả 401 (access token hết hạn): gọi /auth/refresh một lần rồi gửi lại request cũ.
-//    Nhiều request cùng 401 một lúc sẽ dùng chung một lần refresh (refreshPromise).
-let refreshPromise: Promise<string> | null = null
-
-async function refreshAccessToken(): Promise<string> {
-  const { data } = await axios.post<{ accessToken: string }>(
-    `${import.meta.env.VITE_API_URL}/auth/refresh`,
-    null,
-    { withCredentials: true },
-  )
-  useAuthStore.getState().setAccessToken(data.accessToken)
-  return data.accessToken
+interface SessionResponse {
+  accessToken: string
+  user: AuthUser
 }
+
+// Several requests can hit 401 at the same time: they all wait for one shared refresh.
+let refreshPromise: Promise<SessionResponse> | null = null
+
+export function refreshSession() {
+  refreshPromise ??= axios
+    .post<SessionResponse>(`${import.meta.env.VITE_API_URL}/auth/refresh`, null, { withCredentials: true })
+    .then(({ data }) => {
+      useAuthStore.getState().setAuth(data.accessToken, data.user)
+      return data
+    })
+    .finally(() => {
+      refreshPromise = null
+    })
+  return refreshPromise
+}
+
+const NO_RETRY_URLS = ['/auth/login', '/auth/refresh', '/auth/logout', '/auth/register', '/auth/otp/verify']
 
 type RetryConfig = InternalAxiosRequestConfig & { _retry?: boolean }
 
@@ -34,19 +43,16 @@ http.interceptors.response.use(
   (res) => res,
   async (error: AxiosError) => {
     const original = error.config as RetryConfig | undefined
-    const isAuthCall = original?.url?.startsWith('/auth/')
+    const skip = NO_RETRY_URLS.some((url) => original?.url?.startsWith(url))
 
-    if (error.response?.status !== 401 || !original || original._retry || isAuthCall) {
+    if (error.response?.status !== 401 || !original || original._retry || skip) {
       return Promise.reject(error)
     }
 
     original._retry = true
     try {
-      refreshPromise ??= refreshAccessToken().finally(() => {
-        refreshPromise = null
-      })
-      const token = await refreshPromise
-      original.headers.Authorization = `Bearer ${token}`
+      const { accessToken } = await refreshSession()
+      original.headers.Authorization = `Bearer ${accessToken}`
       return http(original)
     } catch (refreshError) {
       useAuthStore.getState().clear()

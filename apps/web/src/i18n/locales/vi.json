@@ -23,8 +23,6 @@
       "title": "Nhập mã xác thực",
       "sentTo": "Mã đã được gửi tới {{email}}",
       "submit": "Xác nhận",
-      "invalid": "Mã không đúng hoặc đã hết hạn",
-      "hint": "Để test, dùng mã 123456",
       "resend": "Gửi lại mã",
       "resendIn": "Gửi lại mã sau {{seconds}} giây",
       "resent": "Đã gửi mã mới"
@@ -42,7 +40,8 @@
     },
     "google": {
       "signingIn": "Đang đăng nhập bằng Google…",
-      "failed": "Đăng nhập Google thất bại. Vui lòng thử lại."
+      "failed": "Đăng nhập Google thất bại. Vui lòng thử lại.",
+      "notConfigured": "Đăng nhập Google hiện chưa khả dụng."
     },
     "fields": {
       "fullName": "Họ và tên",
@@ -78,5 +77,28 @@
     "description": "Trang bạn tìm không tồn tại hoặc đã được chuyển đi. Cùng quay lại đúng hướng nhé.",
     "home": "Về trang chủ",
     "back": "Quay lại"
+  },
+  "apiErrors": {
+    "VALIDATION_ERROR": "Thông tin chưa hợp lệ. Vui lòng kiểm tra lại.",
+    "CAPTCHA_FAILED": "Xác minh thất bại. Vui lòng thử lại.",
+    "EMAIL_TAKEN": "Email này đã được đăng ký",
+    "INVALID_CREDENTIALS": "Email hoặc mật khẩu không đúng",
+    "EMAIL_NOT_VERIFIED": "Vui lòng xác thực email trước",
+    "OTP_INVALID": "Mã không đúng",
+    "OTP_INVALID_ATTEMPTS": "Mã không đúng. Bạn còn {{count}} lần thử.",
+    "OTP_EXPIRED": "Mã đã hết hạn. Vui lòng gửi lại mã mới.",
+    "OTP_TOO_MANY_ATTEMPTS": "Bạn đã nhập sai quá nhiều lần. Vui lòng gửi lại mã mới.",
+    "OTP_COOLDOWN": "Vui lòng đợi một chút trước khi gửi lại mã.",
+    "OTP_COOLDOWN_SECONDS": "Vui lòng đợi {{seconds}} giây trước khi gửi lại mã.",
+    "RESET_TOKEN_INVALID": "Phiên đặt lại mật khẩu đã hết hạn. Vui lòng thực hiện lại.",
+    "SESSION_EXPIRED": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+    "UNAUTHORIZED": "Vui lòng đăng nhập để tiếp tục.",
+    "ThrottlerException": "Bạn thao tác quá nhanh. Vui lòng thử lại sau.",
+    "NETWORK_ERROR": "Không kết nối được máy chủ. Vui lòng kiểm tra mạng và thử lại."
+  },
+  "dashboard": {
+    "greeting": "Chào {{name}} 👋",
+    "comingSoon": "Bảng học tập của bạn sẽ sớm ra mắt.",
+    "logout": "Đăng xuất"
   }
 }

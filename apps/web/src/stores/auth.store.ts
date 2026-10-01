@@ -3,15 +3,20 @@ import { create } from 'zustand'
 export interface AuthUser {
   id: string
   email: string
-  name: string
-  avatarUrl?: string | null
+  fullName: string
+  avatarUrl: string | null
+  emailVerified: boolean
+  hasPassword: boolean
 }
 
+export type AuthStatus = 'loading' | 'authenticated' | 'guest'
+
 interface AuthState {
-  // Access token chỉ nằm trong RAM (không localStorage) → script độc hại (XSS) khó đánh cắp.
-  // F5 là mất → app gọi /auth/refresh (dùng cookie httpOnly) để lấy lại.
+  // Access token lives in memory only (not localStorage) so an XSS script cannot read it.
+  // On reload it is gone and the app restores the session via /auth/refresh (httpOnly cookie).
   accessToken: string | null
   user: AuthUser | null
+  status: AuthStatus
   setAuth: (accessToken: string, user: AuthUser) => void
   setAccessToken: (accessToken: string) => void
   clear: () => void
@@ -20,7 +25,8 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()((set) => ({
   accessToken: null,
   user: null,
-  setAuth: (accessToken, user) => set({ accessToken, user }),
+  status: 'loading',
+  setAuth: (accessToken, user) => set({ accessToken, user, status: 'authenticated' }),
   setAccessToken: (accessToken) => set({ accessToken }),
-  clear: () => set({ accessToken: null, user: null }),
+  clear: () => set({ accessToken: null, user: null, status: 'guest' }),
 }))

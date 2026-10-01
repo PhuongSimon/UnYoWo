@@ -5,23 +5,19 @@ import Button from '@/components/ui/Button'
 import OtpInput from '@/features/auth/components/OtpInput'
 import ResendOtpButton from '@/features/auth/components/ResendOtpButton'
 import { toast } from 'sonner'
+import { authApi } from '@/features/auth/api'
+import { APP_HOME } from '@/features/auth/constants'
+import { apiErrorKey, getApiError } from '@/lib/api-error'
+import { errorKey, translateError } from '@/lib/i18n-error'
+import { useAuthStore } from '@/stores/auth.store'
 
 const OTP_LENGTH = 6
 const isCompleteOtp = (value: string) => new RegExp(`^\\d{${OTP_LENGTH}}$`).test(value)
 
-async function fakeVerifyOtp(code: string) {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-  if (code !== '123456') throw new Error('INVALID_OTP')
-  return { resetToken: 'fake-reset-token' }
-}
-
-async function fakeSendOtp() {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-}
-
 function VerifyOtpPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const setAuth = useAuthStore((s) => s.setAuth)
   const [searchParams] = useSearchParams()
   const [otp, setOtp] = useState('')
   const [error, setError] = useState('')
@@ -33,23 +29,27 @@ function VerifyOtpPage() {
   if (!email || (purpose !== 'reset' && purpose !== 'register')) {
     return <Navigate to="/login" replace />
   }
+  const targetEmail = email
 
   async function verify(code: string) {
     setVerifying(true)
     setError('')
     try {
-      const result = await fakeVerifyOtp(code)
-
       if (purpose === 'reset') {
-        navigate('/reset-password', {
-          replace: true,
-          state: { email, resetToken: result.resetToken },
-        })
+        const { resetToken } = await authApi.verifyResetOtp(targetEmail, code)
+        navigate('/reset-password', { replace: true, state: { email, resetToken } })
       } else {
-        navigate('/login', { replace: true })
+        const session = await authApi.verifyRegisterOtp(targetEmail, code)
+        setAuth(session.accessToken, session.user)
+        navigate(APP_HOME, { replace: true })
       }
-    } catch {
-      setError('auth.verifyOtp.invalid')
+    } catch (err) {
+      const { code: errorCode, attemptsLeft } = getApiError(err)
+      setError(
+        errorCode === 'OTP_INVALID' && attemptsLeft !== undefined
+          ? errorKey('apiErrors.OTP_INVALID_ATTEMPTS', { count: attemptsLeft })
+          : apiErrorKey(errorCode),
+      )
       setOtp('')
     } finally {
       setVerifying(false)
@@ -63,7 +63,17 @@ function VerifyOtpPage() {
   }
 
   async function handleResend() {
-    await fakeSendOtp()
+    try {
+      await authApi.resendOtp(targetEmail, purpose === 'reset' ? 'RESET_PASSWORD' : 'REGISTER')
+    } catch (err) {
+      const { code, retryAfter } = getApiError(err)
+      toast.error(
+        code === 'OTP_COOLDOWN' && retryAfter
+          ? t('apiErrors.OTP_COOLDOWN_SECONDS', { seconds: retryAfter })
+          : t(apiErrorKey(code)),
+      )
+      throw err
+    }
     setOtp('')
     setError('')
     toast.success(t('auth.verifyOtp.resent'))
@@ -93,7 +103,7 @@ function VerifyOtpPage() {
 
       {error && (
         <p role="alert" className="text-center text-sm text-danger">
-          {t(error)}
+          {translateError(t, error)}
         </p>
       )}
 
@@ -109,8 +119,6 @@ function VerifyOtpPage() {
       <div className="flex justify-center">
         <ResendOtpButton onResend={handleResend} />
       </div>
-
-      <p className="text-center text-xs text-muted/70">{t('auth.verifyOtp.hint')}</p>
     </form>
   )
 }

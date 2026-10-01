@@ -5,6 +5,8 @@ import { Navigate, useLocation, useNavigate } from 'react-router'
 import { toast } from 'sonner'
 import Button from '@/components/ui/Button'
 import PasswordField from '@/components/ui/PasswordField'
+import { authApi } from '@/features/auth/api'
+import { apiErrorKey, getApiError } from '@/lib/api-error'
 import { resetPasswordSchema, type ResetPasswordInput } from '@/features/auth/schemas'
 
 interface ResetState {
@@ -21,10 +23,6 @@ function isResetState(value: unknown): value is ResetState {
     typeof value.email === 'string' &&
     typeof value.resetToken === 'string'
   )
-}
-
-async function fakeResetPassword(_token: string, _password: string) {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
 }
 
 function ResetPasswordPage() {
@@ -45,7 +43,14 @@ function ResetPasswordPage() {
   }
 
   async function onSubmit(data: ResetPasswordInput) {
-    await fakeResetPassword(state.resetToken, data.password)
+    try {
+      await authApi.resetPassword(state.resetToken, data.password)
+    } catch (error) {
+      const { code } = getApiError(error)
+      toast.error(t(apiErrorKey(code)))
+      if (code === 'RESET_TOKEN_INVALID') navigate('/forgot-password', { replace: true })
+      return
+    }
     toast.success(t('auth.reset.success'))
     navigate('/login', { replace: true })
   }

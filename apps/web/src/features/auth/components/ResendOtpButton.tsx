@@ -26,6 +26,8 @@ function ResendOtpButton({ onResend, cooldown = 60 }: ResendOtpButtonProps) {
     try {
       await onResend()
       setSecondsLeft(cooldown)
+    } catch {
+      // the parent already showed the error; keep the button available
     } finally {
       setSending(false)
     }

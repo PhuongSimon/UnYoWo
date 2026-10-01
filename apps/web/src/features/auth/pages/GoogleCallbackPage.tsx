@@ -3,11 +3,8 @@ import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 import { toast } from 'sonner'
-
-async function fakeRefreshSession() {
-  await new Promise((resolve) => setTimeout(resolve, 1500))
-  return { accessToken: 'fake-access-token' }
-}
+import { APP_HOME } from '@/features/auth/constants'
+import { useAuthStore } from '@/stores/auth.store'
 
 function GoogleCallbackPage() {
   const { t } = useTranslation()
@@ -19,21 +16,15 @@ function GoogleCallbackPage() {
     if (handledRef.current) return
     handledRef.current = true
 
+    // AuthBootstrap already exchanged the refresh cookie set by the API for a session.
     const error = searchParams.get('error')
-    if (error) {
-      toast.error(t('auth.google.failed'))
-      navigate('/login', { replace: true })
+    if (!error && useAuthStore.getState().status === 'authenticated') {
+      navigate(APP_HOME, { replace: true })
       return
     }
 
-    fakeRefreshSession()
-      .then(() => {
-        navigate('/', { replace: true })
-      })
-      .catch(() => {
-        toast.error(t('auth.google.failed'))
-        navigate('/login', { replace: true })
-      })
+    toast.error(t(error === 'google_not_configured' ? 'auth.google.notConfigured' : 'auth.google.failed'))
+    navigate('/login', { replace: true })
   }, [navigate, searchParams, t])
 
   return (

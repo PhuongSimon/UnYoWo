@@ -1,6 +1,7 @@
 import { RouterProvider } from 'react-router'
 import { Toaster } from 'sonner'
 import { router } from '@/app/router'
+import AuthBootstrap from '@/features/auth/components/AuthBootstrap'
 import { useThemeStore } from '@/stores/theme.store'
 
 function App() {
@@ -8,7 +9,9 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router} />
+      <AuthBootstrap>
+        <RouterProvider router={router} />
+      </AuthBootstrap>
       <Toaster position="top-right" richColors closeButton theme={theme} />
     </>
   )
