@@ -40,7 +40,7 @@ function ResendOtpButton({ onResend, cooldown = 60 }: ResendOtpButtonProps) {
       type="button"
       onClick={handleClick}
       disabled={!canResend}
-      className="min-h-11 text-sm font-medium text-accent hover:underline disabled:text-muted/60 disabled:no-underline"
+      className="text-sm font-medium text-accent hover:underline disabled:text-muted/60 disabled:no-underline"
     >
       {secondsLeft > 0
         ? t('auth.verifyOtp.resendIn', { seconds: secondsLeft })

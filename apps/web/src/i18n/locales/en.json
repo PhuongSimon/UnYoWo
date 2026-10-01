@@ -22,7 +22,6 @@
     "verifyOtp": {
       "title": "Enter verification code",
       "sentTo": "We sent a code to {{email}}",
-      "submit": "Verify",
       "resend": "Resend code",
       "resendIn": "Resend code in {{seconds}}s",
       "resent": "A new code has been sent"

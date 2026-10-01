@@ -1,7 +1,7 @@
-import { useState, type FormEvent } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useNavigate, useSearchParams } from 'react-router'
-import Button from '@/components/ui/Button'
+import DotsLoader from '@/components/ui/DotsLoader'
 import OtpInput from '@/features/auth/components/OtpInput'
 import ResendOtpButton from '@/features/auth/components/ResendOtpButton'
 import { toast } from 'sonner'
@@ -37,7 +37,7 @@ function VerifyOtpPage() {
     try {
       if (purpose === 'reset') {
         const { resetToken } = await authApi.verifyResetOtp(targetEmail, code)
-        navigate('/reset-password', { replace: true, state: { email, resetToken } })
+        navigate('/reset-password', { replace: true, state: { email, resetToken }, viewTransition: true })
       } else {
         const session = await authApi.verifyRegisterOtp(targetEmail, code)
         setAuth(session.accessToken, session.user)
@@ -79,13 +79,8 @@ function VerifyOtpPage() {
     toast.success(t('auth.verifyOtp.resent'))
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    if (isCompleteOtp(otp)) verify(otp)
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <div>
         <h1 className="text-2xl font-bold">{t('auth.verifyOtp.title')}</h1>
         <p className="mt-1 break-all text-sm text-muted">
@@ -101,25 +96,25 @@ function VerifyOtpPage() {
         disabled={verifying}
       />
 
-      {error && (
-        <p role="alert" className="text-center text-sm text-danger">
-          {translateError(t, error)}
-        </p>
-      )}
-
-      <Button
-        type="submit"
-        loading={verifying}
-        disabled={!isCompleteOtp(otp)}
-        className="w-full"
-      >
-        {t('auth.verifyOtp.submit')}
-      </Button>
+      <div className="flex min-h-4 items-center justify-center">
+        {verifying ? (
+          <span role="status" className="text-accent">
+            <DotsLoader size="sm" />
+            <span className="sr-only">{t('common.processing')}</span>
+          </span>
+        ) : (
+          error && (
+            <p role="alert" className="text-center text-sm text-danger">
+              {translateError(t, error)}
+            </p>
+          )
+        )}
+      </div>
 
       <div className="flex justify-center">
         <ResendOtpButton onResend={handleResend} />
       </div>
-    </form>
+    </div>
   )
 }
 

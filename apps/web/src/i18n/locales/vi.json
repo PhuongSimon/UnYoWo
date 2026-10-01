@@ -22,7 +22,6 @@
     "verifyOtp": {
       "title": "Nhập mã xác thực",
       "sentTo": "Mã đã được gửi tới {{email}}",
-      "submit": "Xác nhận",
       "resend": "Gửi lại mã",
       "resendIn": "Gửi lại mã sau {{seconds}} giây",
       "resent": "Đã gửi mã mới"
