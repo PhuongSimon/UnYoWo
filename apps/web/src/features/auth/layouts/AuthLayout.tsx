@@ -64,8 +64,10 @@ function AuthLayout() {
         </header>
 
         <div className="flex flex-1 items-center justify-center py-10">
-          <div className="w-full max-w-sm">
-            <Outlet />
+          <div className="w-full max-w-sm rounded-2xl [view-transition-name:auth-card] border-2 border-line-soft bg-surface p-4 shadow-[0_6px_0_0_var(--color-primary-500),0_24px_40px_-12px_rgb(252_108_38/0.25)] sm:max-w-md sm:p-8 dark:shadow-[0_6px_0_0_var(--color-primary-500),0_24px_40px_-12px_rgb(0_0_0/0.6)]">
+            <div className="[view-transition-name:auth-content]">
+              <Outlet />
+            </div>
           </div>
         </div>
 

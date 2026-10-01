@@ -48,11 +48,11 @@ function ResetPasswordPage() {
     } catch (error) {
       const { code } = getApiError(error)
       toast.error(t(apiErrorKey(code)))
-      if (code === 'RESET_TOKEN_INVALID') navigate('/forgot-password', { replace: true })
+      if (code === 'RESET_TOKEN_INVALID') navigate('/forgot-password', { replace: true, viewTransition: true })
       return
     }
     toast.success(t('auth.reset.success'))
-    navigate('/login', { replace: true })
+    navigate('/login', { replace: true, viewTransition: true })
   }
 
   return (
@@ -78,7 +78,7 @@ function ResetPasswordPage() {
         {...register('confirmPassword')}
       />
 
-      <Button type="submit" loading={isSubmitting} className="w-full">
+      <Button type="submit" loading={isSubmitting} className="w-full mt-2">
         {t('auth.reset.submit')}
       </Button>
     </form>

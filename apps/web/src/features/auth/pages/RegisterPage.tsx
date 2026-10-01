@@ -33,7 +33,7 @@ function RegisterPage() {
     try {
       const { email } = await authApi.register(body)
       const params = new URLSearchParams({ email, purpose: 'register' })
-      navigate(`/verify-otp?${params.toString()}`)
+      navigate(`/verify-otp?${params.toString()}`, { viewTransition: true })
     } catch (error) {
       captchaRef.current?.reset()
       setValue('captchaToken', '')
@@ -90,7 +90,7 @@ function RegisterPage() {
       </GoogleButton>
       <div className="flex items-center gap-3 mt-4">
         <div className="flex-1 border-b border-line-soft"></div>
-        <Link
+        <Link viewTransition
           to="/login"
           className="text-center text-xs font-medium text-accent uppercase hover:underline hover:text-accent whitespace-nowrap"
         >

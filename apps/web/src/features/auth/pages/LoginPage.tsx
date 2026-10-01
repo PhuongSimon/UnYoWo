@@ -46,7 +46,7 @@ function LoginPage() {
       const { code, email } = getApiError(error)
       if (code === 'EMAIL_NOT_VERIFIED') {
         const params = new URLSearchParams({ email: email ?? data.email, purpose: 'register' })
-        navigate(`/verify-otp?${params.toString()}`)
+        navigate(`/verify-otp?${params.toString()}`, { viewTransition: true })
       } else if (code === 'INVALID_CREDENTIALS') {
         setError('password', { message: apiErrorKey(code) })
       } else {
@@ -73,9 +73,15 @@ function LoginPage() {
         error={errors.password?.message}
         {...register('password')}
       />
-      <Link to="/forgot-password" className="self-end font-medium text-sm text-accent hover:underline">
-        {t('auth.login.forgotPassword')}
-      </Link>
+      <div className="flex items-center gap-6 mt-4">
+        <Button type="submit" loading={isSubmitting} className="flex-1">
+          {t('auth.login.submit')}
+        </Button>
+      
+        <Link viewTransition to="/forgot-password" className="shrink-0 whitespace-nowrap text-sm font-medium text-accent hover:underline">
+          {t('auth.login.forgotPassword')}
+        </Link>
+      </div>
       <CaptchaField
         ref={captchaRef}
         error={errors.captchaToken?.message}
@@ -83,16 +89,13 @@ function LoginPage() {
           setValue('captchaToken', token, { shouldValidate: isSubmitted })
         }
       />
-      <Button type="submit" loading={isSubmitting}>
-        {t('auth.login.submit')}
-      </Button>
       <GoogleButton>
         <span className="ml-4">{t('auth.login.google')}</span>
       </GoogleButton>
 
       <div className="flex items-center gap-3 mt-4">
         <div className="flex-1 border-b border-line-soft"></div>
-        <Link
+        <Link viewTransition
           to="/register"
           className="text-center text-xs font-medium text-accent uppercase hover:underline hover:text-accent whitespace-nowrap"
         >

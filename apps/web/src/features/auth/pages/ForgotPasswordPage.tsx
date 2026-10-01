@@ -29,7 +29,7 @@ function ForgotPasswordPage() {
     }
 
     const params = new URLSearchParams({ email: data.email, purpose: 'reset' })
-    navigate(`/verify-otp?${params.toString()}`)
+    navigate(`/verify-otp?${params.toString()}`, { viewTransition: true })
   }
 
   return (
@@ -51,7 +51,7 @@ function ForgotPasswordPage() {
         {t('auth.forgot.submit')}
       </Button>
 
-      <Link to="/login" className="text-sm text-accent underline">
+      <Link viewTransition to="/login" className="text-sm text-accent hover:underline">
         {t('auth.forgot.backToLogin')}
       </Link>
     </form>
