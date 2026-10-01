@@ -99,5 +99,8 @@
     "greeting": "Chào {{name}} 👋",
     "comingSoon": "Bảng học tập của bạn sẽ sớm ra mắt.",
     "logout": "Đăng xuất"
+  },
+  "mascot": {
+    "name": "Bé Hộp"
   }
 }

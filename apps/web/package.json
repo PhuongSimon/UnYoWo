@@ -17,6 +17,7 @@
     "country-flag-icons": "^1.6.20",
     "i18next": "^26.4.2",
     "lucide-react": "^1.48.0",
+    "page-mascot": "^0.1.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.88.0",
