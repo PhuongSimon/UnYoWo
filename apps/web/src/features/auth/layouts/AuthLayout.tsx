@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next'
-import { Outlet } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import Logo from '@/components/Logo'
 import ThemeToggle from '@/components/ThemeToggle'
+import BunnyMascot from '@/components/BunnyMascot'
 import FloatingWords from '@/features/auth/components/FloatingWords'
 
 const LEARNING_LANGUAGES = [
@@ -12,9 +13,13 @@ const LEARNING_LANGUAGES = [
   { code: 'KO', name: '한국어' },
 ]
 
+const CARD_MASCOT_PAGES = ['/login', '/register']
+
 function AuthLayout() {
   const { t } = useTranslation()
+  const { pathname } = useLocation()
   const copyright = t('auth.layout.copyright', { year: new Date().getFullYear() })
+  const showCardMascot = CARD_MASCOT_PAGES.includes(pathname)
 
   return (
     <div className="grid min-h-dvh bg-surface lg:grid-cols-2">
@@ -31,7 +36,10 @@ function AuthLayout() {
             <br />
             <span className="text-primary-400">Yo</span>ur
             <br />
-            <span className="text-primary-400">Wo</span>rld
+            <span className="relative inline-block">
+              <span className="text-primary-400">Wo</span>rld
+              <BunnyMascot interactive={false} size={120} className="absolute bottom-[-0.12em] left-full ml-1" />
+            </span>
           </h2>
           <p className="max-w-md text-xl font-semibold text-secondary-200">
             {t('auth.layout.tagline')}
@@ -63,8 +71,13 @@ function AuthLayout() {
           </div>
         </header>
 
-        <div className="flex flex-1 items-center justify-center py-10">
-          <div className="w-full max-w-sm rounded-2xl [view-transition-name:auth-card] border-2 border-line-soft bg-surface p-4 shadow-[0_6px_0_0_var(--color-primary-500),0_24px_40px_-12px_rgb(252_108_38/0.25)] sm:max-w-md sm:p-8 dark:shadow-[0_6px_0_0_var(--color-primary-500),0_24px_40px_-12px_rgb(0_0_0/0.6)]">
+        <div className="flex flex-1 items-center justify-center pt-24 pb-10">
+          <div className="relative w-full max-w-sm rounded-2xl [view-transition-name:auth-card] border-2 border-line-soft bg-surface p-4 shadow-[0_6px_0_0_var(--color-primary-500),0_24px_40px_-12px_rgb(252_108_38/0.25)] sm:max-w-md sm:p-8 dark:shadow-[0_6px_0_0_var(--color-primary-500),0_24px_40px_-12px_rgb(0_0_0/0.6)]">
+            {showCardMascot && (
+              <div className="absolute right-5 -top-[78px]">
+                <BunnyMascot size={84} />
+              </div>
+            )}
             <div className="[view-transition-name:auth-content]">
               <Outlet />
             </div>

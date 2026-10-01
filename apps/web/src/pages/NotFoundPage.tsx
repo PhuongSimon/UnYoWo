@@ -5,6 +5,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher'
 import Logo from '@/components/Logo'
 import ThemeToggle from '@/components/ThemeToggle'
 import Button from '@/components/ui/Button'
+import BunnyMascot from '@/components/BunnyMascot'
 
 const HOME_PATH = '/'
 
@@ -40,6 +41,7 @@ function NotFoundPage() {
       </header>
 
       <main className="relative flex flex-1 flex-col items-center justify-center py-12 text-center">
+        <BunnyMascot size={120} className="-mb-2" />
         <p
           aria-hidden="true"
           className="bg-linear-to-br from-primary-400 via-primary-500 to-primary-700 bg-clip-text text-[7rem] leading-none font-extrabold tracking-tighter text-transparent select-none sm:text-[11rem] dark:from-primary-300 dark:via-primary-400 dark:to-primary-600"

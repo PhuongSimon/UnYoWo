@@ -99,5 +99,8 @@
     "greeting": "Hi, {{name}} 👋",
     "comingSoon": "Your learning dashboard is coming soon.",
     "logout": "Sign out"
+  },
+  "mascot": {
+    "name": "Box Bunny"
   }
 }
