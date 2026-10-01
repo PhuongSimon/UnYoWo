@@ -1,0 +1,103 @@
+{
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "submit": "Sign in",
+      "google": "Sign in with Google",
+      "noAccount": "Don't have an account? Sign up",
+      "forgotPassword": "Forgot password?"
+    },
+    "register": {
+      "title": "Create account",
+      "submit": "Sign up",
+      "google": "Sign up with Google",
+      "haveAccount": "Have an account? Sign in"
+    },
+    "forgot": {
+      "title": "Forgot password",
+      "subtitle": "Enter your email and we'll send you a 6-digit code",
+      "submit": "Send code",
+      "backToLogin": "Back to sign in"
+    },
+    "verifyOtp": {
+      "title": "Enter verification code",
+      "sentTo": "We sent a code to {{email}}",
+      "resend": "Resend code",
+      "resendIn": "Resend code in {{seconds}}s",
+      "resent": "A new code has been sent"
+    },
+    "reset": {
+      "title": "Set a new password",
+      "subtitle": "Choose a strong password for {{email}}",
+      "submit": "Update password",
+      "success": "Your password has been updated. Please sign in."
+    },
+    "layout": {
+      "tagline": "Learn a language, one day at a time.",
+      "description": "Vocabulary, flashcards and spaced repetition for English, German, Japanese and Korean — all in one place.",
+      "copyright": "© {{year}} UnYoWo"
+    },
+    "google": {
+      "signingIn": "Signing you in with Google…",
+      "failed": "Google sign-in failed. Please try again.",
+      "notConfigured": "Google sign-in is not available yet."
+    },
+    "fields": {
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "John Doe",
+      "email": "Email",
+      "emailPlaceholder": "email@example.com",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "newPassword": "New password",
+      "confirmNewPassword": "Confirm new password"
+    }
+  },
+  "validation": {
+    "fullNameRequired": "Full name is required",
+    "emailRequired": "Please enter your email",
+    "emailInvalid": "Invalid email address",
+    "passwordRequired": "Please enter your password",
+    "passwordMin": "Password must be at least {{min}} characters",
+    "confirmRequired": "Please confirm your password",
+    "passwordMismatch": "Passwords do not match",
+    "captchaRequired": "Please complete the verification"
+  },
+  "common": {
+    "processing": "Processing…",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "captchaError": "Verification failed. Please try again.",
+    "toggleTheme": "Toggle dark mode",
+    "language": "Language"
+  },
+  "notFound": {
+    "title": "Lost in translation",
+    "description": "The page you are looking for does not exist or has been moved. Let’s get you back on track.",
+    "home": "Go to home",
+    "back": "Go back"
+  },
+  "apiErrors": {
+    "VALIDATION_ERROR": "Some information is invalid. Please check and try again.",
+    "CAPTCHA_FAILED": "Verification failed. Please try again.",
+    "EMAIL_TAKEN": "This email is already registered",
+    "INVALID_CREDENTIALS": "Incorrect email or password",
+    "EMAIL_NOT_VERIFIED": "Please verify your email first",
+    "OTP_INVALID": "The code is incorrect",
+    "OTP_INVALID_ATTEMPTS": "The code is incorrect. {{count}} attempt(s) left.",
+    "OTP_EXPIRED": "The code has expired. Please request a new one.",
+    "OTP_TOO_MANY_ATTEMPTS": "Too many wrong attempts. Please request a new code.",
+    "OTP_COOLDOWN": "Please wait before requesting a new code.",
+    "OTP_COOLDOWN_SECONDS": "Please wait {{seconds}}s before requesting a new code.",
+    "RESET_TOKEN_INVALID": "This reset link has expired. Please start again.",
+    "SESSION_EXPIRED": "Your session has expired. Please sign in again.",
+    "UNAUTHORIZED": "Please sign in to continue.",
+    "ThrottlerException": "Too many requests. Please slow down.",
+    "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again."
+  },
+  "dashboard": {
+    "greeting": "Hi, {{name}} 👋",
+    "comingSoon": "Your learning dashboard is coming soon.",
+    "logout": "Sign out"
+  }
+}

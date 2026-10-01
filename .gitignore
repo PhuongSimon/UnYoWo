@@ -11,3 +11,9 @@ coverage/
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# Claude Code personal settings
+.claude/settings.local.json
+
+# Prisma generated client
+apps/api/src/generated/
