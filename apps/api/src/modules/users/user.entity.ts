@@ -7,6 +7,7 @@ export interface User {
   avatarUrl: string | null;
   emailVerifiedAt: Date | null;
   lastLoginAt: Date | null;
+  timezone: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -19,6 +20,7 @@ export interface CreateUserData {
   avatarUrl?: string | null;
   emailVerifiedAt?: Date | null;
   lastLoginAt?: Date | null;
+  timezone?: string;
 }
 
 export type UpdateUserData = Partial<Omit<CreateUserData, 'email'>>;
@@ -31,4 +33,5 @@ export interface PublicUser {
   avatarUrl: string | null;
   emailVerified: boolean;
   hasPassword: boolean;
+  timezone: string;
 }
