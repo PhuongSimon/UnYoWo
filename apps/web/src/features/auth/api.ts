@@ -33,4 +33,6 @@ export const authApi = {
     http.post('/auth/reset-password', { resetToken, password }),
 
   logout: () => http.post('/auth/logout'),
+
+  updateProfile: (body: { timezone: string }) => http.patch<AuthUser>('/auth/me', body).then((r) => r.data),
 }

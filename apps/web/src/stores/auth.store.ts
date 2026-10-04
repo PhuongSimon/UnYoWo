@@ -7,6 +7,8 @@ export interface AuthUser {
   avatarUrl: string | null
   emailVerified: boolean
   hasPassword: boolean
+  /** IANA zone used by the API to decide when the user's day starts */
+  timezone: string
 }
 
 export type AuthStatus = 'loading' | 'authenticated' | 'guest'
@@ -19,6 +21,7 @@ interface AuthState {
   status: AuthStatus
   setAuth: (accessToken: string, user: AuthUser) => void
   setAccessToken: (accessToken: string) => void
+  setUser: (user: AuthUser) => void
   clear: () => void
 }
 
@@ -28,5 +31,6 @@ export const useAuthStore = create<AuthState>()((set) => ({
   status: 'loading',
   setAuth: (accessToken, user) => set({ accessToken, user, status: 'authenticated' }),
   setAccessToken: (accessToken) => set({ accessToken }),
+  setUser: (user) => set({ user }),
   clear: () => set({ accessToken: null, user: null, status: 'guest' }),
 }))

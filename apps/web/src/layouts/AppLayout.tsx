@@ -4,12 +4,14 @@ import LanguageSwitcher from '@/components/LanguageSwitcher'
 import Logo from '@/components/Logo'
 import ThemeToggle from '@/components/ThemeToggle'
 import UserMenu from '@/components/UserMenu'
+import { useTimezoneSync } from '@/features/auth/hooks/useTimezoneSync'
 import { useLocalized } from '@/features/learn/hooks/useLocalized'
 import { STUDY_LANGUAGES } from '@/features/learn/languages'
 
 function AppLayout() {
   const { t } = useTranslation()
   const loc = useLocalized()
+  useTimezoneSync()
 
   return (
     <div className="flex min-h-dvh flex-col">
