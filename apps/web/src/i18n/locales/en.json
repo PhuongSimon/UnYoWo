@@ -92,6 +92,8 @@
     "RESET_TOKEN_INVALID": "This reset link has expired. Please start again.",
     "SESSION_EXPIRED": "Your session has expired. Please sign in again.",
     "UNAUTHORIZED": "Please sign in to continue.",
+    "LANGUAGE_NOT_FOUND": "This language isn't available.",
+    "SET_NOT_FOUND": "This lesson set doesn't exist.",
     "ThrottlerException": "Too many requests. Please slow down.",
     "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again."
   },

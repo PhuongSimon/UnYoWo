@@ -92,6 +92,8 @@
     "RESET_TOKEN_INVALID": "Phiên đặt lại mật khẩu đã hết hạn. Vui lòng thực hiện lại.",
     "SESSION_EXPIRED": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
     "UNAUTHORIZED": "Vui lòng đăng nhập để tiếp tục.",
+    "LANGUAGE_NOT_FOUND": "Ngôn ngữ này chưa được hỗ trợ.",
+    "SET_NOT_FOUND": "Bộ bài học này không tồn tại.",
     "ThrottlerException": "Bạn thao tác quá nhanh. Vui lòng thử lại sau.",
     "NETWORK_ERROR": "Không kết nối được máy chủ. Vui lòng kiểm tra mạng và thử lại."
   },
