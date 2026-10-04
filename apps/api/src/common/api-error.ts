@@ -12,7 +12,9 @@ export type ErrorCode =
   | 'OTP_COOLDOWN'
   | 'RESET_TOKEN_INVALID'
   | 'SESSION_EXPIRED'
-  | 'UNAUTHORIZED';
+  | 'UNAUTHORIZED'
+  | 'LANGUAGE_NOT_FOUND'
+  | 'SET_NOT_FOUND';
 
 /**
  * Every error the API returns has a stable `code` the web app can translate:
