@@ -54,11 +54,11 @@ export class ProgressService {
   ) {}
 
   /** Call inside a transaction: the attempt and the progress row must be saved together. */
-  async recordAnswer(input: RecordAnswerInput): Promise<{ attempt: Attempt; progress: ItemProgress }> {
+  async recordAnswer(input: RecordAnswerInput): Promise<{ attempt: Attempt; progress: ItemProgress; isNewItem: boolean }> {
     const previous = await this.progress.findOne(input.userId, input.itemId);
     const progress = await this.progress.save(applyAnswer(previous, input, this.scheduler));
     const { now: _now, ...attemptData } = input;
     const attempt = await this.progress.createAttempt(attemptData);
-    return { attempt, progress };
+    return { attempt, progress, isNewItem: previous === null };
   }
 }

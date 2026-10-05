@@ -1,17 +1,19 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ApiError } from '../../common/api-error.js';
 import { TransactionHost } from '../../infrastructure/database/transaction-host.js';
+import { GamificationService } from '../gamification/gamification.service.js';
+import { XP_POLICY } from '../gamification/xp-policy.js';
 import type { Attempt, ItemProgress } from '../progress/entities/progress.entity.js';
 import { ProgressService } from '../progress/progress.service.js';
 import { ProgressRepository } from '../progress/repositories/progress.repository.js';
 import type { CreateGameSessionDto, SubmitAnswerDto } from './dto/game-session.dto.js';
 import type {
   AnswerResultView,
+  CompletedSessionSummary,
   GameQuestionRecord,
   GameSessionRecord,
   GameSessionView,
   SessionAttempt,
-  SessionSummary,
   UiLocale,
 } from './entities/game-session.entity.js';
 import { GAME_DEFINITIONS } from './game-definitions.js';
@@ -39,6 +41,7 @@ export class GameSessionsService {
     private readonly progressRecords: ProgressRepository,
     private readonly transaction: TransactionHost,
     private readonly random: Random,
+    private readonly gamification: GamificationService,
   ) {}
 
   async create(userId: string, dto: CreateGameSessionDto, locale: UiLocale): Promise<GameSessionView> {
@@ -71,7 +74,10 @@ export class GameSessionsService {
   }
 
   async get(userId: string, sessionId: string): Promise<GameSessionView> {
-    return toSessionView(await this.findOwned(userId, sessionId), new Date());
+    const now = new Date();
+    const session = await this.findOwned(userId, sessionId);
+    const rewards = session.status === 'COMPLETED' ? await this.gamification.rewardsFor(userId, session.id, now) : null;
+    return toSessionView(session, now, rewards);
   }
 
   answer(userId: string, sessionId: string, dto: SubmitAnswerDto): Promise<AnswerResultView> {
@@ -86,7 +92,9 @@ export class GameSessionsService {
       if (replayed) {
         if (replayed.questionId !== question.id) throw new ApiError(HttpStatus.BAD_REQUEST, 'INVALID_ANSWER');
         const progress = await this.progressRecords.findOne(userId, question.itemId);
-        return this.answerResult(session.attempts, question, replayed.isCorrect, progress);
+        // XP is granted once per question, so a right answer that closed it earned exactly this.
+        const xpGained = replayed.isCorrect && question.answeredAt ? XP_POLICY.correctAnswer : 0;
+        return this.answerResult(session.attempts, question, replayed.isCorrect, progress, xpGained);
       }
 
       this.assertPlayable(session, now);
@@ -104,7 +112,7 @@ export class GameSessionsService {
         throw new ApiError(HttpStatus.CONFLICT, 'QUESTION_ALREADY_ANSWERED');
       }
 
-      const { attempt, progress } = await this.progress.recordAnswer({
+      const { attempt, progress, isNewItem } = await this.progress.recordAnswer({
         userId,
         itemId: question.itemId,
         sessionId: session.id,
@@ -118,30 +126,54 @@ export class GameSessionsService {
         now,
       });
 
-      return this.answerResult([...session.attempts, toSessionAttempt(attempt)], closed, graded.isCorrect, progress);
+      const { xpGained } = await this.gamification.recordAnswer({
+        userId,
+        languageCode: session.languageCode,
+        sessionId: session.id,
+        questionId: question.id,
+        isCorrect: graded.isCorrect,
+        questionCompleted: closed.answeredAt !== null,
+        isNewItem,
+        now,
+      });
+
+      return this.answerResult([...session.attempts, toSessionAttempt(attempt)], closed, graded.isCorrect, progress, xpGained);
     });
   }
 
   /** Idempotent: completing twice returns the same summary. Unanswered questions simply do not count. */
-  complete(userId: string, sessionId: string): Promise<SessionSummary> {
+  complete(userId: string, sessionId: string): Promise<CompletedSessionSummary> {
     return this.transaction.run(async () => {
       const now = new Date();
       const session = await this.findOwned(userId, sessionId);
       const { pointsPerCorrect } = GAME_DEFINITIONS[session.gameType];
 
       if (session.status === 'COMPLETED' && session.completedAt) {
-        return summarize(session.questions, session.attempts, pointsPerCorrect, session.startedAt, session.completedAt);
+        const summary = summarize(session.questions, session.attempts, pointsPerCorrect, session.startedAt, session.completedAt);
+        return { ...summary, rewards: await this.gamification.rewardsFor(userId, session.id, now) };
       }
 
       const summary = summarize(session.questions, session.attempts, pointsPerCorrect, session.startedAt, now);
-      await this.sessions.complete(session.id, {
+      const justCompleted = await this.sessions.complete(session.id, {
         completedAt: now,
         score: summary.score,
         correctCount: summary.correctCount,
         incorrectCount: summary.incorrectCount,
         maxCombo: summary.maxCombo,
       });
-      return summary;
+      // Only the request that actually completed the session hands out its rewards.
+      if (justCompleted) {
+        await this.gamification.recordSessionCompleted({
+          userId,
+          languageCode: session.languageCode,
+          sessionId: session.id,
+          answeredCount: summary.answeredCount,
+          questionCount: summary.questionCount,
+          mistakeCount: summary.mistakeCount,
+          now,
+        });
+      }
+      return { ...summary, rewards: await this.gamification.rewardsFor(userId, session.id, now) };
     });
   }
 
@@ -162,6 +194,7 @@ export class GameSessionsService {
     question: GameQuestionRecord,
     isCorrect: boolean,
     progress: ItemProgress | null,
+    xpGained: number,
   ): AnswerResultView {
     const completed = question.answeredAt !== null;
     return {
@@ -171,6 +204,7 @@ export class GameSessionsService {
       correctOptionId: completed ? question.correctOptionId : null,
       reveal: completed ? question.reveal : null,
       combo: comboStats(attempts.map((attempt) => attempt.isCorrect)).current,
+      xpGained,
       progress: { masteryLevel: progress?.masteryLevel ?? 0, dueAt: progress?.dueAt ?? null },
     };
   }

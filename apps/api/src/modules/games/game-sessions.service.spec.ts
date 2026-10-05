@@ -1,4 +1,5 @@
 import type { TransactionHost } from '../../infrastructure/database/transaction-host.js';
+import type { GamificationService } from '../gamification/gamification.service.js';
 import type { PracticeItem } from '../content/entities/content.entity.js';
 import type { Attempt, CreateAttemptData, ItemProgress } from '../progress/entities/progress.entity.js';
 import { ProgressService } from '../progress/progress.service.js';
@@ -88,6 +89,41 @@ class InMemoryProgressRepository extends ProgressRepository {
     this.attempts.push(attempt);
     return attempt;
   }
+  async findWeakItems() {
+    return [];
+  }
+  async countWeakByLanguage() {
+    return new Map<string, number>();
+  }
+  async countDueByLanguage() {
+    return new Map<string, number>();
+  }
+  async findConfusions() {
+    return [];
+  }
+  async findConfusionPartners() {
+    return new Map<string, string[]>();
+  }
+  async findItemSummaries() {
+    return [];
+  }
+}
+
+/** Records what the game reported; the rewards themselves are tested in gamification.service.spec. */
+class FakeGamification {
+  answers: { questionId: string; isCorrect: boolean; questionCompleted: boolean; isNewItem: boolean }[] = [];
+  completed: string[] = [];
+
+  async recordAnswer(event: { questionId: string; isCorrect: boolean; questionCompleted: boolean; isNewItem: boolean }) {
+    this.answers.push(event);
+    return { xpGained: event.isCorrect && event.questionCompleted ? 5 : 0 };
+  }
+  async recordSessionCompleted(event: { sessionId: string }) {
+    this.completed.push(event.sessionId);
+  }
+  async rewardsFor() {
+    return { xp: 0, breakdown: [], goals: [], achievements: [], streak: 1, totalXp: 0 };
+  }
 }
 
 const kana = (id: string, text: string, romanization: string): PracticeItem => ({
@@ -113,10 +149,12 @@ describe('GameSessionsService', () => {
   let sessions: InMemoryGameSessionsRepository;
   let progress: InMemoryProgressRepository;
   let service: GameSessionsService;
+  let gamification: FakeGamification;
 
   beforeEach(() => {
     progress = new InMemoryProgressRepository();
     sessions = new InMemoryGameSessionsRepository(progress);
+    gamification = new FakeGamification();
     const selector = { select: async () => ({ items: pool, pool }) } as unknown as ItemSelector;
     const transaction = { run: <T>(fn: () => Promise<T>) => fn() } as unknown as TransactionHost;
     service = new GameSessionsService(
@@ -126,6 +164,7 @@ describe('GameSessionsService', () => {
       progress,
       transaction,
       { next: () => 0.5 },
+      gamification as unknown as GamificationService,
     );
   });
 
@@ -299,5 +338,22 @@ describe('GameSessionsService', () => {
     const view = await service.get('user-1', 'session-1');
     expect(JSON.stringify(view.questions[2])).not.toContain('acceptedAnswers');
     expect(view.questions[0].result?.givenAnswer).toBe(question.reveal.romanization?.toUpperCase());
+  });
+
+  it('reports each answer and the completion to gamification exactly once', async () => {
+    await start();
+    const { question, right } = options(sessions.sessions[0], 0);
+    const result = await service.answer('user-1', 'session-1', { questionId: question.id, idempotencyKey: KEY(1), optionId: right });
+    expect(result.xpGained).toBe(5);
+    expect(gamification.answers).toEqual([expect.objectContaining({ questionId: question.id, isCorrect: true, questionCompleted: true, isNewItem: true })]);
+
+    const retried = await service.answer('user-1', 'session-1', { questionId: question.id, idempotencyKey: KEY(1), optionId: right });
+    expect(retried.xpGained).toBe(5);
+    expect(gamification.answers).toHaveLength(1);
+
+    const summary = await service.complete('user-1', 'session-1');
+    await service.complete('user-1', 'session-1');
+    expect(gamification.completed).toEqual(['session-1']);
+    expect(summary.rewards).toMatchObject({ streak: 1 });
   });
 });

@@ -48,7 +48,14 @@ export class ItemSelector {
   ) {}
 
   async select(input: SelectItemsInput): Promise<{ items: PracticeItem[]; pool: PracticeItem[] }> {
-    return input.source === 'SET' ? this.fromSet(input) : this.dueReviews(input);
+    switch (input.source) {
+      case 'SET':
+        return this.fromSet(input);
+      case 'DUE':
+        return this.dueReviews(input);
+      case 'MISTAKES':
+        return this.mistakes(input);
+    }
   }
 
   private async fromSet({ userId, languageCode, setId, count, now }: SelectItemsInput) {
@@ -67,9 +74,37 @@ export class ItemSelector {
     const dueIds = await this.progress.findDueItemIds(userId, languageCode, now, count);
     if (dueIds.length === 0) throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'NOTHING_TO_REVIEW');
 
-    const items = await this.content.findPracticeItems({ ids: dueIds });
+    return this.withPool(dueIds);
+  }
+
+  /**
+   * Items the user keeps getting wrong. The items they mixed each one up with join its
+   * curated look-alikes, so the quiz offers exactly those as wrong options (confusion training).
+   */
+  private async mistakes({ userId, languageCode, count }: SelectItemsInput) {
+    if (!(await this.content.languageExists(languageCode))) throw new ApiError(HttpStatus.NOT_FOUND, 'LANGUAGE_NOT_FOUND');
+
+    const weakIds = (await this.progress.findWeakItems(userId, languageCode, count)).map((weak) => weak.item.id);
+    if (weakIds.length === 0) throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'NO_MISTAKES');
+
+    const partners = await this.progress.findConfusionPartners(userId, weakIds);
+    const { items, pool } = await this.withPool(weakIds, [...new Set([...partners.values()].flat())]);
+    const withPartners = (item: PracticeItem): PracticeItem => ({
+      ...item,
+      confusableIds: [...new Set([...(partners.get(item.id) ?? []), ...item.confusableIds])],
+    });
+    return { items: items.map(withPartners), pool };
+  }
+
+  /** The items in the given order, plus their sets (and any extra items) as the pool for wrong options. */
+  private async withPool(itemIds: string[], extraIds: string[] = []) {
+    const items = await this.content.findPracticeItems({ ids: itemIds });
     const pool = await this.content.findPracticeItems({ setIds: [...new Set(items.map((item) => item.setId))] });
+    const inPool = new Set(pool.map((item) => item.id));
+    const missing = extraIds.filter((id) => !inPool.has(id));
+    const extras = missing.length > 0 ? await this.content.findPracticeItems({ ids: missing }) : [];
+
     const byId = new Map(items.map((item) => [item.id, item]));
-    return { items: dueIds.flatMap((id) => byId.get(id) ?? []), pool };
+    return { items: itemIds.flatMap((id) => byId.get(id) ?? []), pool: [...pool, ...extras] };
   }
 }

@@ -1,3 +1,4 @@
+import type { SessionRewards } from '../../gamification/entities/gamification.entity.js';
 import type {
   GameType,
   QuestionKind,
@@ -124,6 +125,9 @@ export interface SessionSummary {
   durationSeconds: number;
 }
 
+/** A finished session with what it earned (XP, goals, achievements). */
+export type CompletedSessionSummary = SessionSummary & { rewards: SessionRewards };
+
 export interface GameSessionView {
   id: string;
   gameType: GameType;
@@ -137,7 +141,7 @@ export interface GameSessionView {
   questions: QuestionView[];
   /** Lets a reloaded game continue with the right combo and mistake count */
   stats: { combo: number; mistakes: number };
-  summary: SessionSummary | null;
+  summary: CompletedSessionSummary | null;
 }
 
 export interface AnswerResultView {
@@ -151,5 +155,7 @@ export interface AnswerResultView {
   reveal: QuestionReveal | null;
   /** Correct answers in a row so far in this session */
   combo: number;
+  /** XP this answer earned (0 for a wrong one) */
+  xpGained: number;
   progress: { masteryLevel: number; dueAt: Date | null };
 }

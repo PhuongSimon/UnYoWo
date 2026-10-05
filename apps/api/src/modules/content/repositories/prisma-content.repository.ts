@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import type { Prisma } from '../../../generated/prisma/client.js';
 import { TransactionHost } from '../../../infrastructure/database/transaction-host.js';
 import { MASTERED_LEVEL } from '../../progress/mastery.js';
-import type { LanguageSummary, LearningItemView, LearningSetSummary, Localized, PracticeItem, SetProgress } from '../entities/content.entity.js';
+import type { LanguageSummary, LearningItemView, LearningSetSummary, PracticeItem, SetProgress } from '../entities/content.entity.js';
+import { toAttributes, toLocalized } from '../localized.js';
 import { ContentRepository } from './content.repository.js';
 
 const setSelect = {
@@ -17,18 +18,6 @@ const setSelect = {
 } satisfies Prisma.LearningSetSelect;
 
 type SetRow = Prisma.LearningSetGetPayload<{ select: typeof setSelect }>;
-
-function toLocalized(value: Prisma.JsonValue): Localized {
-  if (value && typeof value === 'object' && !Array.isArray(value) && typeof value.en === 'string' && typeof value.vi === 'string') {
-    return { en: value.en, vi: value.vi };
-  }
-  throw new Error(`Expected a { en, vi } object, got ${JSON.stringify(value)}`);
-}
-
-function toAttributes(value: Prisma.JsonValue | null): Record<string, string> | null {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
-  return Object.fromEntries(Object.entries(value).filter((entry): entry is [string, string] => typeof entry[1] === 'string'));
-}
 
 function toSetSummary({ _count, title, ...set }: SetRow): LearningSetSummary {
   return { ...set, title: toLocalized(title), itemCount: _count.items };

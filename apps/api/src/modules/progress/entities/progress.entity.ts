@@ -28,3 +28,28 @@ export interface Attempt {
 }
 
 export type CreateAttemptData = Omit<Attempt, 'id' | 'createdAt'>;
+
+/** Item details for the mistakes screen */
+export interface ItemSummary {
+  id: string;
+  languageCode: string;
+  text: string;
+  reading: string | null;
+  romanization: string | null;
+  meaning: { en: string; vi: string } | null;
+  emoji: string | null;
+}
+
+export interface WeakItem {
+  item: ItemSummary;
+  attemptCount: number;
+  correctCount: number;
+  lastReviewedAt: Date | null;
+}
+
+/** Two items the user mixed up, in either direction (ぬ answered as ね, or ね as ぬ). */
+export interface ConfusionPair {
+  itemIds: [string, string];
+  languageCode: string;
+  count: number;
+}

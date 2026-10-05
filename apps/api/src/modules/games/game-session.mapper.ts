@@ -1,3 +1,4 @@
+import type { SessionRewards } from '../gamification/entities/gamification.entity.js';
 import type {
   GameQuestionRecord,
   GameSessionRecord,
@@ -36,7 +37,8 @@ export function toQuestionView(question: GameQuestionRecord, lastAttempt: Sessio
   };
 }
 
-export function toSessionView(session: GameSessionRecord, now: Date): GameSessionView {
+/** `rewards` is only needed (and only loaded) for a completed session. */
+export function toSessionView(session: GameSessionRecord, now: Date, rewards: SessionRewards | null = null): GameSessionView {
   const lastAttempts = new Map(session.attempts.map((attempt) => [attempt.questionId, attempt]));
   const results = session.attempts.map((attempt) => attempt.isCorrect);
 
@@ -52,14 +54,17 @@ export function toSessionView(session: GameSessionRecord, now: Date): GameSessio
     questions: session.questions.map((question) => toQuestionView(question, lastAttempts.get(question.id))),
     stats: { combo: comboStats(results).current, mistakes: results.filter((correct) => !correct).length },
     summary:
-      session.status === 'COMPLETED' && session.completedAt
-        ? summarize(
-            session.questions,
-            session.attempts,
-            GAME_DEFINITIONS[session.gameType].pointsPerCorrect,
-            session.startedAt,
-            session.completedAt,
-          )
+      session.status === 'COMPLETED' && session.completedAt && rewards
+        ? {
+            ...summarize(
+              session.questions,
+              session.attempts,
+              GAME_DEFINITIONS[session.gameType].pointsPerCorrect,
+              session.startedAt,
+              session.completedAt,
+            ),
+            rewards,
+          }
         : null,
   };
 }
