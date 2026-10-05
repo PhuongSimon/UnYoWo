@@ -182,7 +182,8 @@ apps/api/src/modules/
 │   ├── game-definitions.ts           registry: GameType → số câu, TTL, điểm, generator
 │   ├── item-selector.ts              chọn item cho session: SET (đến hạn → mới → còn lại) / DUE
 │   ├── questions/                    fields, distractors (CONFUSABLE → cùng set → cùng type), generators (Strategy)
-│   ├── scoring.ts                    combo, summary
+│   ├── grading.ts                    chấm theo cách trả lời: rating / choice / match / typing (Strategy)
+│   ├── scoring.ts                    combo, điểm thưởng chuỗi đúng (10, 12 … 20), summary từ nhật ký attempt
 │   └── game-sessions.{controller,service}.ts
 └── gamification/
     ├── xp-policy.ts                  bảng điểm XP duy nhất
@@ -285,3 +286,4 @@ Mỗi phase: tạo branch (`/branch`) → làm → `pnpm --filter api test && pn
 | 1 | — | ✅ Phân tích (tài liệu này) |
 | 2 | `feat/learning-content-model` | ✅ Schema + migration `add_learning_content`, seed (4 ngôn ngữ, 79 concept, 64 set, 729 item, 609 component, 340 relation), `GET /languages`, `GET /languages/:code/sets`, `GET /learning-sets/:id/items`, `PATCH /auth/me`, `LanguagePolicy`, web tự đồng bộ timezone |
 | 3 | `feat/flashcard-quiz-games` (xếp chồng lên phase 2) | ✅ Bảng `learning_attempts`, `game_sessions`, `game_questions`; `ReviewScheduler` + `SimpleIntervalScheduler`; `ProgressService.applyAnswer`; Flashcard + Trắc nghiệm (câu hỏi do server sinh, idempotency key, chống trả lời 2 lần); web: tab Luyện tập, `/app/play/:id`, state machine `useReducer`, phím tắt, retry, resume sau F5; Vitest cho web |
+| 4 | `feat/matching-typing-games` (xếp chồng lên phase 3) | ✅ `GameType` thêm MATCHING, TYPING; `game_questions.accepted_answers`; bảng nối cặp (sai không đóng câu, đếm lỗi), gõ đáp án (chuẩn hoá theo chữ viết của từng đáp án: der Apfel, sakura/さくら, sagwa/사과); điểm cộng thưởng chuỗi; web: `match-reducer` riêng cho bàn ghép, `session-sync` dùng chung, phím tắt 1–6/A–F |
