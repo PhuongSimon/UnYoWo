@@ -172,17 +172,17 @@ Error code mới: `GAME_SESSION_NOT_FOUND`, `GAME_SESSION_EXPIRED` (⚠️ **kh�
 apps/api/src/modules/
 ├── content/        Learning Engine: languages, sets, items
 │   ├── language-policies/   chuẩn hoá đáp án theo ngôn ngữ (Strategy, có default Latin)
-│   ├── item-selector.service.ts      chọn item cho session: SET / DUE / MISTAKES
-│   └── distractor.service.ts         đáp án nhiễu: CONFUSABLE → cùng set → cùng type
+│   └── repositories/                 findPracticeItems: item + nghĩa + danh sách CONFUSABLE
 ├── progress/       Progress + Review Engine
 │   ├── review-scheduler.ts           interface ReviewScheduler (Strategy)
 │   ├── simple-interval.scheduler.ts  Again 10ph · Hard 1d · Good 3d · Easy 7d, tăng dần theo lần trước
 │   ├── progress.service.ts           ghi attempt → cập nhật progress
 │   └── mistakes.service.ts           item yếu + cặp nhầm (tính từ attempts)
 ├── games/          Game Engine
-│   ├── game-definitions.ts           registry: GameType → số câu, thời gian, kind câu hỏi
-│   ├── generators/                   QuestionGenerator theo kind (Strategy)
-│   ├── answer-checker.ts
+│   ├── game-definitions.ts           registry: GameType → số câu, TTL, điểm, generator
+│   ├── item-selector.ts              chọn item cho session: SET (đến hạn → mới → còn lại) / DUE
+│   ├── questions/                    fields, distractors (CONFUSABLE → cùng set → cùng type), generators (Strategy)
+│   ├── scoring.ts                    combo, summary
 │   └── game-sessions.{controller,service}.ts
 └── gamification/
     ├── xp-policy.ts                  bảng điểm XP duy nhất
@@ -284,3 +284,4 @@ Mỗi phase: tạo branch (`/branch`) → làm → `pnpm --filter api test && pn
 |---|---|---|
 | 1 | — | ✅ Phân tích (tài liệu này) |
 | 2 | `feat/learning-content-model` | ✅ Schema + migration `add_learning_content`, seed (4 ngôn ngữ, 79 concept, 64 set, 729 item, 609 component, 340 relation), `GET /languages`, `GET /languages/:code/sets`, `GET /learning-sets/:id/items`, `PATCH /auth/me`, `LanguagePolicy`, web tự đồng bộ timezone |
+| 3 | `feat/flashcard-quiz-games` (xếp chồng lên phase 2) | ✅ Bảng `learning_attempts`, `game_sessions`, `game_questions`; `ReviewScheduler` + `SimpleIntervalScheduler`; `ProgressService.applyAnswer`; Flashcard + Trắc nghiệm (câu hỏi do server sinh, idempotency key, chống trả lời 2 lần); web: tab Luyện tập, `/app/play/:id`, state machine `useReducer`, phím tắt, retry, resume sau F5; Vitest cho web |
