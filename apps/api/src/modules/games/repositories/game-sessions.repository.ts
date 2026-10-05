@@ -1,3 +1,4 @@
+import type { GameType } from '../../../generated/prisma/enums.js';
 import type {
   CompleteSessionData,
   CreateGameSessionData,
@@ -12,4 +13,12 @@ export abstract class GameSessionsRepository {
   abstract markAnswered(questionId: string, isCorrect: boolean, answeredAt: Date): Promise<boolean>;
   /** Completes an ACTIVE session; false if it was already completed. */
   abstract complete(id: string, data: CompleteSessionData): Promise<boolean>;
+  /** Starts the countdown of a timed session unless it already runs; returns when it started. */
+  abstract startTimer(id: string, at: Date): Promise<Date>;
+  /** Best completed score on the same game, language and set, not counting `excludeId` */
+  abstract findBestScore(
+    userId: string,
+    game: { gameType: GameType; languageCode: string; setId: string | null },
+    excludeId: string,
+  ): Promise<number | null>;
 }

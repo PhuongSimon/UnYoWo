@@ -1,3 +1,4 @@
+import type { GameType } from '../../generated/prisma/enums.js';
 import type { TransactionHost } from '../../infrastructure/database/transaction-host.js';
 import type { GamificationService } from '../gamification/gamification.service.js';
 import type { PracticeItem } from '../content/entities/content.entity.js';
@@ -33,6 +34,7 @@ class InMemoryGameSessionsRepository extends GameSessionsRepository {
       correctCount: 0,
       incorrectCount: 0,
       maxCombo: 0,
+      timerStartedAt: null,
       attempts: [],
       questions: questions.map((question) => ({
         ...question,
@@ -61,6 +63,17 @@ class InMemoryGameSessionsRepository extends GameSessionsRepository {
     if (!session || session.status !== 'ACTIVE') return false;
     Object.assign(session, data, { status: 'COMPLETED' });
     return true;
+  }
+  async startTimer(id: string, at: Date) {
+    const session = this.sessions.find((s) => s.id === id);
+    if (session && !session.timerStartedAt) session.timerStartedAt = at;
+    return session?.timerStartedAt ?? at;
+  }
+  async findBestScore(userId: string, { gameType }: { gameType: string }, excludeId: string) {
+    const scores = this.sessions
+      .filter((s) => s.userId === userId && s.gameType === gameType && s.status === 'COMPLETED' && s.id !== excludeId)
+      .map((s) => s.score);
+    return scores.length > 0 ? Math.max(...scores) : null;
   }
 }
 
@@ -138,6 +151,8 @@ const kana = (id: string, text: string, romanization: string): PracticeItem => (
   meaning: null,
   emoji: null,
   attributes: null,
+  components: [],
+  audioUrl: null,
   sortOrder: 0,
   confusableIds: [],
 });
@@ -168,7 +183,7 @@ describe('GameSessionsService', () => {
     );
   });
 
-  const start = (gameType: 'MULTIPLE_CHOICE' | 'FLASHCARD' | 'MATCHING' | 'TYPING' = 'MULTIPLE_CHOICE') =>
+  const start = (gameType: GameType = 'MULTIPLE_CHOICE') =>
     service.create('user-1', { gameType, language: 'ja', source: 'SET', setId: 'set-1' }, 'en');
 
   const options = (session: GameSessionRecord, index: number) => {
@@ -355,5 +370,78 @@ describe('GameSessionsService', () => {
     await service.complete('user-1', 'session-1');
     expect(gamification.completed).toEqual(['session-1']);
     expect(summary.rewards).toMatchObject({ streak: 1 });
+  });
+
+  it('refuses answers in a timed round before Start and after the clock ran out', async () => {
+    const view = await start('SPEED');
+    expect(view.timer).toMatchObject({ limitSeconds: 60, startedAt: null, deadline: null });
+    expect(view.questions.length).toBeGreaterThan(4);
+
+    const { question, right } = options(sessions.sessions[0], 0);
+    await expect(
+      service.answer('user-1', 'session-1', { questionId: question.id, idempotencyKey: KEY(1), optionId: right }),
+    ).rejects.toMatchObject({ response: { code: 'TIMER_NOT_STARTED' } });
+
+    const { timer } = await service.start('user-1', 'session-1');
+    expect(timer.deadline?.getTime()).toBe((timer.startedAt?.getTime() ?? 0) + 60_000);
+    expect((await service.start('user-1', 'session-1')).timer).toEqual(timer);
+    await service.answer('user-1', 'session-1', { questionId: question.id, idempotencyKey: KEY(1), optionId: right });
+
+    sessions.sessions[0].timerStartedAt = new Date(Date.now() - 62_000);
+    const next = options(sessions.sessions[0], 1);
+    await expect(
+      service.answer('user-1', 'session-1', { questionId: next.question.id, idempotencyKey: KEY(2), optionId: next.right }),
+    ).rejects.toMatchObject({ response: { code: 'TIME_UP', statusCode: 410 } });
+  });
+
+  it('compares a timed round with the best earlier one', async () => {
+    await start('SPEED');
+    await service.start('user-1', 'session-1');
+    const first = options(sessions.sessions[0], 0);
+    await service.answer('user-1', 'session-1', { questionId: first.question.id, idempotencyKey: KEY(1), optionId: first.right });
+    expect((await service.complete('user-1', 'session-1')).personalBest).toEqual({ previous: null, isNewBest: true });
+
+    await start('SPEED');
+    await service.start('user-1', 'session-2');
+    expect((await service.complete('user-1', 'session-2')).personalBest).toEqual({ previous: 10, isNewBest: false });
+  });
+
+  it('grades a build only when every slot has one of its own tiles', async () => {
+    const block = (id: string, text: string, parts: [string, string]): PracticeItem => ({
+      ...kana(id, text, id),
+      type: 'SYLLABLE',
+      components: [
+        { role: 'INITIAL', text: parts[0] },
+        { role: 'VOWEL', text: parts[1] },
+      ],
+    });
+    const blocks = [block('ga', '가', ['ㄱ', 'ㅏ']), block('na', '나', ['ㄴ', 'ㅏ']), block('go', '고', ['ㄱ', 'ㅗ'])];
+    service = new GameSessionsService(
+      sessions,
+      { select: async () => ({ items: blocks, pool: blocks }) } as unknown as ItemSelector,
+      new ProgressService(progress, new SimpleIntervalScheduler()),
+      progress,
+      { run: <T>(fn: () => Promise<T>) => fn() } as unknown as TransactionHost,
+      { next: () => 0.5 },
+      gamification as unknown as GamificationService,
+    );
+    await start('BUILDER');
+    const question = sessions.sessions[0].questions[0];
+    const right = question.correctOptionId?.split('|') ?? [];
+
+    await expect(
+      service.answer('user-1', 'session-1', { questionId: question.id, idempotencyKey: KEY(1), parts: right.slice(0, 1) }),
+    ).rejects.toMatchObject({ response: { code: 'INVALID_ANSWER' } });
+    await expect(
+      service.answer('user-1', 'session-1', { questionId: question.id, idempotencyKey: KEY(2), parts: [...right].reverse() }),
+    ).rejects.toMatchObject({ response: { code: 'INVALID_ANSWER' } });
+
+    const result = await service.answer('user-1', 'session-1', { questionId: question.id, idempotencyKey: KEY(3), parts: right });
+    expect(result).toMatchObject({ isCorrect: true, reveal: { text: question.reveal.text } });
+    expect(progress.attempts.at(-1)?.givenAnswer).toMatch(/^ㄱ \+ ㅏ$|^ㄴ \+ ㅏ$|^ㄱ \+ ㅗ$/);
+  });
+
+  it('builds nothing for a set without parts', async () => {
+    await expect(start('BUILDER')).rejects.toMatchObject({ response: { code: 'NOT_ENOUGH_ITEMS' } });
   });
 });

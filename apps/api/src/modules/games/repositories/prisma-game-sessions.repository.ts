@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '../../../generated/prisma/client.js';
+import type { ComponentRole, GameType } from '../../../generated/prisma/enums.js';
 import { TransactionHost } from '../../../infrastructure/database/transaction-host.js';
 import type {
   ChoiceOption,
@@ -24,11 +25,23 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 const stringOrNull = (value: unknown) => (typeof value === 'string' ? value : null);
 
+const ROLES = new Set<string>(['INITIAL', 'VOWEL', 'FINAL', 'BASE', 'SMALL', 'MARK']);
+const isRole = (value: unknown): value is ComponentRole => typeof value === 'string' && ROLES.has(value);
+
 function toOptions(value: Prisma.JsonValue | null): ChoiceOption[] | null {
   if (!Array.isArray(value)) return null;
-  return value.flatMap((option: unknown) =>
-    isRecord(option) ? [{ id: String(option.id), text: String(option.text), itemId: String(option.itemId) }] : [],
-  );
+  return value.flatMap((option: unknown) => {
+    if (!isRecord(option)) return [];
+    return [
+      {
+        id: String(option.id),
+        text: String(option.text),
+        itemId: stringOrNull(option.itemId),
+        ...(typeof option.slot === 'number' ? { slot: option.slot } : {}),
+        ...(isRole(option.role) ? { role: option.role } : {}),
+      },
+    ];
+  });
 }
 
 function toReveal(value: Prisma.JsonValue): QuestionReveal {
@@ -88,6 +101,24 @@ export class PrismaGameSessionsRepository extends GameSessionsRepository {
       data: { answeredAt, isCorrect },
     });
     return count === 1;
+  }
+
+  async startTimer(id: string, at: Date): Promise<Date> {
+    await this.db.gameSession.updateMany({ where: { id, timerStartedAt: null }, data: { timerStartedAt: at } });
+    const row = await this.db.gameSession.findUniqueOrThrow({ where: { id }, select: { timerStartedAt: true } });
+    return row.timerStartedAt ?? at;
+  }
+
+  async findBestScore(
+    userId: string,
+    { gameType, languageCode, setId }: { gameType: GameType; languageCode: string; setId: string | null },
+    excludeId: string,
+  ): Promise<number | null> {
+    const { _max } = await this.db.gameSession.aggregate({
+      where: { userId, gameType, languageCode, setId, status: 'COMPLETED', id: { not: excludeId } },
+      _max: { score: true },
+    });
+    return _max.score;
   }
 
   async complete(id: string, data: CompleteSessionData): Promise<boolean> {

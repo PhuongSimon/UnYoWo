@@ -15,12 +15,14 @@ const setSelect = {
   category: true,
   title: true,
   _count: { select: { items: true } },
+  // One item with parts is enough to know the set can be built.
+  items: { where: { components: { some: {} } }, select: { id: true }, take: 1 },
 } satisfies Prisma.LearningSetSelect;
 
 type SetRow = Prisma.LearningSetGetPayload<{ select: typeof setSelect }>;
 
-function toSetSummary({ _count, title, ...set }: SetRow): LearningSetSummary {
-  return { ...set, title: toLocalized(title), itemCount: _count.items };
+function toSetSummary({ _count, title, items, ...set }: SetRow): LearningSetSummary {
+  return { ...set, title: toLocalized(title), itemCount: _count.items, buildable: items.length > 0 };
 }
 
 @Injectable()
@@ -105,8 +107,10 @@ export class PrismaContentRepository extends ContentRepository {
         romanization: true,
         acceptedAnswers: true,
         attributes: true,
+        audioUrl: true,
         sortOrder: true,
         set: { select: { languageCode: true } },
+        components: { orderBy: { position: 'asc' }, select: { role: true, text: true } },
         concept: { select: { gloss: true, emoji: true } },
         relations: { where: { kind: 'CONFUSABLE' }, select: { relatedItemId: true } },
       },

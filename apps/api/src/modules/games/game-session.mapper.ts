@@ -1,6 +1,8 @@
 import type { SessionRewards } from '../gamification/entities/gamification.entity.js';
 import type {
   GameQuestionRecord,
+  PersonalBest,
+  SessionTimer,
   GameSessionRecord,
   GameSessionView,
   QuestionView,
@@ -23,7 +25,8 @@ export function toQuestionView(question: GameQuestionRecord, lastAttempt: Sessio
     position: question.position,
     kind: question.kind,
     prompt: question.prompt,
-    options: question.options?.map(({ id, text }) => ({ id, text })) ?? null,
+    options: question.options?.map(({ itemId: _itemId, ...option }) => option) ?? null,
+    audioUrl: question.audioUrl,
     reveal: answered || question.kind === 'FLASHCARD' ? question.reveal : null,
     result: answered
       ? {
@@ -37,8 +40,23 @@ export function toQuestionView(question: GameQuestionRecord, lastAttempt: Sessio
   };
 }
 
-/** `rewards` is only needed (and only loaded) for a completed session. */
-export function toSessionView(session: GameSessionRecord, now: Date, rewards: SessionRewards | null = null): GameSessionView {
+export function timerOf(session: GameSessionRecord): SessionTimer | null {
+  if (!session.timeLimitSeconds) return null;
+  const { timeLimitSeconds, timerStartedAt } = session;
+  return {
+    limitSeconds: timeLimitSeconds,
+    startedAt: timerStartedAt,
+    deadline: timerStartedAt ? new Date(timerStartedAt.getTime() + timeLimitSeconds * 1000) : null,
+  };
+}
+
+/** `rewards` and `personalBest` are only needed (and only loaded) for a completed session. */
+export function toSessionView(
+  session: GameSessionRecord,
+  now: Date,
+  rewards: SessionRewards | null = null,
+  personalBest: PersonalBest | null = null,
+): GameSessionView {
   const lastAttempts = new Map(session.attempts.map((attempt) => [attempt.questionId, attempt]));
   const results = session.attempts.map((attempt) => attempt.isCorrect);
 
@@ -51,6 +69,8 @@ export function toSessionView(session: GameSessionRecord, now: Date, rewards: Se
     status: isExpired(session, now) ? 'EXPIRED' : session.status,
     startedAt: session.startedAt,
     expiresAt: session.expiresAt,
+    timer: timerOf(session),
+    serverNow: now,
     questions: session.questions.map((question) => toQuestionView(question, lastAttempts.get(question.id))),
     stats: { combo: comboStats(results).current, mistakes: results.filter((correct) => !correct).length },
     summary:
@@ -64,6 +84,7 @@ export function toSessionView(session: GameSessionRecord, now: Date, rewards: Se
               session.completedAt,
             ),
             rewards,
+            personalBest,
           }
         : null,
   };

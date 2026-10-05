@@ -13,16 +13,21 @@ import type {
   GameQuestionRecord,
   GameSessionRecord,
   GameSessionView,
+  PersonalBest,
   SessionAttempt,
+  SessionTimer,
   UiLocale,
 } from './entities/game-session.entity.js';
 import { GAME_DEFINITIONS } from './game-definitions.js';
-import { isExpired, toSessionView } from './game-session.mapper.js';
+import { isExpired, timerOf, toSessionView } from './game-session.mapper.js';
 import { gradeAnswer } from './grading.js';
 import { ItemSelector } from './item-selector.js';
 import { Random, shuffle } from './random.js';
 import { GameSessionsRepository } from './repositories/game-sessions.repository.js';
 import { comboStats, summarize } from './scoring.js';
+
+/** An answer sent right at the buzzer still counts if it arrives this soon after. */
+const TIMER_GRACE_MS = 1500;
 
 const toSessionAttempt = ({ questionId, isCorrect, givenAnswer, rating, createdAt }: Attempt): SessionAttempt => ({
   questionId,
@@ -68,6 +73,7 @@ export class GameSessionsService {
       setId: dto.source === 'SET' ? (dto.setId ?? null) : null,
       locale,
       expiresAt: new Date(now.getTime() + definition.ttlMinutes * 60_000),
+      timeLimitSeconds: definition.timeLimitSeconds ?? null,
       questions: questions.map((question, position) => ({ ...question, position })),
     });
     return toSessionView(session, now);
@@ -76,8 +82,24 @@ export class GameSessionsService {
   async get(userId: string, sessionId: string): Promise<GameSessionView> {
     const now = new Date();
     const session = await this.findOwned(userId, sessionId);
-    const rewards = session.status === 'COMPLETED' ? await this.gamification.rewardsFor(userId, session.id, now) : null;
-    return toSessionView(session, now, rewards);
+    if (session.status !== 'COMPLETED') return toSessionView(session, now);
+    const rewards = await this.gamification.rewardsFor(userId, session.id, now);
+    return toSessionView(session, now, rewards, await this.personalBest(session));
+  }
+
+  /** Starts the countdown of a timed game. Idempotent: a second call returns the running timer. */
+  start(userId: string, sessionId: string): Promise<{ timer: SessionTimer; serverNow: Date }> {
+    return this.transaction.run(async () => {
+      const now = new Date();
+      const session = await this.findOwned(userId, sessionId);
+      this.assertPlayable(session, now);
+      if (!session.timeLimitSeconds) throw new ApiError(HttpStatus.BAD_REQUEST, 'INVALID_ANSWER');
+
+      const timerStartedAt = await this.sessions.startTimer(session.id, now);
+      const timer = timerOf({ ...session, timerStartedAt });
+      if (!timer) throw new ApiError(HttpStatus.BAD_REQUEST, 'INVALID_ANSWER');
+      return { timer, serverNow: now };
+    });
   }
 
   answer(userId: string, sessionId: string, dto: SubmitAnswerDto): Promise<AnswerResultView> {
@@ -98,6 +120,7 @@ export class GameSessionsService {
       }
 
       this.assertPlayable(session, now);
+      this.assertWithinTime(session, now);
       if (question.answeredAt) throw new ApiError(HttpStatus.CONFLICT, 'QUESTION_ALREADY_ANSWERED');
 
       const graded = gradeAnswer(GAME_DEFINITIONS[session.gameType].answerMode, question, dto, session.languageCode);
@@ -150,7 +173,11 @@ export class GameSessionsService {
 
       if (session.status === 'COMPLETED' && session.completedAt) {
         const summary = summarize(session.questions, session.attempts, pointsPerCorrect, session.startedAt, session.completedAt);
-        return { ...summary, rewards: await this.gamification.rewardsFor(userId, session.id, now) };
+        return {
+          ...summary,
+          rewards: await this.gamification.rewardsFor(userId, session.id, now),
+          personalBest: await this.personalBest({ ...session, score: summary.score }),
+        };
       }
 
       const summary = summarize(session.questions, session.attempts, pointsPerCorrect, session.startedAt, now);
@@ -173,8 +200,26 @@ export class GameSessionsService {
           now,
         });
       }
-      return { ...summary, rewards: await this.gamification.rewardsFor(userId, session.id, now) };
+      return {
+        ...summary,
+        rewards: await this.gamification.rewardsFor(userId, session.id, now),
+        personalBest: await this.personalBest({ ...session, score: summary.score }),
+      };
     });
+  }
+
+  /** Timed games compare the score with the best earlier round on the same set. */
+  private async personalBest(session: GameSessionRecord): Promise<PersonalBest | null> {
+    if (!GAME_DEFINITIONS[session.gameType].tracksPersonalBest) return null;
+    const previous = await this.sessions.findBestScore(session.userId, session, session.id);
+    return { previous, isNewBest: session.score > 0 && (previous === null || session.score > previous) };
+  }
+
+  private assertWithinTime(session: GameSessionRecord, now: Date) {
+    const timer = timerOf(session);
+    if (!timer) return;
+    if (!timer.deadline) throw new ApiError(HttpStatus.CONFLICT, 'TIMER_NOT_STARTED');
+    if (now.getTime() > timer.deadline.getTime() + TIMER_GRACE_MS) throw new ApiError(HttpStatus.GONE, 'TIME_UP');
   }
 
   /** Someone else's session gets the same 404 as a missing one, so ids cannot be probed. */

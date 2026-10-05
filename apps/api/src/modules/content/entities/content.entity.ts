@@ -20,6 +20,8 @@ export interface LearningSetSummary {
   category: string | null;
   title: Localized;
   itemCount: number;
+  /** Its items are built from parts (가 = ㄱ + ㅏ), so the character builder can use it */
+  buildable: boolean;
 }
 
 export interface SetProgress {
@@ -61,8 +63,11 @@ export interface PracticeItem {
   acceptedAnswers: string[];
   meaning: Localized | null;
   emoji: string | null;
-  /** Language-specific extras, e.g. German { article: 'der' } */
+  /** Language-specific extras, e.g. German { article: 'der' }, Korean { speak: '기역' } */
   attributes: Record<string, string> | null;
+  /** Parts in writing order: 곡 = ㄱ (INITIAL) + ㅗ (VOWEL) + ㄱ (FINAL) */
+  components: { role: ComponentRole; text: string }[];
+  audioUrl: string | null;
   sortOrder: number;
   /** Curated look-alikes, preferred as wrong options */
   confusableIds: string[];

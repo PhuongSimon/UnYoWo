@@ -2,7 +2,16 @@ import type { PracticeItem } from '../../content/entities/content.entity.js';
 import type { GeneratedQuestion, UiLocale } from '../entities/game-session.entity.js';
 import { shuffle, type Random } from '../random.js';
 import { pickDistractors } from './distractors.js';
-import { CHOICE_FIELDS, choiceKindsFor, fieldValue, revealFor, typingKindsFor, type ChoiceKind } from './fields.js';
+import {
+  CHOICE_FIELDS,
+  choiceKindsFor,
+  fieldValue,
+  listeningKindsFor,
+  promptFor,
+  revealFor,
+  typingKindsFor,
+  type ChoiceKind,
+} from './fields.js';
 
 export interface GeneratorContext {
   /** Items the wrong options may come from */
@@ -33,23 +42,25 @@ export const generateFlashcard: ItemQuestionGenerator = (item, { locale }) => ({
   options: null,
   correctOptionId: null,
   acceptedAnswers: [],
+  audioUrl: item.audioUrl,
   reveal: revealFor(item, locale),
 });
 
-export const generateMultipleChoice: ItemQuestionGenerator = (item, { pool, locale, random }) => {
-  for (const kind of shuffle(choiceKindsFor(item, locale), random)) {
-    const { prompt, answer } = CHOICE_FIELDS[kind];
-    const promptText = fieldValue(item, prompt, locale);
-    if (!promptText) continue;
+/** One right option plus up to three wrong ones, for whichever of `kinds` the item supports. */
+function choiceQuestion(item: PracticeItem, kinds: ChoiceKind[], { pool, locale, random }: GeneratorContext): GeneratedQuestion | null {
+  for (const kind of shuffle(kinds, random)) {
+    const prompt = promptFor(item, kind, locale);
+    if (!prompt) continue;
 
     const distractors = pickDistractors(item, pool, kind, locale, OPTION_COUNT - 1, random);
     if (distractors.length === 0) continue;
 
+    const { answer } = CHOICE_FIELDS[kind];
     const ordered = shuffle([item, ...distractors], random);
     return {
       itemId: item.id,
       kind,
-      prompt: promptText,
+      prompt,
       options: ordered.map((option, index) => ({
         id: String(index + 1),
         text: fieldValue(option, answer, locale) ?? '',
@@ -57,10 +68,77 @@ export const generateMultipleChoice: ItemQuestionGenerator = (item, { pool, loca
       })),
       correctOptionId: String(ordered.indexOf(item) + 1),
       acceptedAnswers: [],
+      audioUrl: item.audioUrl,
       reveal: revealFor(item, locale),
     };
   }
   return null;
+}
+
+export const generateMultipleChoice: ItemQuestionGenerator = (item, context) =>
+  choiceQuestion(item, choiceKindsFor(item, context.locale), context);
+
+export const generateListening: ItemQuestionGenerator = (item, context) =>
+  choiceQuestion(item, listeningKindsFor(item, context.locale), context);
+
+/**
+ * Keeps asking until `count` questions exist, going round the items again and again (a
+ * timed round needs more questions than a small set has items). Never the same item twice in a row.
+ */
+export function cycling(generate: ItemQuestionGenerator): SessionGenerator {
+  return (items, context) => {
+    const questions: GeneratedQuestion[] = [];
+    while (questions.length < context.count) {
+      const before = questions.length;
+      for (const item of shuffle(items, context.random)) {
+        if (questions.length === context.count) break;
+        if (questions.at(-1)?.itemId === item.id && items.length > 1) continue;
+        const question = generate(item, context);
+        if (question) questions.push(question);
+      }
+      if (questions.length === before) break;
+    }
+    return questions;
+  };
+}
+
+const TILES_PER_SLOT = 4;
+const TILE_LETTERS = 'abcd';
+
+/**
+ * "gok" → pick ㄱ, then ㅗ, then ㄱ. One slot per part of the item, each with the right
+ * part and wrong parts of the same role from the pool (other initials, other vowels…).
+ */
+export const generateBuilder: ItemQuestionGenerator = (item, { pool, locale, random }) => {
+  if (item.components.length < 2 || !item.romanization) return null;
+  // じ and ぢ are both "ji": the prompt would have two right answers.
+  if (pool.some((other) => other.id !== item.id && other.romanization === item.romanization)) return null;
+
+  const options: GeneratedQuestion['options'] = [];
+  const correct: string[] = [];
+  item.components.forEach(({ role, text }, slot) => {
+    const sameRole = new Set(pool.flatMap((other) => other.components.filter((part) => part.role === role).map((part) => part.text)));
+    sameRole.delete(text);
+    const tiles = shuffle([text, ...shuffle([...sameRole], random).slice(0, TILES_PER_SLOT - 1)], random);
+
+    tiles.forEach((tile, index) => {
+      const id = `${slot + 1}${TILE_LETTERS[index]}`;
+      options.push({ id, text: tile, itemId: null, slot, role });
+      if (tile === text) correct.push(id);
+    });
+  });
+
+  return {
+    itemId: item.id,
+    kind: 'BUILD',
+    prompt: item.romanization,
+    options,
+    // The parts in order, e.g. "1b|2a|3c"
+    correctOptionId: correct.join('|'),
+    acceptedAnswers: [],
+    audioUrl: item.audioUrl,
+    reveal: revealFor(item, locale),
+  };
 };
 
 /** Every spelling accepted when the user types the answer to `kind`. */
@@ -95,6 +173,7 @@ export const generateTyping: ItemQuestionGenerator = (item, { locale, random }) 
     options: null,
     correctOptionId: null,
     acceptedAnswers,
+    audioUrl: item.audioUrl,
     reveal: revealFor(item, locale),
   };
 };
@@ -135,6 +214,7 @@ export const generateMatchingBoard: SessionGenerator = (items, { locale, random,
     options: cards,
     correctOptionId: cardOf.get(item.id) ?? null,
     acceptedAnswers: [],
+    audioUrl: item.audioUrl,
     reveal: revealFor(item, locale),
   }));
 };

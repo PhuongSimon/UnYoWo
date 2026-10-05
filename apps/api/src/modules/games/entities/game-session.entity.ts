@@ -1,5 +1,6 @@
 import type { SessionRewards } from '../../gamification/entities/gamification.entity.js';
 import type {
+  ComponentRole,
   GameType,
   QuestionKind,
   ReviewRating,
@@ -11,8 +12,11 @@ export type UiLocale = 'en' | 'vi';
 
 // Type aliases rather than interfaces so they can be stored in Prisma JSON columns.
 
-/** `itemId` stays on the server: it would tell the client which option belongs to which item. */
-export type ChoiceOption = { id: string; text: string; itemId: string };
+/**
+ * `itemId` stays on the server: it would tell the client which option belongs to which item.
+ * Builder tiles have no item but belong to a slot (0 = first part) with a role (INITIAL…).
+ */
+export type ChoiceOption = { id: string; text: string; itemId: string | null; slot?: number; role?: ComponentRole };
 
 /** Everything about the item, shown once the question is answered (or on a flashcard's back). */
 export type QuestionReveal = {
@@ -31,6 +35,8 @@ export interface GeneratedQuestion {
   correctOptionId: string | null;
   /** Typing games: every spelling that counts as right */
   acceptedAnswers: string[];
+  /** Listening: recorded clip, when the item has one */
+  audioUrl: string | null;
   reveal: QuestionReveal;
 }
 
@@ -63,6 +69,8 @@ export interface GameSessionRecord {
   startedAt: Date;
   expiresAt: Date;
   completedAt: Date | null;
+  timeLimitSeconds: number | null;
+  timerStartedAt: Date | null;
   score: number;
   correctCount: number;
   incorrectCount: number;
@@ -79,6 +87,7 @@ export interface CreateGameSessionData {
   setId: string | null;
   locale: UiLocale;
   expiresAt: Date;
+  timeLimitSeconds: number | null;
   questions: (GeneratedQuestion & { position: number })[];
 }
 
@@ -106,7 +115,9 @@ export interface QuestionView {
   position: number;
   kind: QuestionKind;
   prompt: string;
-  options: { id: string; text: string }[] | null;
+  options: { id: string; text: string; slot?: number; role?: ComponentRole }[] | null;
+  /** Listening: play this clip; without one the client speaks `prompt` with speech synthesis */
+  audioUrl: string | null;
   /** Null until answered, except for flashcards, which are graded by the user. */
   reveal: QuestionReveal | null;
   result: QuestionResultView | null;
@@ -125,8 +136,20 @@ export interface SessionSummary {
   durationSeconds: number;
 }
 
-/** A finished session with what it earned (XP, goals, achievements). */
-export type CompletedSessionSummary = SessionSummary & { rewards: SessionRewards };
+export interface PersonalBest {
+  /** Best score before this session, if there was one */
+  previous: number | null;
+  isNewBest: boolean;
+}
+
+/** A finished session with what it earned (XP, goals, achievements) and, for timed games, the personal best. */
+export type CompletedSessionSummary = SessionSummary & { rewards: SessionRewards; personalBest: PersonalBest | null };
+
+export interface SessionTimer {
+  limitSeconds: number;
+  startedAt: Date | null;
+  deadline: Date | null;
+}
 
 export interface GameSessionView {
   id: string;
@@ -138,6 +161,10 @@ export interface GameSessionView {
   status: SessionStatus | 'EXPIRED';
   startedAt: Date;
   expiresAt: Date;
+  /** Timed games only */
+  timer: SessionTimer | null;
+  /** Lets the client correct its clock for the countdown */
+  serverNow: Date;
   questions: QuestionView[];
   /** Lets a reloaded game continue with the right combo and mistake count */
   stats: { combo: number; mistakes: number };

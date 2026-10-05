@@ -30,6 +30,13 @@ export class GameSessionsController {
     return this.sessions.get(user.sub, id);
   }
 
+  /** Timed games: the countdown starts when the player is ready, not when the round is created. */
+  @Post(':id/start')
+  @HttpCode(HttpStatus.OK)
+  start(@CurrentUser() user: AccessTokenPayload, @Param('id', sessionIdPipe) id: string) {
+    return this.sessions.start(user.sub, id);
+  }
+
   @Post(':id/answers')
   @HttpCode(HttpStatus.OK)
   answer(@CurrentUser() user: AccessTokenPayload, @Param('id', sessionIdPipe) id: string, @Body() dto: SubmitAnswerDto) {

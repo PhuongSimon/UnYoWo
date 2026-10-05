@@ -12,6 +12,7 @@ const set = (id: string, slug: string): LearningSetSummary => ({
   category: null,
   title: { en: slug, vi: slug },
   itemCount: 3,
+  buildable: false,
 });
 
 const item = (text: string): LearningItemView => ({

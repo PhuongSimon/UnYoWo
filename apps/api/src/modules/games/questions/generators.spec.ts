@@ -1,7 +1,15 @@
 import type { PracticeItem } from '../../content/entities/content.entity.js';
 import type { Random } from '../random.js';
 import { pickDistractors } from './distractors.js';
-import { generateFlashcard, generateMatchingBoard, generateMultipleChoice, generateTyping } from './generators.js';
+import {
+  cycling,
+  generateBuilder,
+  generateFlashcard,
+  generateListening,
+  generateMatchingBoard,
+  generateMultipleChoice,
+  generateTyping,
+} from './generators.js';
 
 const firstOrder: Random = { next: () => 0.999 };
 const context = (pool: PracticeItem[], locale: 'en' | 'vi' = 'en', random: Random = firstOrder) => ({ pool, locale, random, count: 6 });
@@ -18,6 +26,8 @@ const kana = (id: string, text: string, romanization: string, extra: Partial<Pra
   meaning: null,
   emoji: null,
   attributes: null,
+  components: [],
+  audioUrl: null,
   sortOrder: 0,
   confusableIds: [],
   ...extra,
@@ -35,6 +45,8 @@ const word = (id: string, languageCode: string, text: string, en: string, emoji:
   meaning: { en, vi: `vi:${en}` },
   emoji,
   attributes: null,
+  components: [],
+  audioUrl: null,
   sortOrder: 0,
   confusableIds: [],
   ...extra,
@@ -103,6 +115,7 @@ describe('generateFlashcard', () => {
       options: null,
       correctOptionId: null,
       acceptedAnswers: [],
+      audioUrl: null,
       reveal: { text: '犬', reading: 'いぬ', romanization: 'inu', meaning: 'vi:dog', emoji: '🐕' },
     });
   });
@@ -161,5 +174,68 @@ describe('generateMatchingBoard', () => {
     const items = ['a', 'i', 'u', 'e', 'o'].map((r) => kana(r, r.toUpperCase(), r));
     expect(generateMatchingBoard(items, { ...context(items), count: 3 })).toHaveLength(3);
     expect(generateMatchingBoard(items.slice(0, 1), context(items))).toEqual([]);
+  });
+});
+
+describe('generateListening', () => {
+  it('speaks the spoken form of a jamo and asks which character it was', () => {
+    const giyeok = kana('g', 'ㄱ', 'g', { languageCode: 'ko', attributes: { name: '기역', speak: '기역' } });
+    const kieuk = kana('k', 'ㅋ', 'k', { languageCode: 'ko', attributes: { speak: '키읔' } });
+    const question = generateListening(giyeok, context([giyeok, kieuk]));
+    expect(question).toMatchObject({ kind: 'AUDIO_TO_TEXT', prompt: '기역' });
+    expect(question?.options?.map((option) => option.text).sort()).toEqual(['ㄱ', 'ㅋ']);
+  });
+
+  it('never offers two characters that sound the same', () => {
+    const ji = kana('ji', 'じ', 'ji');
+    const pool = [ji, kana('dji', 'ぢ', 'ji'), kana('zu', 'ず', 'zu')];
+    expect(generateListening(ji, context(pool))?.options?.map((option) => option.text).sort()).toEqual(['じ', 'ず']);
+  });
+
+  it('asks for the meaning of a foreign word', () => {
+    const pool = [word('apfel', 'de', 'Apfel', 'apple', '🍎'), word('brot', 'de', 'Brot', 'bread', '🍞')];
+    expect(generateListening(pool[0], context(pool, 'vi'))).toMatchObject({ kind: 'AUDIO_TO_MEANING', prompt: 'Apfel' });
+  });
+});
+
+describe('cycling', () => {
+  it('goes round a small set until the round has enough questions, never repeating an item back to back', () => {
+    const pool = [kana('a', 'あ', 'a'), kana('i', 'い', 'i'), kana('u', 'う', 'u')];
+    const questions = cycling(generateMultipleChoice)(pool, { ...context(pool), count: 10 });
+    expect(questions).toHaveLength(10);
+    questions.slice(1).forEach((question, index) => expect(question.itemId).not.toBe(questions[index].itemId));
+  });
+});
+
+describe('generateBuilder', () => {
+  const block = (id: string, text: string, romanization: string, parts: [string, string, string?]) =>
+    kana(id, text, romanization, {
+      languageCode: 'ko',
+      type: 'SYLLABLE',
+      components: [
+        { role: 'INITIAL', text: parts[0] },
+        { role: 'VOWEL', text: parts[1] },
+        ...(parts[2] ? [{ role: 'FINAL' as const, text: parts[2] }] : []),
+      ],
+    });
+  const pool = [block('gok', '곡', 'gok', ['ㄱ', 'ㅗ', 'ㄱ']), block('han', '한', 'han', ['ㅎ', 'ㅏ', 'ㄴ']), block('mul', '물', 'mul', ['ㅁ', 'ㅜ', 'ㄹ'])];
+
+  it('gives one slot per part, each with tiles of the same role, and stores the right ones in order', () => {
+    const question = generateBuilder(pool[0], context(pool));
+    expect(question).toMatchObject({ kind: 'BUILD', prompt: 'gok' });
+
+    const slots = [0, 1, 2].map((slot) => question?.options?.filter((option) => option.slot === slot) ?? []);
+    expect(slots.map((tiles) => tiles[0]?.role)).toEqual(['INITIAL', 'VOWEL', 'FINAL']);
+    expect(slots[1].map((tile) => tile.text).sort()).toEqual(['ㅏ', 'ㅗ', 'ㅜ']);
+
+    const right = question?.correctOptionId?.split('|').map((id) => question.options?.find((option) => option.id === id)?.text);
+    expect(right).toEqual(['ㄱ', 'ㅗ', 'ㄱ']);
+  });
+
+  it('skips items without parts, and ones whose romanization is shared (じ and ぢ)', () => {
+    expect(generateBuilder(kana('a', 'あ', 'a'), context(pool))).toBeNull();
+    const ji = kana('ji', 'じ', 'ji', { components: [{ role: 'BASE', text: 'し' }, { role: 'MARK', text: '゛' }] });
+    const dji = kana('dji', 'ぢ', 'ji', { components: [{ role: 'BASE', text: 'ち' }, { role: 'MARK', text: '゛' }] });
+    expect(generateBuilder(ji, context([ji, dji]))).toBeNull();
   });
 });

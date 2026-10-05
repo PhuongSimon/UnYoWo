@@ -1,4 +1,17 @@
-import { IsEnum, IsInt, IsOptional, IsString, IsUUID, Matches, Max, MaxLength, Min, ValidateIf } from 'class-validator';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Matches,
+  Max,
+  MaxLength,
+  Min,
+  ValidateIf,
+} from 'class-validator';
 import { GameType, ReviewRating, SessionSource } from '../../../generated/prisma/enums.js';
 
 export class CreateGameSessionDto {
@@ -42,6 +55,14 @@ export class SubmitAnswerDto {
   @IsString()
   @MaxLength(100)
   text?: string;
+
+  /** Character builder: the chosen tile ids, one per slot, in order */
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(4)
+  @IsString({ each: true })
+  @MaxLength(8, { each: true })
+  parts?: string[];
 
   @IsOptional()
   @IsInt()

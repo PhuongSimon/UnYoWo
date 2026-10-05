@@ -5,8 +5,8 @@ import { isAcceptedTypedAnswer } from '../content/answers/language-policy.js';
 import type { SubmitAnswerDto } from './dto/game-session.dto.js';
 import type { GameQuestionRecord } from './entities/game-session.entity.js';
 
-/** How a game is answered: rate yourself, pick one option, pair cards, or type. */
-export type AnswerMode = 'rating' | 'choice' | 'match' | 'typing';
+/** How a game is answered: rate yourself, pick one option, pair cards, type, or assemble parts. */
+export type AnswerMode = 'rating' | 'choice' | 'match' | 'typing' | 'build';
 
 export interface GradedAnswer {
   isCorrect: boolean;
@@ -44,6 +44,21 @@ const GRADERS: Record<AnswerMode, (question: GameQuestionRecord, dto: SubmitAnsw
   match: (question, { optionId }) => {
     const graded = gradeOption(question, optionId);
     return { ...graded, closesQuestion: graded.isCorrect };
+  },
+
+  // The tiles in slot order; every slot must be filled with one of its own tiles.
+  build: (question, { parts }) => {
+    const slotCount = new Set(question.options?.map((option) => option.slot)).size;
+    const tiles = parts?.map((id) => question.options?.find((option) => option.id === id));
+    if (!tiles || tiles.length !== slotCount || tiles.some((tile, slot) => tile?.slot !== slot)) throw invalid();
+    const isCorrect = parts?.join('|') === question.correctOptionId;
+    return {
+      isCorrect,
+      rating: isCorrect ? 'GOOD' : 'AGAIN',
+      givenAnswer: tiles.map((tile) => tile?.text).join(' + '),
+      confusedWithItemId: null,
+      closesQuestion: true,
+    };
   },
 
   // An empty answer ("I don't know") is allowed and simply counts as wrong.
