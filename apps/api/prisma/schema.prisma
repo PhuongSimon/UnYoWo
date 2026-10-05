@@ -302,6 +302,8 @@ model LearningAttempt {
 enum GameType {
   FLASHCARD
   MULTIPLE_CHOICE
+  MATCHING
+  TYPING
 }
 
 enum SessionSource {
@@ -369,6 +371,8 @@ model GameQuestion {
   options         Json?
   /// Never sent to the client before the question is answered
   correctOptionId String?      @map("correct_option_id")
+  /// Typing: every spelling that counts as right (Apfel, der Apfel; さくら, sakura). Never sent to the client.
+  acceptedAnswers String[]     @default([]) @map("accepted_answers")
   /// Full item details shown after answering (or on the back of a flashcard)
   reveal          Json
   answeredAt      DateTime?    @map("answered_at")
