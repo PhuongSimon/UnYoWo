@@ -16,6 +16,8 @@ import OverviewPage from '@/features/learn/pages/OverviewPage'
 import PronunciationPage from '@/features/learn/pages/PronunciationPage'
 import WritingPage from '@/features/learn/pages/WritingPage'
 import PlayPage from '@/features/practice/pages/PlayPage'
+import ProgressPage from '@/features/progress/pages/ProgressPage'
+import ReviewPage from '@/features/progress/pages/ReviewPage'
 import PracticeHubPage from '@/features/practice/pages/PracticeHubPage'
 import AppLayout from '@/layouts/AppLayout'
 import NotFoundPage from '@/pages/NotFoundPage'
@@ -47,6 +49,8 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <HomePage /> },
           { path: 'play/:sessionId', element: <PlayPage /> },
+          { path: 'review', element: <ReviewPage /> },
+          { path: 'progress', element: <ProgressPage /> },
           {
             path: ':lang',
             element: <LanguageLayout />,

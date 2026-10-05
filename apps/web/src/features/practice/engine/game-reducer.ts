@@ -17,7 +17,7 @@ interface InGame {
 export type GameState =
   | (InGame & { status: 'playing'; index: number; revealed: boolean })
   | (InGame & { status: 'answering'; index: number; answer: PendingAnswer; failed: boolean })
-  | (InGame & { status: 'answered'; index: number })
+  | (InGame & { status: 'answered'; index: number; xpGained: number })
   | (InGame & { status: 'completing'; failed: boolean })
   | { status: 'completed'; session: GameSession; summary: SessionSummary }
   | { status: 'expired'; session: GameSession }
@@ -90,7 +90,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const session = withResult(state.session, state.answer, action.result)
       // A flashcard is graded by the user, so there is no feedback to read: go straight on.
       if (session.questions[state.index].kind === 'FLASHCARD') return moveTo(session, action.result.combo, state.index + 1)
-      return { status: 'answered', session, combo: action.result.combo, index: state.index }
+      return { status: 'answered', session, combo: action.result.combo, index: state.index, xpGained: action.result.xpGained }
     }
 
     case 'ANSWER_FAILED':

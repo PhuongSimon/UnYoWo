@@ -44,6 +44,7 @@ function ChoiceRound({ state, game, studyLang, speechLang, question }: GameScree
           studyLang={studyLang}
           speechLang={speechLang}
           isLast={isLast}
+          xpGained={state.xpGained}
           onNext={game.next}
         />
       )}

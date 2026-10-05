@@ -1,6 +1,10 @@
-import { AudioLines, BookOpen, PenLine, Repeat } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { AudioLines, BookOpen, ChevronRight, PenLine, Repeat, RotateCcw, Trophy } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import BunnyMascot from '@/components/BunnyMascot'
+import DailyGoals from '@/features/progress/components/DailyGoals'
+import { progressSummaryQuery } from '@/features/progress/queries'
 import { useAuthStore } from '@/stores/auth.store'
 import LanguageCard from '../components/LanguageCard'
 import { STUDY_LANGUAGES } from '../languages'
@@ -15,6 +19,7 @@ const ROADMAP = [
 function HomePage() {
   const { t } = useTranslation()
   const user = useAuthStore((s) => s.user)
+  const { data: progress } = useQuery(progressSummaryQuery)
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
@@ -26,6 +31,36 @@ function HomePage() {
         </div>
         <BunnyMascot size={104} className="shrink-0" />
       </section>
+
+      <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
+        <section aria-labelledby="home-goals" className="rounded-3xl border border-line-soft bg-surface-raised p-5 shadow-sm sm:p-6">
+          <h2 id="home-goals" className="text-lg font-bold">
+            {t('progress.goalsTitle')}
+          </h2>
+          <div className="mt-4">{progress ? <DailyGoals goals={progress.dailyGoals} /> : <div className="h-40" />}</div>
+        </section>
+        <nav aria-label={t('home.shortcuts')} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+          {[
+            { to: '/app/review', Icon: RotateCcw, title: t('review.title'), text: t('home.reviewShortcut') },
+            { to: '/app/progress', Icon: Trophy, title: t('progress.title'), text: t('home.progressShortcut') },
+          ].map(({ to, Icon, title, text }) => (
+            <Link
+              key={to}
+              to={to}
+              className="group flex items-center gap-3 rounded-2xl border border-line-soft bg-surface-raised p-4 transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400"
+            >
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-500/15 text-accent">
+                <Icon size={22} aria-hidden="true" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-bold">{title}</span>
+                <span className="block text-sm text-muted">{text}</span>
+              </span>
+              <ChevronRight size={18} aria-hidden="true" className="text-muted transition-transform group-hover:translate-x-0.5" />
+            </Link>
+          ))}
+        </nav>
+      </div>
 
       <section aria-labelledby="home-languages" className="mt-10 sm:mt-12">
         <h2 id="home-languages" className="text-xl font-bold">

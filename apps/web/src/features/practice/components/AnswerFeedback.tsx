@@ -12,10 +12,11 @@ interface AnswerFeedbackProps {
   isLast: boolean
   /** Shown under a wrong verdict in the typing game */
   yourAnswer?: string | null
+  xpGained?: number
   onNext: () => void
 }
 
-function AnswerFeedback({ isCorrect, reveal, studyLang, speechLang, isLast, yourAnswer, onNext }: AnswerFeedbackProps) {
+function AnswerFeedback({ isCorrect, reveal, studyLang, speechLang, isLast, yourAnswer, xpGained = 0, onNext }: AnswerFeedbackProps) {
   const { t } = useTranslation()
   const Icon = isCorrect ? CircleCheck : CircleX
 
@@ -33,6 +34,11 @@ function AnswerFeedback({ isCorrect, reveal, studyLang, speechLang, isLast, your
       >
         <Icon size={24} aria-hidden="true" />
         {t(isCorrect ? 'practice.correct' : 'practice.incorrect')}
+        {xpGained > 0 && (
+          <span className="ml-auto rounded-full bg-secondary-400 px-2.5 py-0.5 text-sm font-extrabold text-secondary-950 motion-safe:animate-fade-in">
+            +{xpGained} XP
+          </span>
+        )}
       </p>
       {!isCorrect && yourAnswer !== undefined && (
         <p className="mt-1 text-sm text-muted">

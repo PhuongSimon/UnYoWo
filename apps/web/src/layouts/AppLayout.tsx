@@ -1,3 +1,4 @@
+import { RotateCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet, ScrollRestoration } from 'react-router'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
@@ -7,6 +8,7 @@ import UserMenu from '@/components/UserMenu'
 import { useTimezoneSync } from '@/features/auth/hooks/useTimezoneSync'
 import { useLocalized } from '@/features/learn/hooks/useLocalized'
 import { STUDY_LANGUAGES } from '@/features/learn/languages'
+import ProgressBadges from '@/features/progress/components/ProgressBadges'
 
 function AppLayout() {
   const { t } = useTranslation()
@@ -33,14 +35,29 @@ function AppLayout() {
                     }
                   >
                     <language.Flag className="h-3.5 w-5 rounded-[2px] shadow-sm" />
-                    <span className="hidden lg:inline">{loc(language.name)}</span>
+                    <span className="hidden whitespace-nowrap xl:inline">{loc(language.name)}</span>
                   </NavLink>
                 </li>
               ))}
+              <li className="ml-1 border-l border-line-soft pl-2">
+                <NavLink
+                  to="/app/review"
+                  title={t('review.title')}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-primary-400 ${
+                      isActive ? 'bg-primary-500/15 text-accent' : 'text-muted hover:bg-surface-raised hover:text-fg'
+                    }`
+                  }
+                >
+                  <RotateCcw size={16} aria-hidden="true" />
+                  <span className="hidden whitespace-nowrap xl:inline">{t('review.title')}</span>
+                </NavLink>
+              </li>
             </ul>
           </nav>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+            <ProgressBadges />
             <LanguageSwitcher />
             <ThemeToggle />
             <UserMenu />

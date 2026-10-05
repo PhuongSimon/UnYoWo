@@ -38,6 +38,7 @@ const result = (questionId: string, isCorrect: boolean, combo: number): AnswerRe
   correctOptionId: '1',
   reveal: { text: questionId, reading: null, romanization: questionId, meaning: null, emoji: null },
   combo,
+  xpGained: isCorrect ? 5 : 0,
   progress: { masteryLevel: 2, dueAt: null },
 })
 
@@ -83,13 +84,13 @@ describe('game state machine', () => {
     )
     expect(state.status).toBe('completing')
 
-    const summary = { score: 0, correctCount: 0, incorrectCount: 1, mistakeCount: 1, answeredCount: 1, questionCount: 1, maxCombo: 0, durationSeconds: 4 }
+    const summary = { score: 0, correctCount: 0, incorrectCount: 1, mistakeCount: 1, answeredCount: 1, questionCount: 1, maxCombo: 0, durationSeconds: 4, rewards: { xp: 0, breakdown: [], goals: [], achievements: [], streak: 1, totalXp: 0 } }
     state = run(state, { type: 'COMPLETE_SUCCEEDED', summary })
     expect(state).toMatchObject({ status: 'completed', summary })
   })
 
   it('opens finished and expired sessions on their final screens', () => {
-    const summary = { score: 10, correctCount: 1, incorrectCount: 0, mistakeCount: 0, answeredCount: 1, questionCount: 1, maxCombo: 1, durationSeconds: 3 }
+    const summary = { score: 10, correctCount: 1, incorrectCount: 0, mistakeCount: 0, answeredCount: 1, questionCount: 1, maxCombo: 1, durationSeconds: 3, rewards: { xp: 0, breakdown: [], goals: [], achievements: [], streak: 1, totalXp: 0 } }
     expect(initGame(session([question('q0', true)], { status: 'COMPLETED', summary })).status).toBe('completed')
     expect(initGame(session([question('q0')], { status: 'EXPIRED' })).status).toBe('expired')
   })

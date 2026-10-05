@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import BunnyMascot from '@/components/BunnyMascot'
 import Button from '@/components/ui/Button'
 import type { GameType, SessionSummary } from '../types'
+import SessionRewards from './SessionRewards'
 
 interface GameResultProps {
   gameType: GameType
@@ -52,6 +53,8 @@ function GameResult({ gameType, summary, backTo, starting, onPlayAgain }: GameRe
           </div>
         ))}
       </dl>
+
+      <SessionRewards rewards={summary.rewards} />
 
       {summary.answeredCount < summary.questionCount && (
         <p className="mt-4 text-sm text-muted">

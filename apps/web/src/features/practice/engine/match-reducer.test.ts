@@ -30,6 +30,7 @@ const verdict = (questionId: string, completed: boolean, correctOptionId: string
   correctOptionId,
   reveal: null,
   combo,
+  xpGained: completed ? 5 : 0,
   progress: { masteryLevel: 0, dueAt: null },
 })
 

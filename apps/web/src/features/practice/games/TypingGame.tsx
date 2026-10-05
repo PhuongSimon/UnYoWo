@@ -89,6 +89,7 @@ function TypingRound({ state, game, studyLang, speechLang, question }: GameScree
           studyLang={studyLang}
           speechLang={speechLang}
           isLast={isLast}
+          xpGained={state.xpGained}
           yourAnswer={question.result.givenAnswer}
           onNext={game.next}
         />

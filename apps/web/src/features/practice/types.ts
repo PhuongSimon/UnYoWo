@@ -1,7 +1,7 @@
 import type { Localized } from '@/features/learn/types'
 
 export type GameType = 'FLASHCARD' | 'MULTIPLE_CHOICE' | 'MATCHING' | 'TYPING'
-export type SessionSource = 'SET' | 'DUE'
+export type SessionSource = 'SET' | 'DUE' | 'MISTAKES'
 export type ReviewRating = 'AGAIN' | 'HARD' | 'GOOD' | 'EASY'
 export type ChoiceKind = 'TEXT_TO_ROMANIZATION' | 'ROMANIZATION_TO_TEXT' | 'TEXT_TO_MEANING' | 'MEANING_TO_TEXT' | 'EMOJI_TO_TEXT'
 export type QuestionKind = 'FLASHCARD' | ChoiceKind
@@ -78,6 +78,20 @@ export interface TypedQuestion extends QuestionBase {
 
 export type Question = FlashcardQuestion | ChoiceQuestion | TypedQuestion
 
+export type XpSource = 'ANSWER' | 'SESSION_COMPLETE' | 'PERFECT_SESSION' | 'DAILY_GOAL'
+
+/** What a finished session earned; decided entirely by the server. */
+export interface SessionRewards {
+  xp: number
+  breakdown: { source: XpSource; amount: number; count: number }[]
+  /** Daily goal keys completed during the session */
+  goals: string[]
+  /** Achievement keys unlocked by the session */
+  achievements: string[]
+  streak: number
+  totalXp: number
+}
+
 export interface SessionSummary {
   score: number
   /** Answered right on the first try */
@@ -89,6 +103,7 @@ export interface SessionSummary {
   questionCount: number
   maxCombo: number
   durationSeconds: number
+  rewards: SessionRewards
 }
 
 export interface GameSession {
@@ -114,6 +129,8 @@ export interface AnswerResult {
   correctOptionId: string | null
   reveal: QuestionReveal | null
   combo: number
+  /** XP this answer earned */
+  xpGained: number
   progress: { masteryLevel: number; dueAt: string | null }
 }
 

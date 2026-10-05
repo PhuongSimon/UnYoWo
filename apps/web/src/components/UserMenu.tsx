@@ -1,7 +1,7 @@
-import { LogOut } from 'lucide-react'
+import { LogOut, RotateCcw, Trophy } from 'lucide-react'
 import { useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import DotsLoader from '@/components/ui/DotsLoader'
 import { authApi } from '@/features/auth/api'
 import { useAuthStore } from '@/stores/auth.store'
@@ -73,6 +73,21 @@ function UserMenu() {
             <p className="truncate font-semibold">{user.fullName}</p>
             <p className="truncate text-sm text-muted">{user.email}</p>
           </div>
+          {[
+            { to: '/app/review', Icon: RotateCcw, label: t('review.title') },
+            { to: '/app/progress', Icon: Trophy, label: t('progress.title') },
+          ].map(({ to, Icon, label }) => (
+            <Link
+              key={to}
+              to={to}
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className="flex min-h-11 w-full items-center gap-3 px-4 text-sm font-semibold transition-colors hover:bg-surface focus-visible:bg-surface focus-visible:outline-none"
+            >
+              <Icon size={18} aria-hidden="true" className="text-muted" />
+              {label}
+            </Link>
+          ))}
           <button
             type="button"
             role="menuitem"

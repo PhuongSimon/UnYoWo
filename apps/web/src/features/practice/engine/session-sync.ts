@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { getApiError } from '@/lib/api-error'
 import { practiceApi } from '../api'
@@ -33,15 +34,21 @@ export function handleRequestFailure<const A extends { type: string }>(
 
 /** Saves the result while `completing` is true. Completing is idempotent on the server, so retries are safe. */
 export function useSessionCompletion(sessionId: string, completing: boolean, dispatch: (action: SessionAction) => void) {
+  const queryClient = useQueryClient()
+
   useEffect(() => {
     if (!completing) return
     let active = true
     withRetry(() => practiceApi.completeSession(sessionId)).then(
-      (summary) => active && dispatch({ type: 'COMPLETE_SUCCEEDED', summary }),
+      (summary) => {
+        // XP, streak, goals, achievements and set progress have all changed.
+        void queryClient.invalidateQueries({ predicate: ({ queryKey }) => queryKey[0] !== 'game-session' })
+        if (active) dispatch({ type: 'COMPLETE_SUCCEEDED', summary })
+      },
       (error: unknown) => active && handleRequestFailure(error, sessionId, dispatch, { type: 'COMPLETE_FAILED' }),
     )
     return () => {
       active = false
     }
-  }, [completing, sessionId, dispatch])
+  }, [completing, sessionId, dispatch, queryClient])
 }

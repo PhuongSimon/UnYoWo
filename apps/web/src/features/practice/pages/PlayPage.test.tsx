@@ -16,7 +16,28 @@ vi.mock('../api', () => ({
 const api = vi.mocked(practiceApi)
 
 const reveal = (text: string, romanization: string): QuestionReveal => ({ text, reading: null, romanization, meaning: null, emoji: null })
-const summary: SessionSummary = { score: 10, correctCount: 1, incorrectCount: 1, mistakeCount: 1, answeredCount: 2, questionCount: 2, maxCombo: 1, durationSeconds: 42 }
+const summary: SessionSummary = {
+  score: 10,
+  correctCount: 1,
+  incorrectCount: 1,
+  mistakeCount: 1,
+  answeredCount: 2,
+  questionCount: 2,
+  maxCombo: 1,
+  durationSeconds: 42,
+  rewards: {
+    xp: 45,
+    breakdown: [
+      { source: 'ANSWER', amount: 5, count: 1 },
+      { source: 'SESSION_COMPLETE', amount: 20, count: 1 },
+      { source: 'DAILY_GOAL', amount: 20, count: 1 },
+    ],
+    goals: ['PLAY_GAME'],
+    achievements: ['FIRST_STEPS'],
+    streak: 3,
+    totalXp: 120,
+  },
+}
 
 const baseSession = {
   id: 's1',
@@ -89,6 +110,7 @@ function answerResult(questionId: string, isCorrect: boolean, correctOptionId: s
     correctOptionId,
     reveal: reveal('ぬ', 'nu'),
     combo: isCorrect ? 1 : 0,
+    xpGained: isCorrect ? 5 : 0,
     progress: { masteryLevel: 2, dueAt: null },
   }
 }
@@ -137,6 +159,9 @@ describe('PlayPage', () => {
     expect(await screen.findByRole('heading', { name: 'Round complete!' })).toBeInTheDocument()
     expect(api.completeSession).toHaveBeenCalledWith('s1')
     expect(screen.getByText('0:42')).toBeInTheDocument()
+    expect(screen.getByText('+45 XP')).toBeInTheDocument()
+    expect(screen.getByText('Goal reached: finish a round')).toBeInTheDocument()
+    expect(screen.getByText('First steps')).toBeInTheDocument()
   })
 
   it('shows the verdict of a quiz answer in Vietnamese and sends it only once', async () => {
@@ -173,6 +198,7 @@ describe('PlayPage', () => {
 
     await user.click(screen.getByRole('button', { name: /Try again/ }))
     expect(await screen.findByText('Correct!')).toBeInTheDocument()
+    expect(screen.getByText('+5 XP')).toBeInTheDocument()
 
     const [first, second] = api.submitAnswer.mock.calls.map(([, body]) => body.idempotencyKey)
     expect(second).toBe(first)
