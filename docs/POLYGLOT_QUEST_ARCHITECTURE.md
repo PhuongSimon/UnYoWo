@@ -186,10 +186,11 @@ apps/api/src/modules/
 │   ├── scoring.ts                    combo, điểm thưởng chuỗi đúng (10, 12 … 20), summary từ nhật ký attempt
 │   └── game-sessions.{controller,service}.ts
 └── gamification/
+    ├── calendar.ts                   ngày theo múi giờ user (Intl), cộng/trừ ngày
     ├── xp-policy.ts                  bảng điểm XP duy nhất
-    ├── streak.ts                     hàm thuần nextStreak(state, today)
-    ├── daily-goals.ts                registry goal
-    └── achievements/                 registry + evaluator
+    ├── streak.ts                     hàm thuần recordStudyDay / displayedStreak
+    ├── daily-goals.ts                registry goal + focusLanguage (ngôn ngữ học nhiều nhất ở ngày học trước)
+    └── achievements.ts               registry: mỗi thành tích tự tính { current, target }
 ```
 
 Luồng một câu trả lời, gói trong **1 transaction** (`TransactionHost.run`):
@@ -287,3 +288,4 @@ Mỗi phase: tạo branch (`/branch`) → làm → `pnpm --filter api test && pn
 | 2 | `feat/learning-content-model` | ✅ Schema + migration `add_learning_content`, seed (4 ngôn ngữ, 79 concept, 64 set, 729 item, 609 component, 340 relation), `GET /languages`, `GET /languages/:code/sets`, `GET /learning-sets/:id/items`, `PATCH /auth/me`, `LanguagePolicy`, web tự đồng bộ timezone |
 | 3 | `feat/flashcard-quiz-games` (xếp chồng lên phase 2) | ✅ Bảng `learning_attempts`, `game_sessions`, `game_questions`; `ReviewScheduler` + `SimpleIntervalScheduler`; `ProgressService.applyAnswer`; Flashcard + Trắc nghiệm (câu hỏi do server sinh, idempotency key, chống trả lời 2 lần); web: tab Luyện tập, `/app/play/:id`, state machine `useReducer`, phím tắt, retry, resume sau F5; Vitest cho web |
 | 4 | `feat/matching-typing-games` (xếp chồng lên phase 3) | ✅ `GameType` thêm MATCHING, TYPING; `game_questions.accepted_answers`; bảng nối cặp (sai không đóng câu, đếm lỗi), gõ đáp án (chuẩn hoá theo chữ viết của từng đáp án: der Apfel, sakura/さくら, sagwa/사과); điểm cộng thưởng chuỗi; web: `match-reducer` riêng cho bàn ghép, `session-sync` dùng chung, phím tắt 1–6/A–F |
+| 5 | `feat/xp-streaks-achievements` (xếp chồng lên phase 4) | ✅ Bảng `user_stats`, `user_daily_activity`, `xp_events` (unique → không cộng trùng), `user_achievements`; nguồn session `MISTAKES` (đáp án nhiễu ưu tiên item user hay nhầm); `GET /progress/summary`, `/achievements`, `/mistakes`; web: huy hiệu 🔥/⭐ trên header, mục tiêu ngày ở trang chủ, trang `/app/review` và `/app/progress`, phần thưởng ở màn kết quả, chip "+5 XP" |
