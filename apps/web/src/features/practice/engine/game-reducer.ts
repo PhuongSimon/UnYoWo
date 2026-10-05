@@ -1,4 +1,5 @@
 import type { AnswerInput, AnswerResult, GameSession, Question, SessionSummary } from '../types'
+import type { SessionAction } from './session-sync'
 
 export type PendingAnswer = AnswerInput & { questionId: string; idempotencyKey: string; responseMs: number }
 
@@ -24,27 +25,15 @@ export type GameState =
 export type QuestionState = Extract<GameState, { index: number }>
 
 export type GameAction =
-  /** Replaces local state with the server's copy, e.g. after another tab answered. */
-  | { type: 'SYNCED'; session: GameSession }
+  | SessionAction
   | { type: 'REVEALED' }
   | { type: 'ANSWER_SENT'; answer: PendingAnswer }
   | { type: 'ANSWER_SUCCEEDED'; result: AnswerResult }
   | { type: 'ANSWER_FAILED' }
   | { type: 'RETRY' }
   | { type: 'NEXT' }
-  | { type: 'COMPLETE_SUCCEEDED'; summary: SessionSummary }
-  | { type: 'COMPLETE_FAILED' }
-  | { type: 'EXPIRED' }
 
 const nextUnanswered = (questions: Question[], from: number) => questions.findIndex((q, i) => i >= from && !q.result)
-
-function trailingCombo(questions: Question[]): number {
-  let combo = 0
-  for (const question of questions) {
-    if (question.result) combo = question.result.isCorrect ? combo + 1 : 0
-  }
-  return combo
-}
 
 function moveTo(session: GameSession, combo: number, from: number): GameState {
   const index = nextUnanswered(session.questions, from)
@@ -57,26 +46,28 @@ function moveTo(session: GameSession, combo: number, from: number): GameState {
 export function initGame(session: GameSession): GameState {
   if (session.status === 'COMPLETED' && session.summary) return { status: 'completed', session, summary: session.summary }
   if (session.status === 'EXPIRED') return { status: 'expired', session }
-  return moveTo(session, trailingCombo(session.questions), 0)
+  return moveTo(session, session.stats.combo, 0)
 }
 
-function withResult(session: GameSession, answer: PendingAnswer, result: AnswerResult): GameSession {
+function answered(question: Question, answer: AnswerInput, result: AnswerResult): Question {
+  const verdict = {
+    isCorrect: result.isCorrect,
+    correctOptionId: result.correctOptionId,
+    selectedOptionId: 'optionId' in answer ? answer.optionId : null,
+    givenAnswer: 'text' in answer ? answer.text.trim() || null : null,
+    rating: 'rating' in answer ? answer.rating : null,
+  }
+  // A flashcard already has its back; other questions learn the answer from the server now.
+  return question.kind === 'FLASHCARD'
+    ? { ...question, result: verdict }
+    : { ...question, reveal: result.reveal ?? question.reveal, result: verdict }
+}
+
+/** Marks a question answered with the server's verdict (shared with the matching board). */
+export function withResult(session: GameSession, answer: AnswerInput, result: AnswerResult): GameSession {
   return {
     ...session,
-    questions: session.questions.map((question) =>
-      question.id === result.questionId
-        ? {
-            ...question,
-            reveal: result.reveal,
-            result: {
-              isCorrect: result.isCorrect,
-              correctOptionId: result.correctOptionId,
-              selectedOptionId: 'optionId' in answer ? answer.optionId : null,
-              rating: 'rating' in answer ? answer.rating : null,
-            },
-          }
-        : question,
-    ),
+    questions: session.questions.map((question) => (question.id === result.questionId ? answered(question, answer, result) : question)),
   }
 }
 

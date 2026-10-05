@@ -7,6 +7,8 @@ import type { Question } from '../types'
 interface PromptCardProps {
   question: Question
   studyLang: string
+  /** Replaces the default question for this kind, e.g. "Type the word…" in the typing game */
+  instruction?: string
   children?: ReactNode
 }
 
@@ -17,7 +19,7 @@ function promptSize(field: string, prompt: string) {
   return [...prompt].length <= 2 ? 'text-7xl font-bold sm:text-8xl' : 'text-4xl font-bold sm:text-5xl'
 }
 
-function PromptCard({ question, studyLang, children }: PromptCardProps) {
+function PromptCard({ question, studyLang, instruction, children }: PromptCardProps) {
   const { t } = useTranslation()
   const uiLang = useUiLanguage()
   const headingId = useId()
@@ -29,7 +31,7 @@ function PromptCard({ question, studyLang, children }: PromptCardProps) {
       className="rounded-3xl border border-line-soft bg-surface-raised px-4 py-7 text-center shadow-sm sm:px-8 sm:py-10"
     >
       <h2 id={headingId} className="text-sm font-semibold text-muted">
-        {t(`practice.prompt.${question.kind}`)}
+        {instruction ?? t(`practice.prompt.${question.kind}`)}
       </h2>
       <p lang={fieldLang(field, studyLang, uiLang)} className={`mt-3 leading-tight break-words ${promptSize(field, question.prompt)}`}>
         {question.prompt}

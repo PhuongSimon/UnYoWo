@@ -9,7 +9,7 @@ import type { GameScreenProps } from './registry'
 
 function MultipleChoiceGame(props: GameScreenProps) {
   const question = props.state.session.questions[props.state.index]
-  return question.kind === 'FLASHCARD' ? null : <ChoiceRound {...props} question={question} />
+  return question.kind === 'FLASHCARD' || question.options === null ? null : <ChoiceRound {...props} question={question} />
 }
 
 function ChoiceRound({ state, game, studyLang, speechLang, question }: GameScreenProps & { question: ChoiceQuestion }) {

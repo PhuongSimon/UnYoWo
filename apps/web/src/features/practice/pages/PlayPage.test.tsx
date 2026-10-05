@@ -16,7 +16,7 @@ vi.mock('../api', () => ({
 const api = vi.mocked(practiceApi)
 
 const reveal = (text: string, romanization: string): QuestionReveal => ({ text, reading: null, romanization, meaning: null, emoji: null })
-const summary: SessionSummary = { score: 10, correctCount: 1, incorrectCount: 1, answeredCount: 2, questionCount: 2, maxCombo: 1, durationSeconds: 42 }
+const summary: SessionSummary = { score: 10, correctCount: 1, incorrectCount: 1, mistakeCount: 1, answeredCount: 2, questionCount: 2, maxCombo: 1, durationSeconds: 42 }
 
 const baseSession = {
   id: 's1',
@@ -27,6 +27,7 @@ const baseSession = {
   startedAt: '2026-10-04T00:00:00Z',
   expiresAt: '2099-01-01T00:00:00Z',
   summary: null,
+  stats: { combo: 0, mistakes: 0 },
 } as const
 
 const flashcards: GameSession = {
@@ -57,8 +58,39 @@ const quiz: GameSession = {
   ],
 }
 
+const typing: GameSession = {
+  ...baseSession,
+  gameType: 'TYPING',
+  language: 'de',
+  questions: [
+    { id: 'q1', position: 0, kind: 'MEANING_TO_TEXT', prompt: 'quả táo', options: null, reveal: null, result: null },
+    { id: 'q2', position: 1, kind: 'MEANING_TO_TEXT', prompt: 'bánh mì', options: null, reveal: null, result: null },
+  ],
+}
+
+const cards = [
+  { id: '1', text: 'ne' },
+  { id: '2', text: 'nu' },
+]
+const matching: GameSession = {
+  ...baseSession,
+  gameType: 'MATCHING',
+  questions: [
+    { id: 'q1', position: 0, kind: 'TEXT_TO_ROMANIZATION', prompt: 'ぬ', options: cards, reveal: null, result: null },
+    { id: 'q2', position: 1, kind: 'TEXT_TO_ROMANIZATION', prompt: 'ね', options: cards, reveal: null, result: null },
+  ],
+}
+
 function answerResult(questionId: string, isCorrect: boolean, correctOptionId: string | null = null): AnswerResult {
-  return { questionId, isCorrect, correctOptionId, reveal: reveal('ぬ', 'nu'), combo: isCorrect ? 1 : 0, progress: { masteryLevel: 2, dueAt: null } }
+  return {
+    questionId,
+    isCorrect,
+    questionCompleted: true,
+    correctOptionId,
+    reveal: reveal('ぬ', 'nu'),
+    combo: isCorrect ? 1 : 0,
+    progress: { masteryLevel: 2, dueAt: null },
+  }
 }
 
 function renderPlay() {
@@ -152,5 +184,50 @@ describe('PlayPage', () => {
     )
     renderPlay()
     await waitFor(() => expect(screen.getByText('Nothing here yet')).toBeInTheDocument())
+  })
+
+  it('checks a typed answer on the server and shows what was typed when wrong', async () => {
+    await i18n.changeLanguage('vi')
+    api.getSession.mockResolvedValue(typing)
+    api.submitAnswer
+      .mockResolvedValueOnce({ ...answerResult('q1', true), reveal: { text: 'Apfel', reading: null, romanization: null, meaning: 'quả táo', emoji: '🍎' } })
+      .mockResolvedValueOnce({ ...answerResult('q2', false), reveal: { text: 'Brot', reading: null, romanization: null, meaning: 'bánh mì', emoji: '🍞' } })
+    const user = userEvent.setup()
+    renderPlay()
+
+    const input = await screen.findByRole('textbox', { name: 'Câu trả lời của bạn' })
+    expect(screen.getByText('Có thể gõ kèm mạo từ, ví dụ: der Apfel.')).toBeInTheDocument()
+    await user.type(input, 'der Apfel{Enter}')
+    expect(api.submitAnswer).toHaveBeenCalledWith('s1', expect.objectContaining({ questionId: 'q1', text: 'der Apfel' }))
+    expect(await screen.findByText('Chính xác!')).toBeInTheDocument()
+
+    await user.keyboard('{Enter}')
+    await user.type(await screen.findByRole('textbox', { name: 'Câu trả lời của bạn' }), 'Brod{Enter}')
+    expect(await screen.findByText('Bạn đã gõ: Brod')).toBeInTheDocument()
+    expect(screen.getByText('Brot')).toBeInTheDocument()
+  })
+
+  it('pairs cards by tapping, flags a wrong pair and finishes the board', async () => {
+    api.getSession.mockResolvedValue(matching)
+    api.submitAnswer.mockImplementation(async (_id, body) => {
+      const right = 'optionId' in body && ((body.questionId === 'q1' && body.optionId === '2') || (body.questionId === 'q2' && body.optionId === '1'))
+      return { ...answerResult(body.questionId, right, right && 'optionId' in body ? body.optionId : null), questionCompleted: right }
+    })
+    const user = userEvent.setup()
+    renderPlay()
+
+    await user.click(await screen.findByRole('button', { name: 'ぬ' }))
+    await user.click(screen.getByRole('button', { name: 'ne' }))
+    expect(await screen.findByText('Not a pair. Try again!')).toBeInTheDocument()
+    expect(screen.getByLabelText('1 wrong pair')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'nu' }))
+    await user.click(screen.getByRole('button', { name: 'ぬ' }))
+    await waitFor(() => expect(screen.getByRole('button', { name: /ぬ/ })).toBeDisabled())
+
+    await user.keyboard('2a')
+    expect(await screen.findByRole('heading', { name: 'Round complete!' })).toBeInTheDocument()
+    expect(api.submitAnswer).toHaveBeenCalledTimes(3)
+    expect(api.completeSession).toHaveBeenCalledWith('s1')
   })
 })

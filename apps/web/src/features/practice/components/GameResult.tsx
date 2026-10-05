@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import BunnyMascot from '@/components/BunnyMascot'
 import Button from '@/components/ui/Button'
-import type { SessionSummary } from '../types'
+import type { GameType, SessionSummary } from '../types'
 
 interface GameResultProps {
+  gameType: GameType
   summary: SessionSummary
   backTo: string
   starting: boolean
@@ -14,13 +15,23 @@ interface GameResultProps {
 
 const formatDuration = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`
 
-function GameResult({ summary, backTo, starting, onPlayAgain }: GameResultProps) {
+function GameResult({ gameType, summary, backTo, starting, onPlayAgain }: GameResultProps) {
   const { t } = useTranslation()
   const accuracy = summary.answeredCount > 0 ? Math.round((summary.correctCount / summary.answeredCount) * 100) : 0
 
+  // A matching board is about finding every pair with as few wrong tries as possible.
+  const firstStats =
+    gameType === 'MATCHING'
+      ? [
+          { label: t('practice.result.pairs'), value: `${summary.answeredCount}/${summary.questionCount}` },
+          { label: t('practice.result.mistakes'), value: summary.mistakeCount },
+        ]
+      : [
+          { label: t('practice.result.correct'), value: `${summary.correctCount}/${summary.answeredCount}` },
+          { label: t('practice.result.accuracy'), value: `${accuracy}%` },
+        ]
   const stats = [
-    { label: t('practice.result.correct'), value: `${summary.correctCount}/${summary.answeredCount}` },
-    { label: t('practice.result.accuracy'), value: `${accuracy}%` },
+    ...firstStats,
     { label: t('practice.result.bestCombo'), value: summary.maxCombo },
     { label: t('practice.result.time'), value: formatDuration(summary.durationSeconds) },
   ]

@@ -11,10 +11,12 @@ interface GameShellProps {
   backTo: string
   /** Keyboard shortcuts for this game; only shown on larger screens */
   hint: string
+  /** Extra counter next to the progress, e.g. mistakes on a matching board */
+  extra?: ReactNode
   children: ReactNode
 }
 
-function GameShell({ answered, total, combo, backTo, hint, children }: GameShellProps) {
+function GameShell({ answered, total, combo, backTo, hint, extra, children }: GameShellProps) {
   const { t } = useTranslation()
 
   return (
@@ -32,6 +34,7 @@ function GameShell({ answered, total, combo, backTo, hint, children }: GameShell
         <span className="shrink-0 text-sm font-semibold text-muted tabular-nums">
           {answered}/{total}
         </span>
+        {extra}
         {combo >= 2 && (
           <span
             key={combo}

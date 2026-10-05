@@ -1,6 +1,6 @@
 import type { Localized } from '@/features/learn/types'
 
-export type GameType = 'FLASHCARD' | 'MULTIPLE_CHOICE'
+export type GameType = 'FLASHCARD' | 'MULTIPLE_CHOICE' | 'MATCHING' | 'TYPING'
 export type SessionSource = 'SET' | 'DUE'
 export type ReviewRating = 'AGAIN' | 'HARD' | 'GOOD' | 'EASY'
 export type ChoiceKind = 'TEXT_TO_ROMANIZATION' | 'ROMANIZATION_TO_TEXT' | 'TEXT_TO_MEANING' | 'MEANING_TO_TEXT' | 'EMOJI_TO_TEXT'
@@ -38,6 +38,8 @@ export interface QuestionResult {
   isCorrect: boolean
   correctOptionId: string | null
   selectedOptionId: string | null
+  /** What the user typed (typing game) */
+  givenAnswer: string | null
   rating: ReviewRating | null
 }
 
@@ -60,19 +62,29 @@ export interface FlashcardQuestion extends QuestionBase {
   reveal: QuestionReveal
 }
 
-/** The right answer is only revealed by the server after answering. */
+/** The right answer is only revealed by the server after answering. On a matching board every pair shares the same cards. */
 export interface ChoiceQuestion extends QuestionBase {
   kind: ChoiceKind
   options: ChoiceOption[]
   reveal: QuestionReveal | null
 }
 
-export type Question = FlashcardQuestion | ChoiceQuestion
+/** Answered by typing; the accepted spellings stay on the server. */
+export interface TypedQuestion extends QuestionBase {
+  kind: ChoiceKind
+  options: null
+  reveal: QuestionReveal | null
+}
+
+export type Question = FlashcardQuestion | ChoiceQuestion | TypedQuestion
 
 export interface SessionSummary {
   score: number
+  /** Answered right on the first try */
   correctCount: number
   incorrectCount: number
+  /** Every wrong attempt, including wrong matching pairs */
+  mistakeCount: number
   answeredCount: number
   questionCount: number
   maxCombo: number
@@ -89,19 +101,23 @@ export interface GameSession {
   startedAt: string
   expiresAt: string
   questions: Question[]
+  stats: { combo: number; mistakes: number }
   summary: SessionSummary | null
 }
 
 export interface AnswerResult {
   questionId: string
+  /** Whether this attempt was right */
   isCorrect: boolean
+  /** False after a wrong matching pair: the pair stays open */
+  questionCompleted: boolean
   correctOptionId: string | null
-  reveal: QuestionReveal
+  reveal: QuestionReveal | null
   combo: number
   progress: { masteryLevel: number; dueAt: string | null }
 }
 
-export type AnswerInput = { optionId: string } | { rating: ReviewRating }
+export type AnswerInput = { optionId: string } | { rating: ReviewRating } | { text: string }
 
 export interface NewGame {
   gameType: GameType

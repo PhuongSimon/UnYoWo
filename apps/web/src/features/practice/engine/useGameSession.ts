@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react'
-import { getApiError } from '@/lib/api-error'
 import { practiceApi } from '../api'
 import type { AnswerInput, GameSession } from '../types'
-import { gameReducer, initGame, type GameAction, type PendingAnswer } from './game-reducer'
+import { gameReducer, initGame, type PendingAnswer } from './game-reducer'
 import { withRetry } from './retry'
+import { handleRequestFailure, useSessionCompletion } from './session-sync'
 
-/** Connects the game state machine to the API. The server keeps every answer, so a reload resumes the session. */
+/** Connects the question-by-question state machine to the API. The server keeps every answer, so a reload resumes the session. */
 export function useGameSession(initialSession: GameSession) {
   const sessionId = initialSession.id
   const [state, dispatch] = useReducer(gameReducer, initialSession, initGame)
@@ -17,42 +17,17 @@ export function useGameSession(initialSession: GameSession) {
     shownAt.current = performance.now()
   }, [questionId])
 
-  const fail = useCallback(
-    (error: unknown, failed: GameAction) => {
-      const { code } = getApiError(error)
-      if (code === 'GAME_SESSION_EXPIRED') return dispatch({ type: 'EXPIRED' })
-      if (code === 'QUESTION_ALREADY_ANSWERED' || code === 'GAME_SESSION_COMPLETED') {
-        // Another tab got there first: continue from the server's copy.
-        practiceApi.getSession(sessionId).then((session) => dispatch({ type: 'SYNCED', session }), () => dispatch(failed))
-        return
-      }
-      dispatch(failed)
-    },
-    [sessionId],
-  )
-
   const send = useCallback(
     (answer: PendingAnswer) => {
       withRetry(() => practiceApi.submitAnswer(sessionId, answer)).then(
         (result) => dispatch({ type: 'ANSWER_SUCCEEDED', result }),
-        (error: unknown) => fail(error, { type: 'ANSWER_FAILED' }),
+        (error: unknown) => handleRequestFailure(error, sessionId, dispatch, { type: 'ANSWER_FAILED' }),
       )
     },
-    [sessionId, fail],
+    [sessionId],
   )
 
-  const completing = state.status === 'completing' && !state.failed
-  useEffect(() => {
-    if (!completing) return
-    let active = true
-    withRetry(() => practiceApi.completeSession(sessionId)).then(
-      (summary) => active && dispatch({ type: 'COMPLETE_SUCCEEDED', summary }),
-      (error: unknown) => active && fail(error, { type: 'COMPLETE_FAILED' }),
-    )
-    return () => {
-      active = false
-    }
-  }, [completing, sessionId, fail])
+  useSessionCompletion(sessionId, state.status === 'completing' && !state.failed, dispatch)
 
   const answer = (input: AnswerInput) => {
     if (state.status !== 'playing') return

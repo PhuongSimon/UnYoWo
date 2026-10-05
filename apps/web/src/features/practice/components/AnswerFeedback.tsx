@@ -10,10 +10,12 @@ interface AnswerFeedbackProps {
   studyLang: string
   speechLang: string
   isLast: boolean
+  /** Shown under a wrong verdict in the typing game */
+  yourAnswer?: string | null
   onNext: () => void
 }
 
-function AnswerFeedback({ isCorrect, reveal, studyLang, speechLang, isLast, onNext }: AnswerFeedbackProps) {
+function AnswerFeedback({ isCorrect, reveal, studyLang, speechLang, isLast, yourAnswer, onNext }: AnswerFeedbackProps) {
   const { t } = useTranslation()
   const Icon = isCorrect ? CircleCheck : CircleX
 
@@ -32,6 +34,11 @@ function AnswerFeedback({ isCorrect, reveal, studyLang, speechLang, isLast, onNe
         <Icon size={24} aria-hidden="true" />
         {t(isCorrect ? 'practice.correct' : 'practice.incorrect')}
       </p>
+      {!isCorrect && yourAnswer !== undefined && (
+        <p className="mt-1 text-sm text-muted">
+          {yourAnswer ? t('practice.typing.yourAnswer', { answer: yourAnswer }) : t('practice.typing.skipped')}
+        </p>
+      )}
       <div className="mt-3">
         <RevealDetails reveal={reveal} studyLang={studyLang} speechLang={speechLang} />
       </div>

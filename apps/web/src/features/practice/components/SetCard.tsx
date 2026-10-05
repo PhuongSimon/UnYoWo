@@ -1,4 +1,4 @@
-import { Layers, ListChecks, type LucideIcon } from 'lucide-react'
+import { Keyboard, Layers, ListChecks, Puzzle, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import DotsLoader from '@/components/ui/DotsLoader'
 import { useLocalized } from '@/features/learn/hooks/useLocalized'
@@ -8,6 +8,8 @@ import ProgressBar from './ProgressBar'
 const GAMES: { type: GameType; Icon: LucideIcon }[] = [
   { type: 'FLASHCARD', Icon: Layers },
   { type: 'MULTIPLE_CHOICE', Icon: ListChecks },
+  { type: 'MATCHING', Icon: Puzzle },
+  { type: 'TYPING', Icon: Keyboard },
 ]
 
 interface SetCardProps {
