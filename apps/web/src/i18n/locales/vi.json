@@ -103,7 +103,8 @@
     "QUESTION_ALREADY_ANSWERED": "Câu hỏi này đã được trả lời.",
     "INVALID_ANSWER": "Không đọc được câu trả lời. Vui lòng thử lại.",
     "ThrottlerException": "Bạn thao tác quá nhanh. Vui lòng thử lại sau.",
-    "NETWORK_ERROR": "Không kết nối được máy chủ. Vui lòng kiểm tra mạng và thử lại."
+    "NETWORK_ERROR": "Không kết nối được máy chủ. Vui lòng kiểm tra mạng và thử lại.",
+    "NO_MISTAKES": "Bạn chưa có lỗi sai nào ở ngôn ngữ này. Tuyệt vời!"
   },
   "home": {
     "greeting": "Chào {{name}} 👋",
@@ -129,7 +130,10 @@
         "title": "Luyện tập mỗi ngày",
         "description": "Đọc to các ví dụ 15 phút mỗi ngày — đều đặn quan trọng hơn học dồn."
       }
-    }
+    },
+    "shortcuts": "Lối tắt",
+    "reviewShortcut": "Mục đến hạn và lỗi sai của bạn",
+    "progressShortcut": "XP, chuỗi ngày học và thành tích"
   },
   "userMenu": {
     "open": "Mở menu tài khoản",
@@ -326,6 +330,111 @@
     "expired": {
       "title": "Lượt chơi này đã hết hạn",
       "description": "Lượt chơi dở được giữ trong một giờ. Câu trả lời của bạn đã được lưu, hãy bắt đầu lượt mới để học tiếp."
+    },
+    "rewards": {
+      "xp": "+{{xp}} XP",
+      "source": {
+        "ANSWER_one": "{{count}} câu trả lời đúng",
+        "ANSWER_other": "{{count}} câu trả lời đúng",
+        "SESSION_COMPLETE": "Hoàn thành lượt chơi",
+        "PERFECT_SESSION": "Lượt chơi hoàn hảo",
+        "DAILY_GOAL_one": "Mục tiêu ngày",
+        "DAILY_GOAL_other": "{{count}} mục tiêu ngày"
+      },
+      "goalDone": "Đạt mục tiêu: {{goal}}",
+      "unlocked": "Mở khoá thành tích"
+    }
+  },
+  "review": {
+    "title": "Ôn tập",
+    "subtitle": "Các mục đến hạn hôm nay và những mục bạn hay sai, theo từng ngôn ngữ.",
+    "due_one": "{{count}} mục đến hạn ôn",
+    "due_other": "{{count}} mục đến hạn ôn",
+    "noneDue": "Chưa có mục nào đến hạn",
+    "reviewDue": "Ôn các mục đến hạn",
+    "weak_one": "{{count}} mục cần sửa",
+    "weak_other": "{{count}} mục cần sửa",
+    "noneWeak": "Không có lỗi nào cần sửa",
+    "practiceMistakes": "Luyện lỗi sai",
+    "weakTitle": "Hay sai",
+    "weakStats": "Sai {{wrong}} trên {{total}} lần trả lời",
+    "confusionsTitle": "Hay nhầm",
+    "versus": "nhầm với",
+    "confusedTimes_one": "{{count}} lần",
+    "confusedTimes_other": "{{count}} lần",
+    "empty": {
+      "title": "Chưa có gì để ôn",
+      "description": "Hãy chơi vài lượt trước: các mục sẽ quay lại đây khi đến hạn, và lỗi sai sẽ hiện ra để bạn sửa.",
+      "cta": "Chọn ngôn ngữ"
+    }
+  },
+  "progress": {
+    "title": "Tiến độ",
+    "streakLabel_one": "Chuỗi {{count}} ngày học",
+    "streakLabel_other": "Chuỗi {{count}} ngày học",
+    "xpLabel_one": "{{count}} XP",
+    "xpLabel_other": "{{count}} XP",
+    "totalXp": "Tổng XP",
+    "todayXp": "XP hôm nay",
+    "streak": "Chuỗi hiện tại",
+    "longest": "Chuỗi dài nhất",
+    "days_one": "{{count}} ngày",
+    "days_other": "{{count}} ngày",
+    "goalsTitle": "Mục tiêu hôm nay",
+    "goals": {
+      "LEARN_NEW_one": "Học {{count}} mục mới",
+      "LEARN_NEW_other": "Học {{count}} mục mới",
+      "REVIEW_one": "Ôn lại {{count}} mục đã học",
+      "REVIEW_other": "Ôn lại {{count}} mục đã học",
+      "PLAY_GAME_one": "Hoàn thành {{count}} lượt chơi",
+      "PLAY_GAME_other": "Hoàn thành {{count}} lượt chơi",
+      "PRACTICE_LANGUAGE_one": "Trả lời {{count}} câu {{language}}",
+      "PRACTICE_LANGUAGE_other": "Trả lời {{count}} câu {{language}}"
+    },
+    "goalNames": {
+      "LEARN_NEW": "học mục mới",
+      "REVIEW": "ôn bài",
+      "PLAY_GAME": "hoàn thành lượt chơi",
+      "PRACTICE_LANGUAGE": "luyện ngôn ngữ đang học"
+    },
+    "goalDone": "đã xong",
+    "goalProgress": "{{label}}: {{current}}/{{target}}",
+    "achievementsTitle": "Thành tích",
+    "unlockedOn": "Mở khoá ngày {{date}}",
+    "achievementProgress": "{{title}}: {{current}}/{{target}}"
+  },
+  "achievements": {
+    "FIRST_STEPS": {
+      "title": "Bước đầu tiên",
+      "description": "Hoàn thành lượt chơi đầu tiên."
+    },
+    "STREAK_7": {
+      "title": "Chuỗi 7 ngày",
+      "description": "Học 7 ngày liên tiếp."
+    },
+    "HIRAGANA_BEGINNER": {
+      "title": "Nhập môn Hiragana",
+      "description": "Trả lời đúng mỗi chữ Hiragana cơ bản ít nhất một lần."
+    },
+    "HIRAGANA_MASTER": {
+      "title": "Bậc thầy Hiragana",
+      "description": "Thuộc lòng toàn bộ Hiragana, kể cả âm đục và âm ghép."
+    },
+    "KATAKANA_BEGINNER": {
+      "title": "Nhập môn Katakana",
+      "description": "Trả lời đúng mỗi chữ Katakana cơ bản ít nhất một lần."
+    },
+    "HANGUL_BEGINNER": {
+      "title": "Nhập môn Hangul",
+      "description": "Trả lời đúng mọi phụ âm và nguyên âm Hangul cơ bản."
+    },
+    "POLYGLOT": {
+      "title": "Đa ngôn ngữ",
+      "description": "Học tất cả ngôn ngữ trên UnYoWo."
+    },
+    "SPEED_DEMON": {
+      "title": "Tia chớp",
+      "description": "Trả lời đúng 20 câu liên tiếp."
     }
   },
   "mascot": {

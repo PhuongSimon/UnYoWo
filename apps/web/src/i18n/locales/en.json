@@ -103,7 +103,8 @@
     "QUESTION_ALREADY_ANSWERED": "This question has already been answered.",
     "INVALID_ANSWER": "That answer couldn't be read. Please try again.",
     "ThrottlerException": "Too many requests. Please slow down.",
-    "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again."
+    "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again.",
+    "NO_MISTAKES": "No mistakes to practise in this language yet. Nice!"
   },
   "home": {
     "greeting": "Hi, {{name}} 👋",
@@ -129,7 +130,10 @@
         "title": "Practise every day",
         "description": "Read the examples aloud for 15 minutes a day — consistency beats long sessions."
       }
-    }
+    },
+    "shortcuts": "Shortcuts",
+    "reviewShortcut": "Due items and your mistakes",
+    "progressShortcut": "XP, streak and achievements"
   },
   "userMenu": {
     "open": "Open account menu",
@@ -326,6 +330,111 @@
     "expired": {
       "title": "This round has expired",
       "description": "Unfinished rounds are kept for an hour. Your answers were saved, so start a new round to keep going."
+    },
+    "rewards": {
+      "xp": "+{{xp}} XP",
+      "source": {
+        "ANSWER_one": "{{count}} correct answer",
+        "ANSWER_other": "{{count}} correct answers",
+        "SESSION_COMPLETE": "Round finished",
+        "PERFECT_SESSION": "Perfect round",
+        "DAILY_GOAL_one": "Daily goal",
+        "DAILY_GOAL_other": "{{count}} daily goals"
+      },
+      "goalDone": "Goal reached: {{goal}}",
+      "unlocked": "Achievement unlocked"
+    }
+  },
+  "review": {
+    "title": "Review",
+    "subtitle": "Items due today and the ones you keep getting wrong, for every language.",
+    "due_one": "{{count}} item is due",
+    "due_other": "{{count}} items are due",
+    "noneDue": "Nothing due right now",
+    "reviewDue": "Review due items",
+    "weak_one": "{{count}} item to fix",
+    "weak_other": "{{count}} items to fix",
+    "noneWeak": "No mistakes to fix",
+    "practiceMistakes": "Practise my mistakes",
+    "weakTitle": "Often missed",
+    "weakStats": "{{wrong}} wrong out of {{total}} answers",
+    "confusionsTitle": "Often mixed up",
+    "versus": "mixed up with",
+    "confusedTimes_one": "{{count}} time",
+    "confusedTimes_other": "{{count}} times",
+    "empty": {
+      "title": "Nothing to review yet",
+      "description": "Play a few rounds first: items come back here when they are due, and mistakes show up so you can fix them.",
+      "cta": "Choose a language"
+    }
+  },
+  "progress": {
+    "title": "Progress",
+    "streakLabel_one": "{{count}}-day streak",
+    "streakLabel_other": "{{count}}-day streak",
+    "xpLabel_one": "{{count}} XP",
+    "xpLabel_other": "{{count}} XP",
+    "totalXp": "Total XP",
+    "todayXp": "XP today",
+    "streak": "Current streak",
+    "longest": "Longest streak",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "goalsTitle": "Today's goals",
+    "goals": {
+      "LEARN_NEW_one": "Learn {{count}} new item",
+      "LEARN_NEW_other": "Learn {{count}} new items",
+      "REVIEW_one": "Review {{count}} item you've seen",
+      "REVIEW_other": "Review {{count}} items you've seen",
+      "PLAY_GAME_one": "Finish {{count}} round",
+      "PLAY_GAME_other": "Finish {{count}} rounds",
+      "PRACTICE_LANGUAGE_one": "Answer {{count}} question in {{language}}",
+      "PRACTICE_LANGUAGE_other": "Answer {{count}} questions in {{language}}"
+    },
+    "goalNames": {
+      "LEARN_NEW": "learn new items",
+      "REVIEW": "review",
+      "PLAY_GAME": "finish a round",
+      "PRACTICE_LANGUAGE": "practise your language"
+    },
+    "goalDone": "done",
+    "goalProgress": "{{label}}: {{current}} of {{target}}",
+    "achievementsTitle": "Achievements",
+    "unlockedOn": "Unlocked on {{date}}",
+    "achievementProgress": "{{title}}: {{current}} of {{target}}"
+  },
+  "achievements": {
+    "FIRST_STEPS": {
+      "title": "First steps",
+      "description": "Finish your first round."
+    },
+    "STREAK_7": {
+      "title": "7-day streak",
+      "description": "Study 7 days in a row."
+    },
+    "HIRAGANA_BEGINNER": {
+      "title": "Hiragana beginner",
+      "description": "Answer every basic hiragana correctly at least once."
+    },
+    "HIRAGANA_MASTER": {
+      "title": "Hiragana master",
+      "description": "Master every hiragana, including dakuten and combinations."
+    },
+    "KATAKANA_BEGINNER": {
+      "title": "Katakana beginner",
+      "description": "Answer every basic katakana correctly at least once."
+    },
+    "HANGUL_BEGINNER": {
+      "title": "Hangul beginner",
+      "description": "Answer every basic Hangul consonant and vowel correctly."
+    },
+    "POLYGLOT": {
+      "title": "Polyglot",
+      "description": "Study every language on UnYoWo."
+    },
+    "SPEED_DEMON": {
+      "title": "Speed demon",
+      "description": "Answer 20 questions correctly in a row."
     }
   },
   "mascot": {
