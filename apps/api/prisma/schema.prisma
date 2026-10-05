@@ -27,6 +27,10 @@ model User {
   itemProgress  UserItemProgress[]
   gameSessions  GameSession[]
   attempts      LearningAttempt[]
+  stats         UserStats?
+  dailyActivity UserDailyActivity[]
+  xpEvents      XpEvent[]
+  achievements  UserAchievement[]
 
   @@map("users")
 }
@@ -311,6 +315,8 @@ enum SessionSource {
   SET
   /// Items whose review time has passed, across a language
   DUE
+  /// Items the user keeps getting wrong, with their look-alikes as options
+  MISTAKES
 }
 
 enum SessionStatus {
@@ -384,4 +390,90 @@ model GameQuestion {
 
   @@unique([sessionId, position])
   @@map("game_questions")
+}
+
+// ─── Gamification ────────────────────────────────────────────────────────────
+
+/// One row per user; the totals the header and dashboard need without aggregating.
+model UserStats {
+  userId           String    @id @map("user_id") @db.Uuid
+  totalXp          Int       @default(0) @map("total_xp")
+  /// Days in a row with at least one answer, in the user's timezone
+  currentStreak    Int       @default(0) @map("current_streak")
+  longestStreak    Int       @default(0) @map("longest_streak")
+  lastStudyDate    DateTime? @map("last_study_date") @db.Date
+  /// Correct answers in a row across all games (for "Speed Demon")
+  answerStreak     Int       @default(0) @map("answer_streak")
+  bestAnswerStreak Int       @default(0) @map("best_answer_streak")
+  gamesCompleted   Int       @default(0) @map("games_completed")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_stats")
+}
+
+/// Counters per local day and language: daily goals and the "practice Japanese" goal read these.
+model UserDailyActivity {
+  userId         String   @map("user_id") @db.Uuid
+  /// The user's local date (see users.timezone)
+  activityDate   DateTime @map("activity_date") @db.Date
+  languageCode   String   @map("language_code")
+  xp             Int      @default(0)
+  attempts       Int      @default(0)
+  correct        Int      @default(0)
+  /// First answer ever on an item
+  newItems       Int      @default(0) @map("new_items")
+  /// Answers on items the user had already seen
+  reviews        Int      @default(0)
+  gamesCompleted Int      @default(0) @map("games_completed")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, activityDate, languageCode])
+  @@map("user_daily_activity")
+}
+
+enum XpSource {
+  ANSWER
+  SESSION_COMPLETE
+  PERFECT_SESSION
+  DAILY_GOAL
+}
+
+/// XP ledger. The unique key makes every reward idempotent: one XP per question,
+/// one bonus per session, one reward per goal per day.
+model XpEvent {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  amount       Int
+  source       XpSource
+  /// Question id, session id, or "2026-10-05:LEARN_NEW"
+  sourceKey    String   @map("source_key")
+  /// The session that earned it, so its results screen can list the rewards
+  sessionId    String?  @map("session_id") @db.Uuid
+  languageCode String?  @map("language_code")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, source, sourceKey])
+  @@index([userId, createdAt])
+  @@index([sessionId])
+  @@map("xp_events")
+}
+
+/// Achievement definitions live in code (gamification/achievements.ts); this stores who unlocked what.
+model UserAchievement {
+  userId         String   @map("user_id") @db.Uuid
+  achievementKey String   @map("achievement_key")
+  /// The session that unlocked it, if any
+  sessionId      String?  @map("session_id") @db.Uuid
+  unlockedAt     DateTime @default(now()) @map("unlocked_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, achievementKey])
+  @@index([sessionId])
+  @@map("user_achievements")
 }
