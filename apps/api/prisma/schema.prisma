@@ -308,6 +308,9 @@ enum GameType {
   MULTIPLE_CHOICE
   MATCHING
   TYPING
+  LISTENING
+  SPEED
+  BUILDER
 }
 
 enum SessionSource {
@@ -332,28 +335,37 @@ enum QuestionKind {
   TEXT_TO_MEANING
   MEANING_TO_TEXT
   EMOJI_TO_TEXT
+  /// Hear the item, pick what it is (さ) or what it means (quả táo)
+  AUDIO_TO_TEXT
+  AUDIO_TO_MEANING
+  /// Pick the parts of a syllable in order: g + o + k → 곡
+  BUILD
 }
 
 /// Questions and their answers are generated and kept by the server; the client
 /// only ever submits a choice. An ACTIVE session past expires_at counts as expired.
 model GameSession {
-  id             String        @id @default(uuid()) @db.Uuid
-  userId         String        @map("user_id") @db.Uuid
-  gameType       GameType      @map("game_type")
-  languageCode   String        @map("language_code")
-  source         SessionSource
-  setId          String?       @map("set_id") @db.Uuid
+  id               String        @id @default(uuid()) @db.Uuid
+  userId           String        @map("user_id") @db.Uuid
+  gameType         GameType      @map("game_type")
+  languageCode     String        @map("language_code")
+  source           SessionSource
+  setId            String?       @map("set_id") @db.Uuid
   /// UI language the meanings were generated in (en / vi)
-  locale         String
-  status         SessionStatus @default(ACTIVE)
-  startedAt      DateTime      @default(now()) @map("started_at")
-  expiresAt      DateTime      @map("expires_at")
-  completedAt    DateTime?     @map("completed_at")
+  locale           String
+  status           SessionStatus @default(ACTIVE)
+  startedAt        DateTime      @default(now()) @map("started_at")
+  /// Timed games (Speed Challenge): length of the round
+  timeLimitSeconds Int?          @map("time_limit_seconds")
+  /// Set when the player presses Start; answers after start + limit are refused
+  timerStartedAt   DateTime?     @map("timer_started_at")
+  expiresAt        DateTime      @map("expires_at")
+  completedAt      DateTime?     @map("completed_at")
   /// Snapshot written once on completion
-  score          Int           @default(0)
-  correctCount   Int           @default(0) @map("correct_count")
-  incorrectCount Int           @default(0) @map("incorrect_count")
-  maxCombo       Int           @default(0) @map("max_combo")
+  score            Int           @default(0)
+  correctCount     Int           @default(0) @map("correct_count")
+  incorrectCount   Int           @default(0) @map("incorrect_count")
+  maxCombo         Int           @default(0) @map("max_combo")
 
   user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   language  Language          @relation(fields: [languageCode], references: [code])
@@ -379,6 +391,8 @@ model GameQuestion {
   correctOptionId String?      @map("correct_option_id")
   /// Typing: every spelling that counts as right (Apfel, der Apfel; さくら, sakura). Never sent to the client.
   acceptedAnswers String[]     @default([]) @map("accepted_answers")
+  /// Listening: a recorded clip when the item has one; otherwise the client uses speech synthesis
+  audioUrl        String?      @map("audio_url")
   /// Full item details shown after answering (or on the back of a flashcard)
   reveal          Json
   answeredAt      DateTime?    @map("answered_at")
