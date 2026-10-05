@@ -5,13 +5,13 @@ import BunnyMascot from '@/components/BunnyMascot'
 import Button from '@/components/ui/Button'
 import DotsLoader from '@/components/ui/DotsLoader'
 
-export function LoadingState() {
+export function LoadingState({ label }: { label?: string }) {
   const { t } = useTranslation()
 
   return (
     <div role="status" className="flex flex-col items-center justify-center gap-4 py-24 text-muted">
       <DotsLoader />
-      <p className="text-sm">{t('learn.loading')}</p>
+      <p className="text-sm">{label ?? t('learn.loading')}</p>
     </div>
   )
 }

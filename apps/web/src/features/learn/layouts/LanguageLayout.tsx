@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, AudioLines, BookOpen, Compass, PenLine } from 'lucide-react'
+import { ArrowLeft, AudioLines, BookOpen, Compass, Gamepad2, PenLine } from 'lucide-react'
 import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet, useLocation, useParams } from 'react-router'
@@ -46,6 +46,7 @@ function LanguageShell({ language }: { language: StudyLanguage }) {
     { to: 'writing', end: false, Icon: PenLine, label: loc(language.writingLabel) },
     { to: 'pronunciation', end: false, Icon: AudioLines, label: t('learn.tabs.pronunciation') },
     { to: 'grammar', end: false, Icon: BookOpen, label: t('learn.tabs.grammar') },
+    { to: 'practice', end: false, Icon: Gamepad2, label: t('learn.tabs.practice') },
   ]
 
   return (

@@ -15,6 +15,8 @@ import HomePage from '@/features/learn/pages/HomePage'
 import OverviewPage from '@/features/learn/pages/OverviewPage'
 import PronunciationPage from '@/features/learn/pages/PronunciationPage'
 import WritingPage from '@/features/learn/pages/WritingPage'
+import PlayPage from '@/features/practice/pages/PlayPage'
+import PracticeHubPage from '@/features/practice/pages/PracticeHubPage'
 import AppLayout from '@/layouts/AppLayout'
 import NotFoundPage from '@/pages/NotFoundPage'
 
@@ -44,6 +46,7 @@ export const router = createBrowserRouter([
         element: <AppLayout />,
         children: [
           { index: true, element: <HomePage /> },
+          { path: 'play/:sessionId', element: <PlayPage /> },
           {
             path: ':lang',
             element: <LanguageLayout />,
@@ -53,6 +56,7 @@ export const router = createBrowserRouter([
               { path: 'pronunciation', element: <PronunciationPage /> },
               { path: 'grammar', element: <GrammarListPage /> },
               { path: 'grammar/:topicId', element: <GrammarTopicPage /> },
+              { path: 'practice', element: <PracticeHubPage /> },
               { path: '*', element: <NotFoundState /> },
             ],
           },
