@@ -94,6 +94,14 @@
     "UNAUTHORIZED": "Please sign in to continue.",
     "LANGUAGE_NOT_FOUND": "This language isn't available.",
     "SET_NOT_FOUND": "This lesson set doesn't exist.",
+    "NOT_ENOUGH_ITEMS": "There aren't enough items in this set to make a game yet.",
+    "NOTHING_TO_REVIEW": "Nothing is due for review right now.",
+    "GAME_SESSION_NOT_FOUND": "This game doesn't exist.",
+    "GAME_SESSION_EXPIRED": "This round has expired. Start a new one.",
+    "GAME_SESSION_COMPLETED": "This round is already finished.",
+    "QUESTION_NOT_FOUND": "This question isn't part of the round.",
+    "QUESTION_ALREADY_ANSWERED": "This question has already been answered.",
+    "INVALID_ANSWER": "That answer couldn't be read. Please try again.",
     "ThrottlerException": "Too many requests. Please slow down.",
     "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again."
   },
@@ -140,7 +148,8 @@
     "tabs": {
       "overview": "Overview",
       "pronunciation": "Pronunciation",
-      "grammar": "Grammar"
+      "grammar": "Grammar",
+      "practice": "Practice"
     },
     "notFound": {
       "title": "Nothing here yet",
@@ -200,6 +209,90 @@
       "final": "Final consonant (batchim)",
       "none": "None",
       "romanization": "Romanization"
+    }
+  },
+  "practice": {
+    "loading": "Getting your questions ready…",
+    "review": {
+      "title": "Review",
+      "due_one": "{{count}} item is due for review.",
+      "due_other": "{{count}} items are due for review.",
+      "none": "Nothing to review right now. Items you practise come back here when it's time.",
+      "start": "Review now"
+    },
+    "sections": {
+      "alphabet": "Writing system",
+      "vocabulary": "Vocabulary"
+    },
+    "set": {
+      "items_one": "{{count}} item",
+      "items_other": "{{count}} items",
+      "mastered_one": "{{count}} mastered",
+      "mastered_other": "{{count}} mastered",
+      "due_one": "{{count}} due",
+      "due_other": "{{count}} due",
+      "seen": "{{seen}}/{{total}} practised",
+      "progressLabel": "Progress in {{title}}"
+    },
+    "games": {
+      "FLASHCARD": "Flashcards",
+      "MULTIPLE_CHOICE": "Quiz"
+    },
+    "start": "{{game}}: {{title}}",
+    "quit": "Leave the game (you can come back to it)",
+    "progress": "{{current}} of {{total}} answered",
+    "combo_one": "{{count}} correct in a row",
+    "combo_other": "{{count}} correct in a row",
+    "prompt": {
+      "FLASHCARD": "Do you remember this?",
+      "TEXT_TO_ROMANIZATION": "How do you read this?",
+      "ROMANIZATION_TO_TEXT": "Which one is it?",
+      "TEXT_TO_MEANING": "What does this mean?",
+      "MEANING_TO_TEXT": "Which word means this?",
+      "EMOJI_TO_TEXT": "Which word fits the picture?"
+    },
+    "optionCorrect": "correct answer",
+    "optionYours": "your answer",
+    "correct": "Correct!",
+    "incorrect": "Not quite",
+    "next": "Next",
+    "finish": "See results",
+    "showAnswer": "Show answer",
+    "rate": "How well did you remember it?",
+    "rating": {
+      "AGAIN": "Again",
+      "HARD": "Hard",
+      "GOOD": "Good",
+      "EASY": "Easy"
+    },
+    "ratingHint": {
+      "AGAIN": "Forgot",
+      "HARD": "With effort",
+      "GOOD": "Remembered",
+      "EASY": "Instantly"
+    },
+    "hint": {
+      "FLASHCARD": "Keyboard: Space shows the answer, 1–4 rates it.",
+      "MULTIPLE_CHOICE": "Keyboard: 1–4 picks an answer, Enter continues."
+    },
+    "sendFailed": "Your answer couldn't be saved. Check your connection and try again.",
+    "completeFailed": "Your results couldn't be saved. Check your connection and try again.",
+    "completing": "Saving your results…",
+    "retry": "Try again",
+    "result": {
+      "title": "Round complete!",
+      "score": "points",
+      "correct": "Correct",
+      "accuracy": "Accuracy",
+      "bestCombo": "Best streak",
+      "time": "Time",
+      "partial": "You answered {{answered}} of {{total}} questions.",
+      "playAgain": "Play again",
+      "back": "Back to practice"
+    },
+    "expired": {
+      "title": "This round has expired",
+      "description": "Unfinished rounds are kept for an hour. Your answers were saved, so start a new round to keep going."
     }
   },
   "mascot": {

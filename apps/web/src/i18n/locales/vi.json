@@ -94,6 +94,14 @@
     "UNAUTHORIZED": "Vui lòng đăng nhập để tiếp tục.",
     "LANGUAGE_NOT_FOUND": "Ngôn ngữ này chưa được hỗ trợ.",
     "SET_NOT_FOUND": "Bộ bài học này không tồn tại.",
+    "NOT_ENOUGH_ITEMS": "Bộ này chưa đủ mục để tạo trò chơi.",
+    "NOTHING_TO_REVIEW": "Hiện chưa có gì cần ôn.",
+    "GAME_SESSION_NOT_FOUND": "Trò chơi này không tồn tại.",
+    "GAME_SESSION_EXPIRED": "Lượt chơi đã hết hạn. Hãy bắt đầu lượt mới.",
+    "GAME_SESSION_COMPLETED": "Lượt chơi này đã kết thúc.",
+    "QUESTION_NOT_FOUND": "Câu hỏi không thuộc lượt chơi này.",
+    "QUESTION_ALREADY_ANSWERED": "Câu hỏi này đã được trả lời.",
+    "INVALID_ANSWER": "Không đọc được câu trả lời. Vui lòng thử lại.",
     "ThrottlerException": "Bạn thao tác quá nhanh. Vui lòng thử lại sau.",
     "NETWORK_ERROR": "Không kết nối được máy chủ. Vui lòng kiểm tra mạng và thử lại."
   },
@@ -140,7 +148,8 @@
     "tabs": {
       "overview": "Tổng quan",
       "pronunciation": "Phát âm",
-      "grammar": "Ngữ pháp"
+      "grammar": "Ngữ pháp",
+      "practice": "Luyện tập"
     },
     "notFound": {
       "title": "Chưa có gì ở đây",
@@ -200,6 +209,90 @@
       "final": "Phụ âm cuối (patchim)",
       "none": "Không",
       "romanization": "Phiên âm"
+    }
+  },
+  "practice": {
+    "loading": "Đang chuẩn bị câu hỏi…",
+    "review": {
+      "title": "Ôn tập",
+      "due_one": "Có {{count}} mục cần ôn.",
+      "due_other": "Có {{count}} mục cần ôn.",
+      "none": "Hiện chưa có gì cần ôn. Những gì bạn đã luyện sẽ quay lại đây khi đến lúc.",
+      "start": "Ôn ngay"
+    },
+    "sections": {
+      "alphabet": "Chữ viết",
+      "vocabulary": "Từ vựng"
+    },
+    "set": {
+      "items_one": "{{count}} mục",
+      "items_other": "{{count}} mục",
+      "mastered_one": "{{count}} đã thuộc",
+      "mastered_other": "{{count}} đã thuộc",
+      "due_one": "{{count}} cần ôn",
+      "due_other": "{{count}} cần ôn",
+      "seen": "Đã luyện {{seen}}/{{total}}",
+      "progressLabel": "Tiến độ {{title}}"
+    },
+    "games": {
+      "FLASHCARD": "Thẻ ghi nhớ",
+      "MULTIPLE_CHOICE": "Trắc nghiệm"
+    },
+    "start": "{{game}}: {{title}}",
+    "quit": "Rời trò chơi (bạn có thể quay lại sau)",
+    "progress": "Đã trả lời {{current}}/{{total}}",
+    "combo_one": "Đúng {{count}} câu liên tiếp",
+    "combo_other": "Đúng {{count}} câu liên tiếp",
+    "prompt": {
+      "FLASHCARD": "Bạn có nhớ chữ này không?",
+      "TEXT_TO_ROMANIZATION": "Chữ này đọc là gì?",
+      "ROMANIZATION_TO_TEXT": "Chữ nào đọc như thế này?",
+      "TEXT_TO_MEANING": "Từ này nghĩa là gì?",
+      "MEANING_TO_TEXT": "Từ nào có nghĩa này?",
+      "EMOJI_TO_TEXT": "Từ nào hợp với hình?"
+    },
+    "optionCorrect": "đáp án đúng",
+    "optionYours": "bạn đã chọn",
+    "correct": "Chính xác!",
+    "incorrect": "Chưa đúng",
+    "next": "Tiếp tục",
+    "finish": "Xem kết quả",
+    "showAnswer": "Xem đáp án",
+    "rate": "Bạn nhớ chữ này đến đâu?",
+    "rating": {
+      "AGAIN": "Quên",
+      "HARD": "Khó",
+      "GOOD": "Nhớ",
+      "EASY": "Dễ"
+    },
+    "ratingHint": {
+      "AGAIN": "Học lại",
+      "HARD": "Phải nghĩ lâu",
+      "GOOD": "Nhớ ra",
+      "EASY": "Nhớ ngay"
+    },
+    "hint": {
+      "FLASHCARD": "Bàn phím: Space để xem đáp án, 1–4 để đánh giá.",
+      "MULTIPLE_CHOICE": "Bàn phím: 1–4 để chọn đáp án, Enter để tiếp tục."
+    },
+    "sendFailed": "Chưa lưu được câu trả lời. Kiểm tra kết nối rồi thử lại.",
+    "completeFailed": "Chưa lưu được kết quả. Kiểm tra kết nối rồi thử lại.",
+    "completing": "Đang lưu kết quả…",
+    "retry": "Thử lại",
+    "result": {
+      "title": "Hoàn thành lượt chơi!",
+      "score": "điểm",
+      "correct": "Trả lời đúng",
+      "accuracy": "Độ chính xác",
+      "bestCombo": "Chuỗi đúng dài nhất",
+      "time": "Thời gian",
+      "partial": "Bạn đã trả lời {{answered}}/{{total}} câu.",
+      "playAgain": "Chơi lại",
+      "back": "Về trang luyện tập"
+    },
+    "expired": {
+      "title": "Lượt chơi này đã hết hạn",
+      "description": "Lượt chơi dở được giữ trong một giờ. Câu trả lời của bạn đã được lưu, hãy bắt đầu lượt mới để học tiếp."
     }
   },
   "mascot": {
