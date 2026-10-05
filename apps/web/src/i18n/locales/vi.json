@@ -236,7 +236,9 @@
     },
     "games": {
       "FLASHCARD": "Thẻ ghi nhớ",
-      "MULTIPLE_CHOICE": "Trắc nghiệm"
+      "MULTIPLE_CHOICE": "Trắc nghiệm",
+      "MATCHING": "Nối cặp",
+      "TYPING": "Gõ đáp án"
     },
     "start": "{{game}}: {{title}}",
     "quit": "Rời trò chơi (bạn có thể quay lại sau)",
@@ -273,7 +275,36 @@
     },
     "hint": {
       "FLASHCARD": "Bàn phím: Space để xem đáp án, 1–4 để đánh giá.",
-      "MULTIPLE_CHOICE": "Bàn phím: 1–4 để chọn đáp án, Enter để tiếp tục."
+      "MULTIPLE_CHOICE": "Bàn phím: 1–4 để chọn đáp án, Enter để tiếp tục.",
+      "MATCHING": "Bàn phím: 1–6 chọn bên trái, A–F chọn bên phải.",
+      "TYPING": "Bàn phím: Enter để kiểm tra, Enter lần nữa để tiếp tục."
+    },
+    "matching": {
+      "instructions": "Chạm một thẻ mỗi bên để ghép thành cặp.",
+      "prompts": "Câu hỏi",
+      "cards": "Đáp án",
+      "matched": "đã ghép",
+      "miss": "Không phải một cặp. Thử lại nhé!",
+      "mistakes_one": "Ghép sai {{count}} lần",
+      "mistakes_other": "Ghép sai {{count}} lần"
+    },
+    "typing": {
+      "prompt": {
+        "TEXT_TO_ROMANIZATION": "Gõ cách đọc của chữ này",
+        "MEANING_TO_TEXT": "Gõ từ có nghĩa này",
+        "EMOJI_TO_TEXT": "Gõ từ hợp với hình"
+      },
+      "label": "Câu trả lời của bạn",
+      "placeholder": "Gõ câu trả lời…",
+      "submit": "Kiểm tra",
+      "dontKnow": "Tôi không biết",
+      "yourAnswer": "Bạn đã gõ: {{answer}}",
+      "skipped": "Bạn đã bỏ qua câu này.",
+      "hint": {
+        "de": "Có thể gõ kèm mạo từ, ví dụ: der Apfel.",
+        "ja": "Gõ bằng kanji, kana hay romaji đều được, ví dụ: さくら hoặc sakura.",
+        "ko": "Gõ bằng Hangul hay chữ Latin đều được, ví dụ: 사과 hoặc sagwa."
+      }
     },
     "sendFailed": "Chưa lưu được câu trả lời. Kiểm tra kết nối rồi thử lại.",
     "completeFailed": "Chưa lưu được kết quả. Kiểm tra kết nối rồi thử lại.",
@@ -288,7 +319,9 @@
       "time": "Thời gian",
       "partial": "Bạn đã trả lời {{answered}}/{{total}} câu.",
       "playAgain": "Chơi lại",
-      "back": "Về trang luyện tập"
+      "back": "Về trang luyện tập",
+      "pairs": "Số cặp đã ghép",
+      "mistakes": "Ghép sai"
     },
     "expired": {
       "title": "Lượt chơi này đã hết hạn",

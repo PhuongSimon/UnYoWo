@@ -236,7 +236,9 @@
     },
     "games": {
       "FLASHCARD": "Flashcards",
-      "MULTIPLE_CHOICE": "Quiz"
+      "MULTIPLE_CHOICE": "Quiz",
+      "MATCHING": "Matching",
+      "TYPING": "Typing"
     },
     "start": "{{game}}: {{title}}",
     "quit": "Leave the game (you can come back to it)",
@@ -273,7 +275,36 @@
     },
     "hint": {
       "FLASHCARD": "Keyboard: Space shows the answer, 1–4 rates it.",
-      "MULTIPLE_CHOICE": "Keyboard: 1–4 picks an answer, Enter continues."
+      "MULTIPLE_CHOICE": "Keyboard: 1–4 picks an answer, Enter continues.",
+      "MATCHING": "Keyboard: 1–6 picks a prompt, A–F picks its match.",
+      "TYPING": "Keyboard: Enter checks your answer, then Enter continues."
+    },
+    "matching": {
+      "instructions": "Tap a card on each side to make a pair.",
+      "prompts": "Prompts",
+      "cards": "Matches",
+      "matched": "matched",
+      "miss": "Not a pair. Try again!",
+      "mistakes_one": "{{count}} wrong pair",
+      "mistakes_other": "{{count}} wrong pairs"
+    },
+    "typing": {
+      "prompt": {
+        "TEXT_TO_ROMANIZATION": "Type how you read this",
+        "MEANING_TO_TEXT": "Type the word that means this",
+        "EMOJI_TO_TEXT": "Type the word for this picture"
+      },
+      "label": "Your answer",
+      "placeholder": "Type your answer…",
+      "submit": "Check",
+      "dontKnow": "I don't know",
+      "yourAnswer": "You typed: {{answer}}",
+      "skipped": "You skipped this one.",
+      "hint": {
+        "de": "You can add the article too, e.g. der Apfel.",
+        "ja": "Kanji, kana or romaji all count, e.g. さくら or sakura.",
+        "ko": "Hangul or romanization both count, e.g. 사과 or sagwa."
+      }
     },
     "sendFailed": "Your answer couldn't be saved. Check your connection and try again.",
     "completeFailed": "Your results couldn't be saved. Check your connection and try again.",
@@ -288,7 +319,9 @@
       "time": "Time",
       "partial": "You answered {{answered}} of {{total}} questions.",
       "playAgain": "Play again",
-      "back": "Back to practice"
+      "back": "Back to practice",
+      "pairs": "Pairs found",
+      "mistakes": "Wrong pairs"
     },
     "expired": {
       "title": "This round has expired",
