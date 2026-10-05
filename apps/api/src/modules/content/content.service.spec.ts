@@ -49,6 +49,9 @@ class InMemoryContentRepository extends ContentRepository {
   async findItems(_setId: string, { skip, take }: { skip: number; take: number }) {
     return { items: this.items.slice(skip, skip + take), total: this.items.length };
   }
+  async findPracticeItems() {
+    return [];
+  }
   async countSetProgress(userId: string, languageCode: string) {
     this.progressCalls.push({ userId, languageCode });
     return this.progress;

@@ -48,6 +48,22 @@ export interface LearningItemView {
   components: { role: ComponentRole; text: string }[];
 }
 
+/** An item with everything a game needs to build a question about it. */
+export interface PracticeItem {
+  id: string;
+  setId: string;
+  languageCode: string;
+  type: LearningItemType;
+  text: string;
+  reading: string | null;
+  romanization: string | null;
+  meaning: Localized | null;
+  emoji: string | null;
+  sortOrder: number;
+  /** Curated look-alikes, preferred as wrong options */
+  confusableIds: string[];
+}
+
 export interface Page<T> {
   items: T[];
   page: number;

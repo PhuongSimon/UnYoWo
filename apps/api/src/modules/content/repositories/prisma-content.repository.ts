@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import type { Prisma } from '../../../generated/prisma/client.js';
 import { TransactionHost } from '../../../infrastructure/database/transaction-host.js';
 import { MASTERED_LEVEL } from '../../progress/mastery.js';
-import type { LanguageSummary, LearningItemView, LearningSetSummary, Localized, SetProgress } from '../entities/content.entity.js';
+import type { LanguageSummary, LearningItemView, LearningSetSummary, Localized, PracticeItem, SetProgress } from '../entities/content.entity.js';
 import { ContentRepository } from './content.repository.js';
 
 const setSelect = {
@@ -101,6 +101,33 @@ export class PrismaContentRepository extends ContentRepository {
       attributes: toAttributes(attributes),
     }));
     return { items, total };
+  }
+
+  async findPracticeItems(filter: { setIds: string[] } | { ids: string[] }): Promise<PracticeItem[]> {
+    const rows = await this.db.learningItem.findMany({
+      where: 'ids' in filter ? { id: { in: filter.ids } } : { setId: { in: filter.setIds } },
+      orderBy: { sortOrder: 'asc' },
+      select: {
+        id: true,
+        setId: true,
+        type: true,
+        text: true,
+        reading: true,
+        romanization: true,
+        sortOrder: true,
+        set: { select: { languageCode: true } },
+        concept: { select: { gloss: true, emoji: true } },
+        relations: { where: { kind: 'CONFUSABLE' }, select: { relatedItemId: true } },
+      },
+    });
+
+    return rows.map(({ set, concept, relations, ...item }) => ({
+      ...item,
+      languageCode: set.languageCode,
+      meaning: concept ? toLocalized(concept.gloss) : null,
+      emoji: concept?.emoji ?? null,
+      confusableIds: relations.map((relation) => relation.relatedItemId),
+    }));
   }
 
   // Prisma's groupBy cannot group by a relation's column (item → set), so this one is SQL.

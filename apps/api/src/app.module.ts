@@ -6,6 +6,7 @@ import { validateEnv } from './config/env.validation.js';
 import { PrismaModule } from './infrastructure/database/prisma.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { ContentModule } from './modules/content/content.module.js';
+import { GamesModule } from './modules/games/games.module.js';
 import { HealthModule } from './modules/health/health.module.js';
 
 @Module({
@@ -16,6 +17,7 @@ import { HealthModule } from './modules/health/health.module.js';
     HealthModule,
     AuthModule,
     ContentModule,
+    GamesModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

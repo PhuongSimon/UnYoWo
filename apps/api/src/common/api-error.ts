@@ -14,7 +14,15 @@ export type ErrorCode =
   | 'SESSION_EXPIRED'
   | 'UNAUTHORIZED'
   | 'LANGUAGE_NOT_FOUND'
-  | 'SET_NOT_FOUND';
+  | 'SET_NOT_FOUND'
+  | 'NOT_ENOUGH_ITEMS'
+  | 'NOTHING_TO_REVIEW'
+  | 'GAME_SESSION_NOT_FOUND'
+  | 'GAME_SESSION_EXPIRED'
+  | 'GAME_SESSION_COMPLETED'
+  | 'QUESTION_NOT_FOUND'
+  | 'QUESTION_ALREADY_ANSWERED'
+  | 'INVALID_ANSWER';
 
 /**
  * Every error the API returns has a stable `code` the web app can translate:
