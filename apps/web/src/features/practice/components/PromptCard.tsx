@@ -1,12 +1,15 @@
-import { useId, type ReactNode } from 'react'
+import { useId, useMemo, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useUiLanguage } from '@/features/learn/hooks/useLocalized'
 import { fieldLang, PROMPT_FIELD } from '../games/question-fields'
 import type { Question } from '../types'
+import AudioPrompt from './AudioPrompt'
 
 interface PromptCardProps {
   question: Question
   studyLang: string
+  /** Voice for listening questions; defaults to the study language */
+  speechLang?: string
   /** Replaces the default question for this kind, e.g. "Type the word…" in the typing game */
   instruction?: string
   children?: ReactNode
@@ -19,11 +22,14 @@ function promptSize(field: string, prompt: string) {
   return [...prompt].length <= 2 ? 'text-7xl font-bold sm:text-8xl' : 'text-4xl font-bold sm:text-5xl'
 }
 
-function PromptCard({ question, studyLang, instruction, children }: PromptCardProps) {
+function PromptCard({ question, studyLang, speechLang, instruction, children }: PromptCardProps) {
   const { t } = useTranslation()
   const uiLang = useUiLanguage()
   const headingId = useId()
   const field = PROMPT_FIELD[question.kind]
+  const { prompt, audioUrl } = question
+  // Memoised so a re-render does not replay the clip.
+  const clip = useMemo(() => ({ url: audioUrl, text: prompt, lang: speechLang ?? studyLang }), [audioUrl, prompt, speechLang, studyLang])
 
   return (
     <section
@@ -33,9 +39,13 @@ function PromptCard({ question, studyLang, instruction, children }: PromptCardPr
       <h2 id={headingId} className="text-sm font-semibold text-muted">
         {instruction ?? t(`practice.prompt.${question.kind}`)}
       </h2>
-      <p lang={fieldLang(field, studyLang, uiLang)} className={`mt-3 leading-tight break-words ${promptSize(field, question.prompt)}`}>
-        {question.prompt}
-      </p>
+      {field === 'audio' ? (
+        <AudioPrompt clip={clip} />
+      ) : (
+        <p lang={fieldLang(field, studyLang, uiLang)} className={`mt-3 leading-tight break-words ${promptSize(field, question.prompt)}`}>
+          {question.prompt}
+        </p>
+      )}
       {children}
     </section>
   )

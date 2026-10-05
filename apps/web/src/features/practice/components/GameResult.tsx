@@ -1,4 +1,4 @@
-import { ArrowLeft, RotateCcw } from 'lucide-react'
+import { ArrowLeft, RotateCcw, Trophy } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import BunnyMascot from '@/components/BunnyMascot'
@@ -44,6 +44,18 @@ function GameResult({ gameType, summary, backTo, starting, onPlayAgain }: GameRe
 
       <p className="mt-5 text-6xl font-extrabold text-accent tabular-nums motion-safe:animate-fade-in">{summary.score}</p>
       <p className="text-sm font-semibold text-muted">{t('practice.result.score')}</p>
+      {summary.personalBest && (
+        <p
+          className={`mt-2 flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-bold ${
+            summary.personalBest.isNewBest ? 'bg-secondary-400 text-secondary-950 motion-safe:animate-fade-in' : 'text-muted'
+          }`}
+        >
+          <Trophy size={16} aria-hidden="true" />
+          {summary.personalBest.isNewBest
+            ? t('practice.result.newBest')
+            : t('practice.result.best', { score: summary.personalBest.previous ?? 0 })}
+        </p>
+      )}
 
       <dl className="mt-6 grid w-full grid-cols-2 gap-3">
         {stats.map(({ label, value }) => (

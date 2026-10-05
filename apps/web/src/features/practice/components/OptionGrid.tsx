@@ -28,7 +28,10 @@ function OptionGrid({ question, studyLang, pendingId, disabled, onSelect }: Opti
   const { t } = useTranslation()
   const uiLang = useUiLanguage()
   const result = question.result
-  const lang = fieldLang(ANSWER_FIELD[question.kind], studyLang, uiLang)
+  const answerField = ANSWER_FIELD[question.kind]
+  const lang = fieldLang(answerField, studyLang, uiLang)
+  // A lone kana or jamo is hard to read at word size.
+  const glyphSize = (text: string) => (answerField === 'text' && [...text].length <= 2 ? 'text-3xl sm:text-4xl' : '')
 
   const stateOf = (optionId: string): OptionState => {
     if (result) {
@@ -58,7 +61,7 @@ function OptionGrid({ question, studyLang, pendingId, disabled, onSelect }: Opti
               </kbd>
               {state === 'correct' && <Check size={20} strokeWidth={3} aria-hidden="true" className="shrink-0" />}
               {state === 'wrong' && <X size={20} strokeWidth={3} aria-hidden="true" className="shrink-0" />}
-              <span lang={lang} className="break-words">
+              <span lang={lang} className={`break-words ${glyphSize(option.text)}`}>
                 {option.text}
               </span>
               {state === 'correct' && <span className="sr-only">({t('practice.optionCorrect')})</span>}

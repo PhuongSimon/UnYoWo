@@ -1,4 +1,4 @@
-import type { AnswerInput, AnswerResult, GameSession, Question, SessionSummary } from '../types'
+import type { AnswerInput, AnswerResult, GameSession, Question, SessionSummary, SessionTimer } from '../types'
 import type { SessionAction } from './session-sync'
 
 export type PendingAnswer = AnswerInput & { questionId: string; idempotencyKey: string; responseMs: number }
@@ -7,15 +7,25 @@ interface InGame {
   session: GameSession
   /** Correct answers in a row */
   combo: number
+  /** Timed games: the clock ran out while an answer was on its way; finish once it lands */
+  timeUp: boolean
+}
+
+/** The verdict of the last answer in a game that does not stop for feedback (Speed Challenge). */
+export interface Flash {
+  questionId: string
+  isCorrect: boolean
 }
 
 /**
  * One explicit status instead of isLoading/isAnswered/isFinished flags:
- * playing → answering → answered → playing … → completing → completed.
+ * (ready →) playing → answering → answered → playing … → completing → completed.
  * A failed request keeps its status (with `failed`) so nothing the user did is lost.
  */
 export type GameState =
-  | (InGame & { status: 'playing'; index: number; revealed: boolean })
+  /** A timed game waiting for the player to press Start */
+  | (InGame & { status: 'ready' })
+  | (InGame & { status: 'playing'; index: number; revealed: boolean; flash: Flash | null })
   | (InGame & { status: 'answering'; index: number; answer: PendingAnswer; failed: boolean })
   | (InGame & { status: 'answered'; index: number; xpGained: number })
   | (InGame & { status: 'completing'; failed: boolean })
@@ -26,6 +36,7 @@ export type QuestionState = Extract<GameState, { index: number }>
 
 export type GameAction =
   | SessionAction
+  | { type: 'TIMER_STARTED'; timer: SessionTimer }
   | { type: 'REVEALED' }
   | { type: 'ANSWER_SENT'; answer: PendingAnswer }
   | { type: 'ANSWER_SUCCEEDED'; result: AnswerResult }
@@ -33,20 +44,29 @@ export type GameAction =
   | { type: 'RETRY' }
   | { type: 'NEXT' }
 
+/** Games that move on right after an answer instead of showing feedback first. */
+const answersWithoutStopping = (session: GameSession, question: Question) =>
+  question.kind === 'FLASHCARD' || session.gameType === 'SPEED'
+
 const nextUnanswered = (questions: Question[], from: number) => questions.findIndex((q, i) => i >= from && !q.result)
 
-function moveTo(session: GameSession, combo: number, from: number): GameState {
-  const index = nextUnanswered(session.questions, from)
+function moveTo(session: GameSession, combo: number, from: number, flash: Flash | null = null, timeUp = false): GameState {
+  const index = timeUp ? -1 : nextUnanswered(session.questions, from)
   return index === -1
-    ? { status: 'completing', session, combo, failed: false }
-    : { status: 'playing', session, combo, index, revealed: false }
+    ? { status: 'completing', session, combo, timeUp, failed: false }
+    : { status: 'playing', session, combo, timeUp, index, revealed: false, flash }
 }
 
-/** Where a loaded (or resumed) session starts: at its first unanswered question. */
+/** Where a loaded (or resumed) session starts: at its first unanswered question, or the Start screen. */
 export function initGame(session: GameSession): GameState {
   if (session.status === 'COMPLETED' && session.summary) return { status: 'completed', session, summary: session.summary }
   if (session.status === 'EXPIRED') return { status: 'expired', session }
-  return moveTo(session, session.stats.combo, 0)
+
+  const { timer } = session
+  if (timer && !timer.startedAt) return { status: 'ready', session, combo: 0, timeUp: false }
+  // Reloaded after the clock ran out: nothing left to answer.
+  const ranOut = timer?.deadline ? Date.parse(timer.deadline) <= Date.parse(session.serverNow) : false
+  return moveTo(session, session.stats.combo, 0, null, ranOut)
 }
 
 function answered(question: Question, answer: AnswerInput, result: AnswerResult): Question {
@@ -76,26 +96,52 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'SYNCED':
       return initGame(action.session)
 
+    case 'TIMER_STARTED':
+      return state.status === 'ready' ? moveTo({ ...state.session, timer: action.timer }, 0, 0) : state
+
+    case 'TIME_UP':
+      if (state.status === 'playing' || state.status === 'answered' || (state.status === 'answering' && action.final)) {
+        return { status: 'completing', session: state.session, combo: state.combo, timeUp: true, failed: false }
+      }
+      // An answer is on its way: let it land, then finish.
+      return state.status === 'answering' ? { ...state, timeUp: true } : state
+
     case 'REVEALED':
       return state.status === 'playing' ? { ...state, revealed: true } : state
 
     case 'ANSWER_SENT':
       // Ignored unless waiting for an answer: a double tap cannot answer twice.
       return state.status === 'playing'
-        ? { status: 'answering', session: state.session, combo: state.combo, index: state.index, answer: action.answer, failed: false }
+        ? {
+            status: 'answering',
+            session: state.session,
+            combo: state.combo,
+            timeUp: state.timeUp,
+            index: state.index,
+            answer: action.answer,
+            failed: false,
+          }
         : state
 
     case 'ANSWER_SUCCEEDED': {
       if (state.status !== 'answering' || action.result.questionId !== state.answer.questionId) return state
       const session = withResult(state.session, state.answer, action.result)
-      // A flashcard is graded by the user, so there is no feedback to read: go straight on.
-      if (session.questions[state.index].kind === 'FLASHCARD') return moveTo(session, action.result.combo, state.index + 1)
-      return { status: 'answered', session, combo: action.result.combo, index: state.index, xpGained: action.result.xpGained }
+      const { combo, isCorrect, questionId, xpGained } = action.result
+      if (answersWithoutStopping(session, session.questions[state.index])) {
+        return moveTo(session, combo, state.index + 1, { questionId, isCorrect }, state.timeUp)
+      }
+      if (state.timeUp) return { status: 'completing', session, combo, timeUp: true, failed: false }
+      return { status: 'answered', session, combo, timeUp: false, index: state.index, xpGained }
     }
 
     case 'ANSWER_FAILED':
+      if (state.status === 'answering' && state.timeUp) {
+        return { status: 'completing', session: state.session, combo: state.combo, timeUp: true, failed: false }
+      }
+      return state.status === 'answering' ? { ...state, failed: true } : state
+
     case 'COMPLETE_FAILED':
-      return state.status === 'answering' || state.status === 'completing' ? { ...state, failed: true } : state
+      return state.status === 'completing' ? { ...state, failed: true } : state
 
     case 'RETRY':
       return state.status === 'answering' || state.status === 'completing' ? { ...state, failed: false } : state

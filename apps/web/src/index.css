@@ -43,6 +43,27 @@
   --animate-float: float 8s ease-in-out infinite;
   --animate-dot-wave: dot-wave 1.1s ease-in-out infinite;
   --animate-shake: shake 0.4s ease-in-out;
+  --animate-flash-good: flash-good 0.5s ease-out;
+  --animate-flash-bad: flash-bad 0.5s ease-out;
+
+  /* Speed Challenge: the next card glows briefly with the verdict of the last answer */
+  @keyframes flash-good {
+    from {
+      box-shadow: 0 0 0 4px var(--color-emerald-500);
+    }
+    to {
+      box-shadow: 0 0 0 4px transparent;
+    }
+  }
+
+  @keyframes flash-bad {
+    from {
+      box-shadow: 0 0 0 4px var(--color-red-500);
+    }
+    to {
+      box-shadow: 0 0 0 4px transparent;
+    }
+  }
 
   /* A wrong matching pair: a short sideways shake */
   @keyframes shake {

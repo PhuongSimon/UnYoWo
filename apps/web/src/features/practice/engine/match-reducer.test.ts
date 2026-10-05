@@ -6,7 +6,16 @@ const cards = [
   { id: '1', text: 'nu' },
   { id: '2', text: 'ne' },
 ]
-const pair = (id: string): ChoiceQuestion => ({ id, position: 0, kind: 'TEXT_TO_ROMANIZATION', prompt: id, options: cards, reveal: null, result: null })
+const pair = (id: string): ChoiceQuestion => ({
+  id,
+  position: 0,
+  kind: 'TEXT_TO_ROMANIZATION',
+  prompt: id,
+  audioUrl: null,
+  options: cards,
+  reveal: null,
+  result: null,
+})
 
 const board: GameSession = {
   id: 's1',
@@ -18,6 +27,8 @@ const board: GameSession = {
   startedAt: '2026-10-05T00:00:00Z',
   expiresAt: '2026-10-05T01:00:00Z',
   summary: null,
+  timer: null,
+  serverNow: '2026-10-05T00:00:00Z',
   stats: { combo: 0, mistakes: 0 },
   questions: [pair('ぬ'), pair('ね')],
 }

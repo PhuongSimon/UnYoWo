@@ -34,7 +34,7 @@ function MatchingGame({ state, studyLang, onPick, onRetry }: MatchingGameProps) 
   const matched = matchedCardIds(session)
   // Every pair on a board is asked the same way (ぬ ↔ nu, or Apfel ↔ quả táo).
   const first = session.questions[0]
-  const kind: ChoiceKind = first && first.kind !== 'FLASHCARD' ? first.kind : 'TEXT_TO_ROMANIZATION'
+  const kind: ChoiceKind = first && first.kind !== 'FLASHCARD' && first.kind !== 'BUILD' ? first.kind : 'TEXT_TO_ROMANIZATION'
   const playing = state.status === 'playing'
   const selected = playing ? state.selected : null
   const miss = playing ? state.miss : null

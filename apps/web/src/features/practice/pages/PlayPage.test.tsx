@@ -1,16 +1,22 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import i18n from '@/i18n'
 import { practiceApi } from '../api'
+import { playClip } from '../audio/audio-provider'
 import type { AnswerResult, GameSession, QuestionReveal, SessionSummary } from '../types'
 import PlayPage from './PlayPage'
 
 vi.mock('@/components/BunnyMascot', () => ({ default: () => null }))
 vi.mock('../api', () => ({
-  practiceApi: { getSession: vi.fn(), submitAnswer: vi.fn(), completeSession: vi.fn(), createSession: vi.fn() },
+  practiceApi: { getSession: vi.fn(), submitAnswer: vi.fn(), completeSession: vi.fn(), createSession: vi.fn(), startSession: vi.fn() },
+}))
+vi.mock('../audio/audio-provider', () => ({
+  canPlay: () => true,
+  playClip: vi.fn(() => Promise.resolve()),
+  stopClips: vi.fn(),
 }))
 
 const api = vi.mocked(practiceApi)
@@ -37,6 +43,7 @@ const summary: SessionSummary = {
     streak: 3,
     totalXp: 120,
   },
+  personalBest: null,
 }
 
 const baseSession = {
@@ -48,6 +55,8 @@ const baseSession = {
   startedAt: '2026-10-04T00:00:00Z',
   expiresAt: '2099-01-01T00:00:00Z',
   summary: null,
+  timer: null,
+  serverNow: '2026-10-04T00:00:00Z',
   stats: { combo: 0, mistakes: 0 },
 } as const
 
@@ -55,8 +64,8 @@ const flashcards: GameSession = {
   ...baseSession,
   gameType: 'FLASHCARD',
   questions: [
-    { id: 'q1', position: 0, kind: 'FLASHCARD', prompt: 'ぬ', options: null, reveal: reveal('ぬ', 'nu'), result: null },
-    { id: 'q2', position: 1, kind: 'FLASHCARD', prompt: 'め', options: null, reveal: reveal('め', 'me'), result: null },
+    { id: 'q1', position: 0, kind: 'FLASHCARD', prompt: 'ぬ', audioUrl: null, options: null, reveal: reveal('ぬ', 'nu'), result: null },
+    { id: 'q2', position: 1, kind: 'FLASHCARD', prompt: 'め', audioUrl: null, options: null, reveal: reveal('め', 'me'), result: null },
   ],
 }
 
@@ -69,6 +78,7 @@ const quiz: GameSession = {
       position: 0,
       kind: 'TEXT_TO_ROMANIZATION',
       prompt: 'ぬ',
+      audioUrl: null,
       options: [
         { id: '1', text: 'nu' },
         { id: '2', text: 'ne' },
@@ -84,8 +94,8 @@ const typing: GameSession = {
   gameType: 'TYPING',
   language: 'de',
   questions: [
-    { id: 'q1', position: 0, kind: 'MEANING_TO_TEXT', prompt: 'quả táo', options: null, reveal: null, result: null },
-    { id: 'q2', position: 1, kind: 'MEANING_TO_TEXT', prompt: 'bánh mì', options: null, reveal: null, result: null },
+    { id: 'q1', position: 0, kind: 'MEANING_TO_TEXT', prompt: 'quả táo', audioUrl: null, options: null, reveal: null, result: null },
+    { id: 'q2', position: 1, kind: 'MEANING_TO_TEXT', prompt: 'bánh mì', audioUrl: null, options: null, reveal: null, result: null },
   ],
 }
 
@@ -97,8 +107,8 @@ const matching: GameSession = {
   ...baseSession,
   gameType: 'MATCHING',
   questions: [
-    { id: 'q1', position: 0, kind: 'TEXT_TO_ROMANIZATION', prompt: 'ぬ', options: cards, reveal: null, result: null },
-    { id: 'q2', position: 1, kind: 'TEXT_TO_ROMANIZATION', prompt: 'ね', options: cards, reveal: null, result: null },
+    { id: 'q1', position: 0, kind: 'TEXT_TO_ROMANIZATION', prompt: 'ぬ', audioUrl: null, options: cards, reveal: null, result: null },
+    { id: 'q2', position: 1, kind: 'TEXT_TO_ROMANIZATION', prompt: 'ね', audioUrl: null, options: cards, reveal: null, result: null },
   ],
 }
 
@@ -255,5 +265,96 @@ describe('PlayPage', () => {
     expect(await screen.findByRole('heading', { name: 'Round complete!' })).toBeInTheDocument()
     expect(api.submitAnswer).toHaveBeenCalledTimes(3)
     expect(api.completeSession).toHaveBeenCalledWith('s1')
+  })
+
+  it('plays the sound of a listening question, and again on R, without showing it', async () => {
+    api.getSession.mockResolvedValue({
+      ...quiz,
+      gameType: 'LISTENING',
+      language: 'ko',
+      questions: [{ ...quiz.questions[0], kind: 'AUDIO_TO_TEXT', prompt: '기역' }],
+    })
+    const user = userEvent.setup()
+    renderPlay()
+
+    expect(await screen.findByText('What did you hear?')).toBeInTheDocument()
+    expect(screen.queryByText('기역')).not.toBeInTheDocument()
+    expect(playClip).toHaveBeenCalledWith({ url: null, text: '기역', lang: 'ko-KR' })
+
+    await user.keyboard('r')
+    expect(playClip).toHaveBeenCalledTimes(2)
+    await user.click(screen.getByRole('button', { name: 'Play the sound again' }))
+    expect(playClip).toHaveBeenCalledTimes(3)
+  })
+
+  it('starts a speed round only when the player presses Start, then moves on without stopping', async () => {
+    api.getSession.mockResolvedValue({
+      ...quiz,
+      gameType: 'SPEED',
+      timer: { limitSeconds: 60, startedAt: null, deadline: null },
+      questions: [quiz.questions[0], { ...quiz.questions[0], id: 'q2', position: 1, prompt: 'ね' }],
+    })
+    api.startSession.mockResolvedValue({
+      timer: { limitSeconds: 60, startedAt: '2026-10-04T00:00:00Z', deadline: '2026-10-04T00:01:00Z' },
+      serverNow: '2026-10-04T00:00:00Z',
+    })
+    api.submitAnswer.mockResolvedValue(answerResult('q1', true, '1'))
+    const user = userEvent.setup()
+    renderPlay()
+
+    await user.click(await screen.findByRole('button', { name: 'Start' }))
+    expect(api.startSession).toHaveBeenCalledWith('s1')
+    expect(await screen.findByRole('progressbar', { name: '60 seconds left' })).toBeInTheDocument()
+
+    await user.keyboard('1')
+    expect(await screen.findByText('ね')).toBeInTheDocument()
+    expect(screen.queryByText('Correct!', { selector: 'p.text-lg' })).not.toBeInTheDocument()
+  })
+
+  it('builds a syllable part by part and sends the tiles in order', async () => {
+    api.getSession.mockResolvedValue({
+      ...quiz,
+      gameType: 'BUILDER',
+      language: 'ko',
+      questions: [
+        {
+          id: 'q1',
+          position: 0,
+          kind: 'BUILD',
+          prompt: 'gok',
+          audioUrl: null,
+          reveal: null,
+          result: null,
+          options: [
+            { id: '1a', text: 'ㄱ', slot: 0, role: 'INITIAL' },
+            { id: '1b', text: 'ㅋ', slot: 0, role: 'INITIAL' },
+            { id: '2a', text: 'ㅗ', slot: 1, role: 'VOWEL' },
+            { id: '2b', text: 'ㅓ', slot: 1, role: 'VOWEL' },
+            { id: '3a', text: 'ㄱ', slot: 2, role: 'FINAL' },
+            { id: '3b', text: 'ㄴ', slot: 2, role: 'FINAL' },
+          ],
+        },
+      ],
+    })
+    api.submitAnswer.mockResolvedValue({
+      ...answerResult('q1', true, '1a|2a|3a'),
+      reveal: { text: '곡', reading: null, romanization: 'gok', meaning: null, emoji: null },
+    })
+    const user = userEvent.setup()
+    renderPlay()
+
+    expect(await screen.findByText('gok')).toBeInTheDocument()
+    const check = screen.getByRole('button', { name: /Check/ })
+    expect(check).toBeDisabled()
+
+    const rows = screen.getAllByRole('group')
+    await user.click(within(rows[0]).getByRole('button', { name: 'ㄱ' }))
+    await user.click(within(rows[1]).getByRole('button', { name: 'ㅗ' }))
+    await user.click(within(rows[2]).getByRole('button', { name: 'ㄱ' }))
+    expect(screen.getByText('곡')).toBeInTheDocument()
+
+    await user.click(check)
+    expect(api.submitAnswer).toHaveBeenCalledWith('s1', expect.objectContaining({ questionId: 'q1', parts: ['1a', '2a', '3a'] }))
+    expect(await screen.findByText('Correct!')).toBeInTheDocument()
   })
 })

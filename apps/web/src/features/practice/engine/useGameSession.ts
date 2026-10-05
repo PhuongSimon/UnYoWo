@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef } from 'react'
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { practiceApi } from '../api'
 import type { AnswerInput, GameSession } from '../types'
 import { gameReducer, initGame, type PendingAnswer } from './game-reducer'
@@ -11,11 +11,23 @@ export function useGameSession(initialSession: GameSession) {
   const [state, dispatch] = useReducer(gameReducer, initialSession, initGame)
   const shownAt = useRef(0)
   const sentQuestions = useRef(new Set<string>())
+  // Server clock minus local clock, so the countdown ends when the server says it does.
+  const [clockOffset, setClockOffset] = useState(() => offsetFrom(initialSession.serverNow))
 
   const questionId = 'index' in state ? state.session.questions[state.index].id : null
   useEffect(() => {
     shownAt.current = performance.now()
   }, [questionId])
+
+  const deadline = state.status !== 'completed' && state.status !== 'expired' ? state.session.timer?.deadline : null
+  const deadlineAt = deadline ? Date.parse(deadline) - clockOffset : null
+  const running = state.status === 'playing' || state.status === 'answering' || state.status === 'answered'
+
+  useEffect(() => {
+    if (!running || deadlineAt === null) return
+    const timeout = setTimeout(() => dispatch({ type: 'TIME_UP' }), Math.max(0, deadlineAt - Date.now()))
+    return () => clearTimeout(timeout)
+  }, [running, deadlineAt])
 
   const send = useCallback(
     (answer: PendingAnswer) => {
@@ -28,6 +40,14 @@ export function useGameSession(initialSession: GameSession) {
   )
 
   useSessionCompletion(sessionId, state.status === 'completing' && !state.failed, dispatch)
+
+  /** Timed games: starts the countdown on the server; rejects so the Start screen can offer a retry. */
+  const start = async () => {
+    if (state.status !== 'ready') return
+    const { timer, serverNow } = await withRetry(() => practiceApi.startSession(sessionId))
+    setClockOffset(offsetFrom(serverNow))
+    dispatch({ type: 'TIMER_STARTED', timer })
+  }
 
   const answer = (input: AnswerInput) => {
     if (state.status !== 'playing') return
@@ -58,11 +78,16 @@ export function useGameSession(initialSession: GameSession) {
 
   return {
     state,
+    /** Local time (ms) when a timed round ends, or null */
+    deadlineAt,
+    start,
     answer,
     retry,
     reveal: () => dispatch({ type: 'REVEALED' }),
     next: () => dispatch({ type: 'NEXT' }),
   }
 }
+
+const offsetFrom = (serverNow: string) => Date.parse(serverNow) - Date.now()
 
 export type GameController = ReturnType<typeof useGameSession>

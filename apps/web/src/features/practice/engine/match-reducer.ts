@@ -99,5 +99,9 @@ export function matchReducer(state: MatchState, action: MatchAction): MatchState
 
     case 'EXPIRED':
       return { status: 'expired', session: state.session }
+
+    // Matching boards are not timed.
+    case 'TIME_UP':
+      return state
   }
 }

@@ -7,6 +7,7 @@ const question = (id: string, answered?: boolean): ChoiceQuestion => ({
   position: Number(id.slice(1)),
   kind: 'TEXT_TO_ROMANIZATION',
   prompt: id,
+  audioUrl: null,
   options: [
     { id: '1', text: 'a' },
     { id: '2', text: 'b' },
@@ -25,6 +26,8 @@ const session = (questions: ChoiceQuestion[], extra: Partial<GameSession> = {}):
   startedAt: '2026-10-04T00:00:00Z',
   expiresAt: '2026-10-04T01:00:00Z',
   summary: null,
+  timer: null,
+  serverNow: '2026-10-04T00:00:00Z',
   stats: { combo: 0, mistakes: 0 },
   questions,
   ...extra,
@@ -84,14 +87,56 @@ describe('game state machine', () => {
     )
     expect(state.status).toBe('completing')
 
-    const summary = { score: 0, correctCount: 0, incorrectCount: 1, mistakeCount: 1, answeredCount: 1, questionCount: 1, maxCombo: 0, durationSeconds: 4, rewards: { xp: 0, breakdown: [], goals: [], achievements: [], streak: 1, totalXp: 0 } }
+    const summary = { score: 0, correctCount: 0, incorrectCount: 1, mistakeCount: 1, answeredCount: 1, questionCount: 1, maxCombo: 0, durationSeconds: 4, rewards: { xp: 0, breakdown: [], goals: [], achievements: [], streak: 1, totalXp: 0 }, personalBest: null }
     state = run(state, { type: 'COMPLETE_SUCCEEDED', summary })
     expect(state).toMatchObject({ status: 'completed', summary })
   })
 
   it('opens finished and expired sessions on their final screens', () => {
-    const summary = { score: 10, correctCount: 1, incorrectCount: 0, mistakeCount: 0, answeredCount: 1, questionCount: 1, maxCombo: 1, durationSeconds: 3, rewards: { xp: 0, breakdown: [], goals: [], achievements: [], streak: 1, totalXp: 0 } }
+    const summary = { score: 10, correctCount: 1, incorrectCount: 0, mistakeCount: 0, answeredCount: 1, questionCount: 1, maxCombo: 1, durationSeconds: 3, rewards: { xp: 0, breakdown: [], goals: [], achievements: [], streak: 1, totalXp: 0 }, personalBest: null }
     expect(initGame(session([question('q0', true)], { status: 'COMPLETED', summary })).status).toBe('completed')
     expect(initGame(session([question('q0')], { status: 'EXPIRED' })).status).toBe('expired')
+  })
+
+  describe('timed rounds', () => {
+    const timed = (extra: Partial<GameSession> = {}) =>
+      session([question('q0'), question('q1')], {
+        gameType: 'SPEED',
+        timer: { limitSeconds: 60, startedAt: null, deadline: null },
+        ...extra,
+      })
+    const running = { limitSeconds: 60, startedAt: '2026-10-04T00:00:00Z', deadline: '2026-10-04T00:01:00Z' }
+
+    it('waits on the start screen until the clock starts', () => {
+      const state = initGame(timed())
+      expect(state.status).toBe('ready')
+      expect(run(state, { type: 'TIMER_STARTED', timer: running })).toMatchObject({ status: 'playing', index: 0 })
+    })
+
+    it('moves straight on after each answer and flashes its verdict', () => {
+      const state = run(
+        initGame(timed({ timer: running })),
+        { type: 'ANSWER_SENT', answer: pending('q0') },
+        { type: 'ANSWER_SUCCEEDED', result: result('q0', false, 0) },
+      )
+      expect(state).toMatchObject({ status: 'playing', index: 1, flash: { questionId: 'q0', isCorrect: false } })
+    })
+
+    it('lets an answer in flight land when time runs out, then finishes', () => {
+      let state = run(initGame(timed({ timer: running })), { type: 'ANSWER_SENT', answer: pending('q0') }, { type: 'TIME_UP' })
+      expect(state).toMatchObject({ status: 'answering', timeUp: true })
+      state = run(state, { type: 'ANSWER_SUCCEEDED', result: result('q0', true, 1) })
+      expect(state).toMatchObject({ status: 'completing', combo: 1 })
+      expect(state.session.questions[0].result?.isCorrect).toBe(true)
+    })
+
+    it('finishes at once when the server says time is up', () => {
+      const state = run(initGame(timed({ timer: running })), { type: 'ANSWER_SENT', answer: pending('q0') }, { type: 'TIME_UP', final: true })
+      expect(state.status).toBe('completing')
+    })
+
+    it('goes straight to the results when reloaded after the clock ran out', () => {
+      expect(initGame(timed({ timer: running, serverNow: '2026-10-04T00:02:00Z' })).status).toBe('completing')
+    })
   })
 })

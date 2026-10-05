@@ -9,6 +9,8 @@ import { findStudyLanguage } from '@/features/learn/languages'
 import { getApiError } from '@/lib/api-error'
 import GameEnd from '../components/GameEnd'
 import GameShell from '../components/GameShell'
+import GameTimer from '../components/GameTimer'
+import ReadyScreen from '../components/ReadyScreen'
 import RequestError from '../components/RequestError'
 import { useGameSession } from '../engine/useGameSession'
 import { useMatchingBoard } from '../engine/useMatchingBoard'
@@ -67,6 +69,7 @@ function SequentialRunner({ initialSession, gameType }: { initialSession: GameSe
   if (state.status === 'expired') return <GameEnd session={state.session} summary={null} />
 
   const { session } = state
+  const { timer } = session
   return (
     <LanguageFrame session={session}>
       <GameShell
@@ -75,8 +78,11 @@ function SequentialRunner({ initialSession, gameType }: { initialSession: GameSe
         combo={state.combo}
         backTo={practiceHome(session)}
         hint={t(hintKey)}
+        timer={timer ? <GameTimer deadlineAt={game.deadlineAt} limitSeconds={timer.limitSeconds} /> : undefined}
       >
-        {state.status === 'completing' ? (
+        {state.status === 'ready' ? (
+          <ReadyScreen limitSeconds={timer?.limitSeconds ?? 0} onStart={game.start} />
+        ) : state.status === 'completing' ? (
           <Completing failed={state.failed} onRetry={game.retry} />
         ) : (
           <Screen state={state} game={game} studyLang={session.language} speechLang={speechLangOf(session)} />

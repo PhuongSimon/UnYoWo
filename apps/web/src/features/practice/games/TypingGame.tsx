@@ -13,7 +13,9 @@ import type { GameScreenProps } from './registry'
 function TypingGame(props: GameScreenProps) {
   const question = props.state.session.questions[props.state.index]
   // Keyed by question so the input starts empty (and focused) for every new prompt.
-  return question.kind !== 'FLASHCARD' && question.options === null ? <TypingRound key={question.id} {...props} question={question} /> : null
+  return question.kind !== 'FLASHCARD' && question.kind !== 'BUILD' && question.options === null ? (
+    <TypingRound key={question.id} {...props} question={question} />
+  ) : null
 }
 
 function TypingRound({ state, game, studyLang, speechLang, question }: GameScreenProps & { question: TypedQuestion }) {

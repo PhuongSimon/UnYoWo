@@ -9,7 +9,9 @@ import type { GameScreenProps } from './registry'
 
 function MultipleChoiceGame(props: GameScreenProps) {
   const question = props.state.session.questions[props.state.index]
-  return question.kind === 'FLASHCARD' || question.options === null ? null : <ChoiceRound {...props} question={question} />
+  return question.kind === 'FLASHCARD' || question.kind === 'BUILD' || question.options === null ? null : (
+    <ChoiceRound {...props} question={question} />
+  )
 }
 
 function ChoiceRound({ state, game, studyLang, speechLang, question }: GameScreenProps & { question: ChoiceQuestion }) {
@@ -26,7 +28,7 @@ function ChoiceRound({ state, game, studyLang, speechLang, question }: GameScree
 
   return (
     <>
-      <PromptCard question={question} studyLang={studyLang} />
+      <PromptCard question={question} studyLang={studyLang} speechLang={speechLang} />
       <OptionGrid
         question={question}
         studyLang={studyLang}

@@ -10,6 +10,8 @@ export type SessionAction =
   /** Replaces local state with the server's copy, e.g. after another tab answered. */
   | { type: 'SYNCED'; session: GameSession }
   | { type: 'EXPIRED' }
+  /** The countdown ran out; `final` when the server already refused an answer for it */
+  | { type: 'TIME_UP'; final?: boolean }
   | { type: 'COMPLETE_SUCCEEDED'; summary: SessionSummary }
   | { type: 'COMPLETE_FAILED' }
 
@@ -22,6 +24,7 @@ export function handleRequestFailure<const A extends { type: string }>(
 ) {
   const { code } = getApiError(error)
   if (code === 'GAME_SESSION_EXPIRED') return dispatch({ type: 'EXPIRED' })
+  if (code === 'TIME_UP') return dispatch({ type: 'TIME_UP', final: true })
   if (code === 'QUESTION_ALREADY_ANSWERED' || code === 'GAME_SESSION_COMPLETED') {
     practiceApi.getSession(sessionId).then(
       (session) => dispatch({ type: 'SYNCED', session }),

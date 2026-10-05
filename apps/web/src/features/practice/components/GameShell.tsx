@@ -13,10 +13,12 @@ interface GameShellProps {
   hint: string
   /** Extra counter next to the progress, e.g. mistakes on a matching board */
   extra?: ReactNode
+  /** Timed games show the countdown instead of the progress bar */
+  timer?: ReactNode
   children: ReactNode
 }
 
-function GameShell({ answered, total, combo, backTo, hint, extra, children }: GameShellProps) {
+function GameShell({ answered, total, combo, backTo, hint, extra, timer, children }: GameShellProps) {
   const { t } = useTranslation()
 
   return (
@@ -30,10 +32,14 @@ function GameShell({ answered, total, combo, backTo, hint, extra, children }: Ga
         >
           <X size={22} aria-hidden="true" />
         </Link>
-        <ProgressBar value={answered} max={total} label={t('practice.progress', { current: answered, total })} className="flex-1" />
-        <span className="shrink-0 text-sm font-semibold text-muted tabular-nums">
-          {answered}/{total}
-        </span>
+        {timer ?? (
+          <>
+            <ProgressBar value={answered} max={total} label={t('practice.progress', { current: answered, total })} className="flex-1" />
+            <span className="shrink-0 text-sm font-semibold text-muted tabular-nums">
+              {answered}/{total}
+            </span>
+          </>
+        )}
         {extra}
         {combo >= 2 && (
           <span

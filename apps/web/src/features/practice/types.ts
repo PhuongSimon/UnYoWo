@@ -1,10 +1,18 @@
 import type { Localized } from '@/features/learn/types'
 
-export type GameType = 'FLASHCARD' | 'MULTIPLE_CHOICE' | 'MATCHING' | 'TYPING'
+export type GameType = 'FLASHCARD' | 'MULTIPLE_CHOICE' | 'MATCHING' | 'TYPING' | 'LISTENING' | 'SPEED' | 'BUILDER'
 export type SessionSource = 'SET' | 'DUE' | 'MISTAKES'
 export type ReviewRating = 'AGAIN' | 'HARD' | 'GOOD' | 'EASY'
-export type ChoiceKind = 'TEXT_TO_ROMANIZATION' | 'ROMANIZATION_TO_TEXT' | 'TEXT_TO_MEANING' | 'MEANING_TO_TEXT' | 'EMOJI_TO_TEXT'
-export type QuestionKind = 'FLASHCARD' | ChoiceKind
+export type ChoiceKind =
+  | 'TEXT_TO_ROMANIZATION'
+  | 'ROMANIZATION_TO_TEXT'
+  | 'TEXT_TO_MEANING'
+  | 'MEANING_TO_TEXT'
+  | 'EMOJI_TO_TEXT'
+  | 'AUDIO_TO_TEXT'
+  | 'AUDIO_TO_MEANING'
+export type QuestionKind = 'FLASHCARD' | 'BUILD' | ChoiceKind
+export type ComponentRole = 'INITIAL' | 'VOWEL' | 'FINAL' | 'BASE' | 'SMALL' | 'MARK'
 
 export const REVIEW_RATINGS: ReviewRating[] = ['AGAIN', 'HARD', 'GOOD', 'EASY']
 
@@ -23,6 +31,8 @@ export interface LearningSet {
   category: string | null
   title: Localized
   itemCount: number
+  /** Items are built from parts, so the character builder can use this set */
+  buildable: boolean
   progress: SetProgress
 }
 
@@ -48,10 +58,19 @@ export interface ChoiceOption {
   text: string
 }
 
+/** A part the user can place in a builder slot */
+export interface BuilderTile extends ChoiceOption {
+  slot: number
+  role: ComponentRole
+}
+
 interface QuestionBase {
   id: string
   position: number
+  /** For listening, the text to speak (never shown); for the builder, the romanization to build */
   prompt: string
+  /** Recorded clip for listening; null means speech synthesis */
+  audioUrl: string | null
   result: QuestionResult | null
 }
 
@@ -76,7 +95,14 @@ export interface TypedQuestion extends QuestionBase {
   reveal: QuestionReveal | null
 }
 
-export type Question = FlashcardQuestion | ChoiceQuestion | TypedQuestion
+/** "gok" → pick ㄱ, ㅗ, ㄱ in their slots. `result.correctOptionId` lists the right tiles: "1b|2a|3c". */
+export interface BuildQuestion extends QuestionBase {
+  kind: 'BUILD'
+  options: BuilderTile[]
+  reveal: QuestionReveal | null
+}
+
+export type Question = FlashcardQuestion | ChoiceQuestion | TypedQuestion | BuildQuestion
 
 export type XpSource = 'ANSWER' | 'SESSION_COMPLETE' | 'PERFECT_SESSION' | 'DAILY_GOAL'
 
@@ -104,6 +130,14 @@ export interface SessionSummary {
   maxCombo: number
   durationSeconds: number
   rewards: SessionRewards
+  /** Timed games only */
+  personalBest: { previous: number | null; isNewBest: boolean } | null
+}
+
+export interface SessionTimer {
+  limitSeconds: number
+  startedAt: string | null
+  deadline: string | null
 }
 
 export interface GameSession {
@@ -116,6 +150,10 @@ export interface GameSession {
   startedAt: string
   expiresAt: string
   questions: Question[]
+  /** Timed games only */
+  timer: SessionTimer | null
+  /** The server's clock when this was sent, to correct the client's countdown */
+  serverNow: string
   stats: { combo: number; mistakes: number }
   summary: SessionSummary | null
 }
@@ -134,7 +172,7 @@ export interface AnswerResult {
   progress: { masteryLevel: number; dueAt: string | null }
 }
 
-export type AnswerInput = { optionId: string } | { rating: ReviewRating } | { text: string }
+export type AnswerInput = { optionId: string } | { rating: ReviewRating } | { text: string } | { parts: string[] }
 
 export interface NewGame {
   gameType: GameType
