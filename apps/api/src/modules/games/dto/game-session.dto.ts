@@ -37,6 +37,12 @@ export class SubmitAnswerDto {
   @IsEnum(ReviewRating)
   rating?: ReviewRating;
 
+  /** Typing; an empty string means "I don't know" */
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  text?: string;
+
   @IsOptional()
   @IsInt()
   @Min(0)

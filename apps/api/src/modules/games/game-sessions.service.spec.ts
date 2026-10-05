@@ -16,6 +16,10 @@ import { GameSessionsRepository } from './repositories/game-sessions.repository.
 class InMemoryGameSessionsRepository extends GameSessionsRepository {
   sessions: GameSessionRecord[] = [];
 
+  constructor(private readonly log: InMemoryProgressRepository) {
+    super();
+  }
+
   async create({ questions, ...data }: CreateGameSessionData) {
     const id = `session-${this.sessions.length + 1}`;
     const session: GameSessionRecord = {
@@ -28,12 +32,12 @@ class InMemoryGameSessionsRepository extends GameSessionsRepository {
       correctCount: 0,
       incorrectCount: 0,
       maxCombo: 0,
+      attempts: [],
       questions: questions.map((question) => ({
         ...question,
         id: `${id}-q${question.position}`,
         answeredAt: null,
         isCorrect: null,
-        lastAttempt: null,
       })),
     };
     this.sessions.push(session);
@@ -41,7 +45,9 @@ class InMemoryGameSessionsRepository extends GameSessionsRepository {
   }
   async findOwned(id: string, userId: string) {
     const session = this.sessions.find((s) => s.id === id && s.userId === userId);
-    return session ? structuredClone(session) : null;
+    if (!session) return null;
+    const attempts = this.log.attempts.filter((a) => a.sessionId === id);
+    return structuredClone({ ...session, attempts });
   }
   async markAnswered(questionId: string, isCorrect: boolean, answeredAt: Date) {
     const question = this.sessions.flatMap((s) => s.questions).find((q) => q.id === questionId);
@@ -92,8 +98,10 @@ const kana = (id: string, text: string, romanization: string): PracticeItem => (
   text,
   reading: null,
   romanization,
+  acceptedAnswers: [],
   meaning: null,
   emoji: null,
+  attributes: null,
   sortOrder: 0,
   confusableIds: [],
 });
@@ -107,8 +115,8 @@ describe('GameSessionsService', () => {
   let service: GameSessionsService;
 
   beforeEach(() => {
-    sessions = new InMemoryGameSessionsRepository();
     progress = new InMemoryProgressRepository();
+    sessions = new InMemoryGameSessionsRepository(progress);
     const selector = { select: async () => ({ items: pool, pool }) } as unknown as ItemSelector;
     const transaction = { run: <T>(fn: () => Promise<T>) => fn() } as unknown as TransactionHost;
     service = new GameSessionsService(
@@ -121,7 +129,7 @@ describe('GameSessionsService', () => {
     );
   });
 
-  const start = (gameType: 'MULTIPLE_CHOICE' | 'FLASHCARD' = 'MULTIPLE_CHOICE') =>
+  const start = (gameType: 'MULTIPLE_CHOICE' | 'FLASHCARD' | 'MATCHING' | 'TYPING' = 'MULTIPLE_CHOICE') =>
     service.create('user-1', { gameType, language: 'ja', source: 'SET', setId: 'set-1' }, 'en');
 
   const options = (session: GameSessionRecord, index: number) => {
@@ -234,12 +242,62 @@ describe('GameSessionsService', () => {
     await service.answer('user-1', 'session-1', { questionId: question.id, idempotencyKey: KEY(1), optionId: right });
 
     const summary = await service.complete('user-1', 'session-1');
-    expect(summary).toMatchObject({ score: 10, correctCount: 1, incorrectCount: 0, answeredCount: 1, questionCount: 4, maxCombo: 1 });
+    expect(summary).toMatchObject({
+      score: 10,
+      correctCount: 1,
+      incorrectCount: 0,
+      mistakeCount: 0,
+      answeredCount: 1,
+      questionCount: 4,
+      maxCombo: 1,
+    });
     expect(await service.complete('user-1', 'session-1')).toEqual(summary);
 
     const next = options(sessions.sessions[0], 1);
     await expect(
       service.answer('user-1', 'session-1', { questionId: next.question.id, idempotencyKey: KEY(2), optionId: next.right }),
     ).rejects.toMatchObject({ response: { code: 'GAME_SESSION_COMPLETED' } });
+  });
+
+  it('keeps a matching pair open after a wrong card and counts it as a mistake', async () => {
+    const view = await start('MATCHING');
+    expect(view.questions).toHaveLength(4);
+    expect(new Set(view.questions.map((q) => JSON.stringify(q.options))).size).toBe(1);
+
+    const { question, right, wrong } = options(sessions.sessions[0], 0);
+    const miss = await service.answer('user-1', 'session-1', { questionId: question.id, idempotencyKey: KEY(1), optionId: wrong });
+    expect(miss).toMatchObject({ isCorrect: false, questionCompleted: false, correctOptionId: null, reveal: null });
+
+    const hit = await service.answer('user-1', 'session-1', { questionId: question.id, idempotencyKey: KEY(2), optionId: right });
+    expect(hit).toMatchObject({ isCorrect: true, questionCompleted: true, correctOptionId: right, combo: 1 });
+    expect(sessions.sessions[0].questions[0]).toMatchObject({ isCorrect: false });
+
+    const second = options(sessions.sessions[0], 1);
+    await service.answer('user-1', 'session-1', { questionId: second.question.id, idempotencyKey: KEY(3), optionId: second.right });
+
+    const summary = await service.complete('user-1', 'session-1');
+    expect(summary).toMatchObject({ answeredCount: 2, correctCount: 1, incorrectCount: 1, mistakeCount: 1, maxCombo: 2, score: 10 + 12 });
+  });
+
+  it('grades a typed answer on the server, ignoring case and spacing', async () => {
+    await start('TYPING');
+    const question = sessions.sessions[0].questions[0];
+    expect(question.acceptedAnswers).toEqual([question.reveal.romanization]);
+
+    const result = await service.answer('user-1', 'session-1', {
+      questionId: question.id,
+      idempotencyKey: KEY(1),
+      text: ` ${question.reveal.romanization?.toUpperCase()} `,
+    });
+    expect(result).toMatchObject({ isCorrect: true, questionCompleted: true, reveal: question.reveal });
+
+    const next = sessions.sessions[0].questions[1];
+    const skipped = await service.answer('user-1', 'session-1', { questionId: next.id, idempotencyKey: KEY(2), text: '' });
+    expect(skipped.isCorrect).toBe(false);
+    expect(progress.attempts[1]).toMatchObject({ givenAnswer: null, rating: 'AGAIN' });
+
+    const view = await service.get('user-1', 'session-1');
+    expect(JSON.stringify(view.questions[2])).not.toContain('acceptedAnswers');
+    expect(view.questions[0].result?.givenAnswer).toBe(question.reveal.romanization?.toUpperCase());
   });
 });

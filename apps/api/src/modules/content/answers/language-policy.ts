@@ -39,3 +39,16 @@ export function isAcceptedAnswer(given: string, accepted: string[], policy: Lang
   const answer = policy.normalize(given);
   return answer.length > 0 && accepted.some((candidate) => policy.normalize(candidate) === answer);
 }
+
+const LATIN_SCRIPT = /^[\p{Script=Latin}\p{Mark}\p{Number}\p{Punctuation}\p{Separator}\p{Symbol}]*$/u;
+
+/**
+ * For typed answers that may be written in more than one script: each accepted answer is
+ * compared with the policy of its own script, so "sakura" is checked like Latin text
+ * (case ignored) and "さくら" like Japanese (no case folding, half-width folded).
+ */
+export function isAcceptedTypedAnswer(given: string, accepted: string[], languageCode: string): boolean {
+  return accepted.some((candidate) =>
+    isAcceptedAnswer(given, [candidate], LATIN_SCRIPT.test(candidate) ? latinPolicy : languagePolicy(languageCode)),
+  );
+}

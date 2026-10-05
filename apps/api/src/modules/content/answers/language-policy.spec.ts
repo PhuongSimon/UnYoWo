@@ -1,4 +1,11 @@
-import { isAcceptedAnswer, japanesePolicy, koreanPolicy, languagePolicy, latinPolicy } from './language-policy.js';
+import {
+  isAcceptedAnswer,
+  isAcceptedTypedAnswer,
+  japanesePolicy,
+  koreanPolicy,
+  languagePolicy,
+  latinPolicy,
+} from './language-policy.js';
 
 describe('language policies', () => {
   it('ignores case and extra spaces for Latin answers', () => {
@@ -36,5 +43,16 @@ describe('language policies', () => {
   it('falls back to the Latin policy for languages without their own', () => {
     expect(languagePolicy('es')).toBe(latinPolicy);
     expect(languagePolicy('ja')).toBe(japanesePolicy);
+  });
+
+  it('compares typed answers with the policy of each accepted spelling', () => {
+    const sakura = ['さくら', 'sakura'];
+    expect(isAcceptedTypedAnswer('Sakura ', sakura, 'ja')).toBe(true);
+    expect(isAcceptedTypedAnswer('さくら', sakura, 'ja')).toBe(true);
+    expect(isAcceptedTypedAnswer('サクラ', sakura, 'ja')).toBe(false);
+    expect(isAcceptedTypedAnswer('DER APFEL', ['Apfel', 'der Apfel'], 'de')).toBe(true);
+    expect(isAcceptedTypedAnswer('die Apfel', ['Apfel', 'der Apfel'], 'de')).toBe(false);
+    expect(isAcceptedTypedAnswer('gakkou', ['学校', 'がっこう', 'gakkō', 'gakkou'], 'ja')).toBe(true);
+    expect(isAcceptedTypedAnswer('사과', ['사과', 'sagwa'], 'ko')).toBe(true);
   });
 });

@@ -28,6 +28,8 @@ export interface GeneratedQuestion {
   prompt: string;
   options: ChoiceOption[] | null;
   correctOptionId: string | null;
+  /** Typing games: every spelling that counts as right */
+  acceptedAnswers: string[];
   reveal: QuestionReveal;
 }
 
@@ -35,8 +37,17 @@ export interface GameQuestionRecord extends GeneratedQuestion {
   id: string;
   position: number;
   answeredAt: Date | null;
+  /** True only when answered right on the first try */
   isCorrect: boolean | null;
-  lastAttempt: { givenAnswer: string | null; rating: ReviewRating } | null;
+}
+
+/** One answer in a session, oldest first. A matching pair can take several. */
+export interface SessionAttempt {
+  questionId: string | null;
+  isCorrect: boolean;
+  givenAnswer: string | null;
+  rating: ReviewRating;
+  createdAt: Date;
 }
 
 export interface GameSessionRecord {
@@ -56,6 +67,7 @@ export interface GameSessionRecord {
   incorrectCount: number;
   maxCombo: number;
   questions: GameQuestionRecord[];
+  attempts: SessionAttempt[];
 }
 
 export interface CreateGameSessionData {
@@ -83,6 +95,8 @@ export interface QuestionResultView {
   isCorrect: boolean;
   correctOptionId: string | null;
   selectedOptionId: string | null;
+  /** What the user typed (typing games) */
+  givenAnswer: string | null;
   rating: ReviewRating | null;
 }
 
@@ -99,8 +113,11 @@ export interface QuestionView {
 
 export interface SessionSummary {
   score: number;
+  /** Questions answered right on the first try */
   correctCount: number;
   incorrectCount: number;
+  /** Every wrong attempt, including the wrong pairs of a matching board */
+  mistakeCount: number;
   answeredCount: number;
   questionCount: number;
   maxCombo: number;
@@ -118,14 +135,20 @@ export interface GameSessionView {
   startedAt: Date;
   expiresAt: Date;
   questions: QuestionView[];
+  /** Lets a reloaded game continue with the right combo and mistake count */
+  stats: { combo: number; mistakes: number };
   summary: SessionSummary | null;
 }
 
 export interface AnswerResultView {
   questionId: string;
+  /** Whether this attempt was right */
   isCorrect: boolean;
+  /** False after a wrong matching pair: the question stays open for another try */
+  questionCompleted: boolean;
+  /** Only sent once the question is completed */
   correctOptionId: string | null;
-  reveal: QuestionReveal;
+  reveal: QuestionReveal | null;
   /** Correct answers in a row so far in this session */
   combo: number;
   progress: { masteryLevel: number; dueAt: Date | null };

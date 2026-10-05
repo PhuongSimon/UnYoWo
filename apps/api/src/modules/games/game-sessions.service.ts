@@ -1,8 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ApiError } from '../../common/api-error.js';
-import type { ReviewRating } from '../../generated/prisma/enums.js';
 import { TransactionHost } from '../../infrastructure/database/transaction-host.js';
-import type { ItemProgress } from '../progress/entities/progress.entity.js';
+import type { Attempt, ItemProgress } from '../progress/entities/progress.entity.js';
 import { ProgressService } from '../progress/progress.service.js';
 import { ProgressRepository } from '../progress/repositories/progress.repository.js';
 import type { CreateGameSessionDto, SubmitAnswerDto } from './dto/game-session.dto.js';
@@ -11,22 +10,25 @@ import type {
   GameQuestionRecord,
   GameSessionRecord,
   GameSessionView,
+  SessionAttempt,
   SessionSummary,
   UiLocale,
 } from './entities/game-session.entity.js';
 import { GAME_DEFINITIONS } from './game-definitions.js';
 import { isExpired, toSessionView } from './game-session.mapper.js';
+import { gradeAnswer } from './grading.js';
 import { ItemSelector } from './item-selector.js';
 import { Random, shuffle } from './random.js';
 import { GameSessionsRepository } from './repositories/game-sessions.repository.js';
-import { answeredResults, comboStats, summarize } from './scoring.js';
+import { comboStats, summarize } from './scoring.js';
 
-interface GradedAnswer {
-  isCorrect: boolean;
-  rating: ReviewRating;
-  givenAnswer: string | null;
-  confusedWithItemId: string | null;
-}
+const toSessionAttempt = ({ questionId, isCorrect, givenAnswer, rating, createdAt }: Attempt): SessionAttempt => ({
+  questionId,
+  isCorrect,
+  givenAnswer,
+  rating,
+  createdAt,
+});
 
 @Injectable()
 export class GameSessionsService {
@@ -47,12 +49,12 @@ export class GameSessionsService {
       languageCode: dto.language,
       source: dto.source,
       setId: dto.setId,
-      count: definition.questionCount,
+      count: definition.selectCount,
       now,
     });
 
     const ordered = definition.shuffleItems ? shuffle(items, this.random) : items;
-    const questions = ordered.flatMap((item) => definition.generate(item, { pool, locale, random: this.random }) ?? []);
+    const questions = definition.generate(ordered, { pool, locale, random: this.random, count: definition.questionCount });
     if (questions.length === 0) throw new ApiError(HttpStatus.UNPROCESSABLE_ENTITY, 'NOT_ENOUGH_ITEMS');
 
     const session = await this.sessions.create({
@@ -83,32 +85,40 @@ export class GameSessionsService {
       const replayed = await this.progressRecords.findAttemptByKey(userId, dto.idempotencyKey);
       if (replayed) {
         if (replayed.questionId !== question.id) throw new ApiError(HttpStatus.BAD_REQUEST, 'INVALID_ANSWER');
-        return this.answerResult(session, question, await this.progressRecords.findOne(userId, question.itemId));
+        const progress = await this.progressRecords.findOne(userId, question.itemId);
+        return this.answerResult(session.attempts, question, replayed.isCorrect, progress);
       }
 
       this.assertPlayable(session, now);
       if (question.answeredAt) throw new ApiError(HttpStatus.CONFLICT, 'QUESTION_ALREADY_ANSWERED');
 
-      const graded = this.grade(question, dto);
+      const graded = gradeAnswer(GAME_DEFINITIONS[session.gameType].answerMode, question, dto, session.languageCode);
+      // A matching pair found after a wrong try is completed, but not "right first time".
+      const firstTry = !session.attempts.some((attempt) => attempt.questionId === question.id);
+      const closed: GameQuestionRecord = graded.closesQuestion
+        ? { ...question, answeredAt: now, isCorrect: graded.isCorrect && firstTry }
+        : question;
+
       // Conditional update: of two concurrent answers to one question, only the first counts.
-      if (!(await this.sessions.markAnswered(question.id, graded.isCorrect, now))) {
+      if (graded.closesQuestion && !(await this.sessions.markAnswered(question.id, closed.isCorrect === true, now))) {
         throw new ApiError(HttpStatus.CONFLICT, 'QUESTION_ALREADY_ANSWERED');
       }
 
-      const { progress } = await this.progress.recordAnswer({
+      const { attempt, progress } = await this.progress.recordAnswer({
         userId,
         itemId: question.itemId,
         sessionId: session.id,
         questionId: question.id,
         idempotencyKey: dto.idempotencyKey,
+        isCorrect: graded.isCorrect,
+        rating: graded.rating,
+        givenAnswer: graded.givenAnswer,
+        confusedWithItemId: graded.confusedWithItemId,
         responseMs: dto.responseMs ?? null,
         now,
-        ...graded,
       });
 
-      const answered: GameQuestionRecord = { ...question, answeredAt: now, isCorrect: graded.isCorrect };
-      const questions = session.questions.map((q) => (q.id === question.id ? answered : q));
-      return this.answerResult({ ...session, questions }, answered, progress);
+      return this.answerResult([...session.attempts, toSessionAttempt(attempt)], closed, graded.isCorrect, progress);
     });
   }
 
@@ -120,10 +130,10 @@ export class GameSessionsService {
       const { pointsPerCorrect } = GAME_DEFINITIONS[session.gameType];
 
       if (session.status === 'COMPLETED' && session.completedAt) {
-        return summarize(session.questions, pointsPerCorrect, session.startedAt, session.completedAt);
+        return summarize(session.questions, session.attempts, pointsPerCorrect, session.startedAt, session.completedAt);
       }
 
-      const summary = summarize(session.questions, pointsPerCorrect, session.startedAt, now);
+      const summary = summarize(session.questions, session.attempts, pointsPerCorrect, session.startedAt, now);
       await this.sessions.complete(session.id, {
         completedAt: now,
         score: summary.score,
@@ -147,35 +157,20 @@ export class GameSessionsService {
     if (isExpired(session, now)) throw new ApiError(HttpStatus.GONE, 'GAME_SESSION_EXPIRED');
   }
 
-  private grade(question: GameQuestionRecord, dto: SubmitAnswerDto): GradedAnswer {
-    if (question.kind === 'FLASHCARD') {
-      if (!dto.rating) throw new ApiError(HttpStatus.BAD_REQUEST, 'INVALID_ANSWER');
-      return { isCorrect: dto.rating !== 'AGAIN', rating: dto.rating, givenAnswer: null, confusedWithItemId: null };
-    }
-
-    const option = question.options?.find((candidate) => candidate.id === dto.optionId);
-    if (!option) throw new ApiError(HttpStatus.BAD_REQUEST, 'INVALID_ANSWER');
-
-    const isCorrect = option.id === question.correctOptionId;
-    return {
-      isCorrect,
-      rating: isCorrect ? 'GOOD' : 'AGAIN',
-      givenAnswer: option.text,
-      confusedWithItemId: isCorrect ? null : option.itemId,
-    };
-  }
-
   private answerResult(
-    session: GameSessionRecord,
+    attempts: SessionAttempt[],
     question: GameQuestionRecord,
+    isCorrect: boolean,
     progress: ItemProgress | null,
   ): AnswerResultView {
+    const completed = question.answeredAt !== null;
     return {
       questionId: question.id,
-      isCorrect: question.isCorrect === true,
-      correctOptionId: question.correctOptionId,
-      reveal: question.reveal,
-      combo: comboStats(answeredResults(session.questions)).current,
+      isCorrect,
+      questionCompleted: completed,
+      correctOptionId: completed ? question.correctOptionId : null,
+      reveal: completed ? question.reveal : null,
+      combo: comboStats(attempts.map((attempt) => attempt.isCorrect)).current,
       progress: { masteryLevel: progress?.masteryLevel ?? 0, dueAt: progress?.dueAt ?? null },
     };
   }

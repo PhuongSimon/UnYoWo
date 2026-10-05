@@ -36,6 +36,13 @@ export function choiceKindsFor(item: PracticeItem, locale: UiLocale): ChoiceKind
   return item.meaning ? ['TEXT_TO_MEANING', 'MEANING_TO_TEXT'] : [];
 }
 
+/** Typing needs an answer the user can type on any keyboard (or in the study language's own script). */
+export function typingKindsFor(item: PracticeItem, locale: UiLocale): ChoiceKind[] {
+  if (item.type !== 'WORD') return item.romanization ? ['TEXT_TO_ROMANIZATION'] : [];
+  if (item.languageCode === locale) return item.emoji ? ['EMOJI_TO_TEXT'] : [];
+  return item.meaning ? ['MEANING_TO_TEXT'] : [];
+}
+
 export function revealFor(item: PracticeItem, locale: UiLocale): QuestionReveal {
   return {
     text: item.text,

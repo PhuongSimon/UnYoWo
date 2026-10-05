@@ -114,6 +114,8 @@ export class PrismaContentRepository extends ContentRepository {
         text: true,
         reading: true,
         romanization: true,
+        acceptedAnswers: true,
+        attributes: true,
         sortOrder: true,
         set: { select: { languageCode: true } },
         concept: { select: { gloss: true, emoji: true } },
@@ -121,8 +123,9 @@ export class PrismaContentRepository extends ContentRepository {
       },
     });
 
-    return rows.map(({ set, concept, relations, ...item }) => ({
+    return rows.map(({ set, concept, relations, attributes, ...item }) => ({
       ...item,
+      attributes: toAttributes(attributes),
       languageCode: set.languageCode,
       meaning: concept ? toLocalized(concept.gloss) : null,
       emoji: concept?.emoji ?? null,

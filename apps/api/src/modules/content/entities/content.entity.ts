@@ -57,8 +57,12 @@ export interface PracticeItem {
   text: string;
   reading: string | null;
   romanization: string | null;
+  /** Other accepted romanizations (shi → si) */
+  acceptedAnswers: string[];
   meaning: Localized | null;
   emoji: string | null;
+  /** Language-specific extras, e.g. German { article: 'der' } */
+  attributes: Record<string, string> | null;
   sortOrder: number;
   /** Curated look-alikes, preferred as wrong options */
   confusableIds: string[];

@@ -11,9 +11,10 @@ import type {
 import { GameSessionsRepository } from './game-sessions.repository.js';
 
 const sessionInclude = {
-  questions: {
-    orderBy: { position: 'asc' },
-    include: { attempts: { orderBy: { createdAt: 'desc' }, take: 1, select: { givenAnswer: true, rating: true } } },
+  questions: { orderBy: { position: 'asc' } },
+  attempts: {
+    orderBy: { createdAt: 'asc' },
+    select: { questionId: true, isCorrect: true, givenAnswer: true, rating: true, createdAt: true },
   },
 } satisfies Prisma.GameSessionInclude;
 
@@ -45,11 +46,10 @@ function toRecord({ questions, locale, ...session }: SessionRow): GameSessionRec
   return {
     ...session,
     locale: locale === 'vi' ? 'vi' : 'en',
-    questions: questions.map(({ attempts, options, reveal, sessionId: _sessionId, ...question }) => ({
+    questions: questions.map(({ options, reveal, sessionId: _sessionId, ...question }) => ({
       ...question,
       options: toOptions(options),
       reveal: toReveal(reveal),
-      lastAttempt: attempts[0] ?? null,
     })),
   };
 }
