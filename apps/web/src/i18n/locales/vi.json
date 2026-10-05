@@ -104,7 +104,9 @@
     "INVALID_ANSWER": "Không đọc được câu trả lời. Vui lòng thử lại.",
     "ThrottlerException": "Bạn thao tác quá nhanh. Vui lòng thử lại sau.",
     "NETWORK_ERROR": "Không kết nối được máy chủ. Vui lòng kiểm tra mạng và thử lại.",
-    "NO_MISTAKES": "Bạn chưa có lỗi sai nào ở ngôn ngữ này. Tuyệt vời!"
+    "NO_MISTAKES": "Bạn chưa có lỗi sai nào ở ngôn ngữ này. Tuyệt vời!",
+    "TIMER_NOT_STARTED": "Hãy bấm Bắt đầu trước khi trả lời.",
+    "TIME_UP": "Hết giờ!"
   },
   "home": {
     "greeting": "Chào {{name}} 👋",
@@ -242,7 +244,24 @@
       "FLASHCARD": "Thẻ ghi nhớ",
       "MULTIPLE_CHOICE": "Trắc nghiệm",
       "MATCHING": "Nối cặp",
-      "TYPING": "Gõ đáp án"
+      "TYPING": "Gõ đáp án",
+      "LISTENING": "Nghe",
+      "SPEED": "Tốc độ",
+      "BUILDER": "Ghép chữ"
+    },
+    "gameDescriptions": {
+      "FLASHCARD": "Xem, nhớ lại, rồi tự đánh giá mức độ nhớ.",
+      "MULTIPLE_CHOICE": "Chọn đáp án đúng trong bốn lựa chọn.",
+      "MATCHING": "Ghép mỗi câu hỏi với đáp án của nó.",
+      "TYPING": "Tự gõ câu trả lời.",
+      "LISTENING": "Nghe rồi chọn đúng cái bạn nghe được.",
+      "SPEED": "Trả lời đúng càng nhiều càng tốt trong một phút.",
+      "BUILDER": "Ghép các phần lại thành chữ."
+    },
+    "picker": {
+      "open": "Trò chơi khác",
+      "title": "Chơi: {{title}}",
+      "close": "Đóng"
     },
     "start": "{{game}}: {{title}}",
     "quit": "Rời trò chơi (bạn có thể quay lại sau)",
@@ -255,7 +274,10 @@
       "ROMANIZATION_TO_TEXT": "Chữ nào đọc như thế này?",
       "TEXT_TO_MEANING": "Từ này nghĩa là gì?",
       "MEANING_TO_TEXT": "Từ nào có nghĩa này?",
-      "EMOJI_TO_TEXT": "Từ nào hợp với hình?"
+      "EMOJI_TO_TEXT": "Từ nào hợp với hình?",
+      "AUDIO_TO_TEXT": "Bạn nghe thấy gì?",
+      "AUDIO_TO_MEANING": "Từ bạn vừa nghe nghĩa là gì?",
+      "BUILD": "Ghép chữ đọc là"
     },
     "optionCorrect": "đáp án đúng",
     "optionYours": "bạn đã chọn",
@@ -281,7 +303,10 @@
       "FLASHCARD": "Bàn phím: Space để xem đáp án, 1–4 để đánh giá.",
       "MULTIPLE_CHOICE": "Bàn phím: 1–4 để chọn đáp án, Enter để tiếp tục.",
       "MATCHING": "Bàn phím: 1–6 chọn bên trái, A–F chọn bên phải.",
-      "TYPING": "Bàn phím: Enter để kiểm tra, Enter lần nữa để tiếp tục."
+      "TYPING": "Bàn phím: Enter để kiểm tra, Enter lần nữa để tiếp tục.",
+      "LISTENING": "Bàn phím: R để nghe lại, 1–4 để chọn đáp án.",
+      "SPEED": "Bàn phím: 1–4 để chọn đáp án. Nhanh tay lên!",
+      "BUILDER": "Chọn một phần ở mỗi hàng, rồi nhấn Enter để kiểm tra."
     },
     "matching": {
       "instructions": "Chạm một thẻ mỗi bên để ghép thành cặp.",
@@ -310,6 +335,36 @@
         "ko": "Gõ bằng Hangul hay chữ Latin đều được, ví dụ: 사과 hoặc sagwa."
       }
     },
+    "listening": {
+      "replay": "Nghe lại",
+      "unsupported": "Thiết bị này không phát được âm thanh nên chưa chơi được phần Nghe. Hãy thử trình duyệt khác."
+    },
+    "speed": {
+      "title": "Thử thách tốc độ",
+      "description_one": "Trả lời càng nhiều câu càng tốt trong {{count}} giây. Đồng hồ chỉ chạy khi bạn bấm Bắt đầu.",
+      "description_other": "Trả lời càng nhiều câu càng tốt trong {{count}} giây. Đồng hồ chỉ chạy khi bạn bấm Bắt đầu.",
+      "start": "Bắt đầu",
+      "timeLeft_one": "Còn {{count}} giây",
+      "timeLeft_other": "Còn {{count}} giây",
+      "hurry": "Còn chưa đến 10 giây!"
+    },
+    "builder": {
+      "instruction": "Ghép chữ đọc là",
+      "slots": "Chữ của bạn, từng phần",
+      "empty": "Trống: {{role}}",
+      "clear": "Bỏ {{part}} ({{role}})",
+      "roles": {
+        "INITIAL": "Phụ âm đầu",
+        "VOWEL": "Nguyên âm",
+        "FINAL": "Phụ âm cuối",
+        "BASE": "Chữ gốc",
+        "SMALL": "Chữ nhỏ",
+        "MARK": "Dấu"
+      },
+      "check": "Kiểm tra",
+      "reset": "Xoá hết các phần",
+      "yourParts": "Bạn đã ghép: {{parts}}"
+    },
     "sendFailed": "Chưa lưu được câu trả lời. Kiểm tra kết nối rồi thử lại.",
     "completeFailed": "Chưa lưu được kết quả. Kiểm tra kết nối rồi thử lại.",
     "completing": "Đang lưu kết quả…",
@@ -325,7 +380,9 @@
       "playAgain": "Chơi lại",
       "back": "Về trang luyện tập",
       "pairs": "Số cặp đã ghép",
-      "mistakes": "Ghép sai"
+      "mistakes": "Ghép sai",
+      "newBest": "Kỷ lục mới!",
+      "best": "Kỷ lục của bạn: {{score}}"
     },
     "expired": {
       "title": "Lượt chơi này đã hết hạn",

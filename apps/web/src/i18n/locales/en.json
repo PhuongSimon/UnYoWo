@@ -104,7 +104,9 @@
     "INVALID_ANSWER": "That answer couldn't be read. Please try again.",
     "ThrottlerException": "Too many requests. Please slow down.",
     "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again.",
-    "NO_MISTAKES": "No mistakes to practise in this language yet. Nice!"
+    "NO_MISTAKES": "No mistakes to practise in this language yet. Nice!",
+    "TIMER_NOT_STARTED": "Press Start before answering.",
+    "TIME_UP": "Time's up!"
   },
   "home": {
     "greeting": "Hi, {{name}} 👋",
@@ -242,7 +244,24 @@
       "FLASHCARD": "Flashcards",
       "MULTIPLE_CHOICE": "Quiz",
       "MATCHING": "Matching",
-      "TYPING": "Typing"
+      "TYPING": "Typing",
+      "LISTENING": "Listening",
+      "SPEED": "Speed",
+      "BUILDER": "Builder"
+    },
+    "gameDescriptions": {
+      "FLASHCARD": "See it, recall it, rate how well you knew it.",
+      "MULTIPLE_CHOICE": "Pick the right answer out of four.",
+      "MATCHING": "Pair every prompt with its match.",
+      "TYPING": "Type the answer yourself.",
+      "LISTENING": "Hear it, then pick what you heard.",
+      "SPEED": "As many right answers as you can in a minute.",
+      "BUILDER": "Assemble characters from their parts."
+    },
+    "picker": {
+      "open": "More games",
+      "title": "Play {{title}}",
+      "close": "Close"
     },
     "start": "{{game}}: {{title}}",
     "quit": "Leave the game (you can come back to it)",
@@ -255,7 +274,10 @@
       "ROMANIZATION_TO_TEXT": "Which one is it?",
       "TEXT_TO_MEANING": "What does this mean?",
       "MEANING_TO_TEXT": "Which word means this?",
-      "EMOJI_TO_TEXT": "Which word fits the picture?"
+      "EMOJI_TO_TEXT": "Which word fits the picture?",
+      "AUDIO_TO_TEXT": "What did you hear?",
+      "AUDIO_TO_MEANING": "What does the word you heard mean?",
+      "BUILD": "Build the character that reads"
     },
     "optionCorrect": "correct answer",
     "optionYours": "your answer",
@@ -281,7 +303,10 @@
       "FLASHCARD": "Keyboard: Space shows the answer, 1–4 rates it.",
       "MULTIPLE_CHOICE": "Keyboard: 1–4 picks an answer, Enter continues.",
       "MATCHING": "Keyboard: 1–6 picks a prompt, A–F picks its match.",
-      "TYPING": "Keyboard: Enter checks your answer, then Enter continues."
+      "TYPING": "Keyboard: Enter checks your answer, then Enter continues.",
+      "LISTENING": "Keyboard: R plays the sound again, 1–4 picks an answer.",
+      "SPEED": "Keyboard: 1–4 picks an answer. Be quick!",
+      "BUILDER": "Pick one part per row, then press Enter to check."
     },
     "matching": {
       "instructions": "Tap a card on each side to make a pair.",
@@ -310,6 +335,36 @@
         "ko": "Hangul or romanization both count, e.g. 사과 or sagwa."
       }
     },
+    "listening": {
+      "replay": "Play the sound again",
+      "unsupported": "This device can't play sounds, so listening rounds won't work here. Try another browser."
+    },
+    "speed": {
+      "title": "Speed challenge",
+      "description_one": "Answer as many questions as you can in {{count}} second. The clock starts when you press Start.",
+      "description_other": "Answer as many questions as you can in {{count}} seconds. The clock starts when you press Start.",
+      "start": "Start",
+      "timeLeft_one": "{{count}} second left",
+      "timeLeft_other": "{{count}} seconds left",
+      "hurry": "Less than 10 seconds left!"
+    },
+    "builder": {
+      "instruction": "Build the character that reads",
+      "slots": "Your character, part by part",
+      "empty": "Empty: {{role}}",
+      "clear": "Remove {{part}} ({{role}})",
+      "roles": {
+        "INITIAL": "First consonant",
+        "VOWEL": "Vowel",
+        "FINAL": "Final consonant",
+        "BASE": "Main character",
+        "SMALL": "Small character",
+        "MARK": "Mark"
+      },
+      "check": "Check",
+      "reset": "Clear all parts",
+      "yourParts": "You built: {{parts}}"
+    },
     "sendFailed": "Your answer couldn't be saved. Check your connection and try again.",
     "completeFailed": "Your results couldn't be saved. Check your connection and try again.",
     "completing": "Saving your results…",
@@ -325,7 +380,9 @@
       "playAgain": "Play again",
       "back": "Back to practice",
       "pairs": "Pairs found",
-      "mistakes": "Wrong pairs"
+      "mistakes": "Wrong pairs",
+      "newBest": "New personal best!",
+      "best": "Your best: {{score}}"
     },
     "expired": {
       "title": "This round has expired",
