@@ -140,6 +140,12 @@ describe('Korean Hangul', () => {
     ]);
   });
 
+  it('gives every jamo a spoken form for listening games', () => {
+    expect(findItem('ko', 'hangul-consonants', 'ㄱ').attributes).toEqual({ name: '기역', speak: '기역' });
+    expect(findItem('ko', 'hangul-vowels', 'ㅏ').attributes).toEqual({ speak: '아' });
+    expect(findItem('ko', 'hangul-compound-vowels', 'ㅘ').attributes).toEqual({ speak: '와' });
+  });
+
   it('records which two vowels form each compound vowel', () => {
     expect(findItem('ko', 'hangul-compound-vowels', 'ㅘ').components?.map((c) => c.text)).toEqual(['ㅗ', 'ㅏ']);
   });

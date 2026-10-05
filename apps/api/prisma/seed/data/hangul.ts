@@ -96,7 +96,9 @@ function jamoItem([jamo, roman, ipa, name]: JamoRow, difficulty: number): SeedIt
     ipa,
     // ㄹ is r between vowels and l at the end of a syllable; both spellings are correct.
     acceptedAnswers: jamo === 'ㄹ' ? ['l'] : undefined,
-    attributes: name ? { name } : undefined,
+    // A bare jamo is read unreliably by speech engines: consonants are spoken by their
+    // name (기역), vowels with the silent ㅇ in front (아), as Korean teachers do.
+    attributes: { ...(name ? { name } : {}), speak: name ?? composeSyllable('ㅇ', jamo) },
     difficulty,
   };
 }
