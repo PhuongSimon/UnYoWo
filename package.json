@@ -13,6 +13,7 @@
     "lint": "pnpm -r lint",
     "db:up": "docker compose -f infrastructure/docker-compose.yml up -d",
     "db:down": "docker compose -f infrastructure/docker-compose.yml down",
+    "translate:up": "docker compose -f infrastructure/docker-compose.yml --profile translate up -d libretranslate",
     "db:migrate": "pnpm --filter api db:migrate",
     "db:generate": "pnpm --filter api db:generate",
     "db:seed": "pnpm --filter api db:seed",
