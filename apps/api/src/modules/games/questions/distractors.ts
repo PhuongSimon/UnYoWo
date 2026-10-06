@@ -7,8 +7,9 @@ const key = (value: string) => value.trim().toLowerCase();
 
 /**
  * Picks wrong options for a question about `target`: curated look-alikes first, then
- * items from the same set, then any item of the same type in the pool. A candidate is
- * skipped when it would be a second right answer, e.g. じ and ぢ are both "ji".
+ * items from the same set, then any item of the same type in the pool. Within each tier,
+ * words of the same part of speech come first, so a verb is not the odd one out among nouns.
+ * A candidate is skipped when it would be a second right answer, e.g. じ and ぢ are both "ji".
  */
 export function pickDistractors(
   target: PracticeItem,
@@ -31,10 +32,12 @@ export function pickDistractors(
     others.filter((item) => !confusable.has(item.id) && item.setId !== target.setId && item.type === target.type),
   ];
 
+  const samePartOfSpeech = (item: PracticeItem) => item.partOfSpeech === target.partOfSpeech;
   const usedAnswers = new Set([key(targetAnswer)]);
   const picked: PracticeItem[] = [];
   for (const tier of tiers) {
-    for (const candidate of shuffle(tier, random)) {
+    const shuffled = shuffle(tier, random);
+    for (const candidate of [...shuffled.filter(samePartOfSpeech), ...shuffled.filter((item) => !samePartOfSpeech(item))]) {
       if (picked.length === count) return picked;
 
       const candidateAnswer = fieldValue(candidate, answer, locale);

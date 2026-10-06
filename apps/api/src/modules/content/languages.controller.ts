@@ -18,4 +18,10 @@ export class LanguagesController {
   listSets(@Param('code') code: string, @CurrentUser() user: AccessTokenPayload) {
     return this.content.listSets(code, user.sub);
   }
+
+  /** Credits for the datasets this language's words came from */
+  @Get(':code/sources')
+  listSources(@Param('code') code: string) {
+    return this.content.listSources(code);
+  }
 }

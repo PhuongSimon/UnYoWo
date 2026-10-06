@@ -149,6 +149,7 @@ const kana = (id: string, text: string, romanization: string): PracticeItem => (
   romanization,
   acceptedAnswers: [],
   meaning: null,
+  partOfSpeech: null,
   emoji: null,
   attributes: null,
   components: [],

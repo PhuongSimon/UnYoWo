@@ -42,25 +42,34 @@ export function promptFor(item: PracticeItem, kind: ChoiceKind, locale: UiLocale
   return CHOICE_FIELDS[kind].prompt === 'AUDIO' ? spokenText(item) : fieldValue(item, CHOICE_FIELDS[kind].prompt, locale);
 }
 
+/**
+ * Whether the item has a meaning worth asking about in this UI language. "What does 'apple'
+ * mean?" is pointless when the meaning just repeats the word (an English word in the English UI).
+ */
+function hasMeaning(item: PracticeItem, locale: UiLocale): boolean {
+  const meaning = item.meaning?.[locale];
+  return !!meaning && meaning.trim().toLowerCase() !== item.text.trim().toLowerCase();
+}
+
 /** The multiple-choice questions that make sense for an item. */
 export function choiceKindsFor(item: PracticeItem, locale: UiLocale): ChoiceKind[] {
   if (item.type !== 'WORD') return item.romanization ? ['TEXT_TO_ROMANIZATION', 'ROMANIZATION_TO_TEXT'] : [];
-  // "What does 'apple' mean?" is pointless when the UI is in English too: show the picture instead.
-  if (item.languageCode === locale) return item.emoji ? ['EMOJI_TO_TEXT'] : [];
-  return item.meaning ? ['TEXT_TO_MEANING', 'MEANING_TO_TEXT'] : [];
+  if (hasMeaning(item, locale)) return ['TEXT_TO_MEANING', 'MEANING_TO_TEXT'];
+  // No meaning in this language (or it repeats the word): show the picture instead.
+  return item.emoji ? ['EMOJI_TO_TEXT'] : [];
 }
 
 /** Typing needs an answer the user can type on any keyboard (or in the study language's own script). */
 export function typingKindsFor(item: PracticeItem, locale: UiLocale): ChoiceKind[] {
   if (item.type !== 'WORD') return item.romanization ? ['TEXT_TO_ROMANIZATION'] : [];
-  if (item.languageCode === locale) return item.emoji ? ['EMOJI_TO_TEXT'] : [];
-  return item.meaning ? ['MEANING_TO_TEXT'] : [];
+  if (hasMeaning(item, locale)) return ['MEANING_TO_TEXT'];
+  return item.emoji ? ['EMOJI_TO_TEXT'] : [];
 }
 
 /** Hear it, then pick the character, or the meaning of a foreign word. */
 export function listeningKindsFor(item: PracticeItem, locale: UiLocale): ChoiceKind[] {
-  if (item.type !== 'WORD' || item.languageCode === locale) return ['AUDIO_TO_TEXT'];
-  return item.meaning ? ['AUDIO_TO_MEANING'] : [];
+  if (item.type !== 'WORD') return ['AUDIO_TO_TEXT'];
+  return hasMeaning(item, locale) ? ['AUDIO_TO_MEANING'] : ['AUDIO_TO_TEXT'];
 }
 
 export function revealFor(item: PracticeItem, locale: UiLocale): QuestionReveal {
