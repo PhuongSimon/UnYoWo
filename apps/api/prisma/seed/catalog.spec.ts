@@ -2,6 +2,8 @@ import { buildCatalog, refKey } from './catalog.js';
 import { composeSyllable, decomposeSyllable, romanizeSyllable } from './data/hangul.js';
 import { splitDakuten, toKatakana } from './data/kana.js';
 import { VOCABULARY_LANGUAGES } from './data/vocabulary.js';
+import { CATEGORIES, LEVELS } from './data/vocabulary-meta.js';
+import { MAX_PART_SIZE, WORD_LISTS } from './data/word-lists.js';
 
 const catalog = buildCatalog();
 const findSet = (language: string, slug: string) => {
@@ -152,9 +154,10 @@ describe('Korean Hangul', () => {
 });
 
 describe('vocabulary', () => {
-  it('has every concept in every study language', () => {
+  it('has every starter concept in every study language', () => {
     for (const language of VOCABULARY_LANGUAGES) {
-      const concepts = catalog.sets.filter((s) => s.language === language && s.kind === 'VOCABULARY').flatMap((s) => s.items.map((i) => i.concept));
+      const starter = catalog.sets.filter((s) => s.language === language && s.kind === 'VOCABULARY' && !s.level);
+      const concepts = starter.flatMap((s) => s.items.map((i) => i.concept));
       expect(new Set(concepts)).toEqual(new Set(catalog.concepts.map((c) => c.slug)));
     }
     expect(catalog.concepts.length).toBeGreaterThanOrEqual(60);
@@ -164,7 +167,8 @@ describe('vocabulary', () => {
     const kanji = /[一-鿿]/;
     for (const set of catalog.sets.filter((s) => s.language === 'ja' && s.kind === 'VOCABULARY')) {
       for (const item of set.items) {
-        if (kanji.test(item.text)) expect(item.reading, item.text).toMatch(/^[ぁ-ゖー]+$/);
+        // Loanword compounds keep their katakana part: ローマ字 → ローマじ, 消しゴム → けしゴム.
+        if (kanji.test(item.text)) expect(item.reading, item.text).toMatch(/^[ぁ-ゖァ-ヺー]+$/);
         expect(item.romanization, item.text).toBeTruthy();
       }
     }
@@ -172,7 +176,7 @@ describe('vocabulary', () => {
 
   it('gives every Korean word a romanization and every concept both glosses', () => {
     for (const set of catalog.sets.filter((s) => s.language === 'ko' && s.kind === 'VOCABULARY')) {
-      for (const item of set.items) expect(item.romanization, item.text).toMatch(/^[a-z ]+$/);
+      for (const item of set.items) expect(item.romanization, item.text).toMatch(/^[a-z' -]+$/);
     }
     for (const concept of catalog.concepts) {
       expect(concept.gloss.en.length).toBeGreaterThan(0);
@@ -183,5 +187,47 @@ describe('vocabulary', () => {
   it('stores German nouns without the article, keeping it as an attribute', () => {
     expect(findItem('de', 'vocab-food', 'Apfel').attributes).toEqual({ article: 'der', gender: 'masculine' });
     expect(findItem('de', 'vocab-verbs', 'essen').attributes).toBeUndefined();
+  });
+});
+
+describe('word lists', () => {
+  const wordListSets = catalog.sets.filter((s) => s.level);
+
+  it('has a word list for every level, and every set belongs to a known level and topic', () => {
+    expect(WORD_LISTS.map((list) => `${list.language}/${list.level}`)).toEqual(LEVELS.map((level) => `${level.language}/${level.code}`));
+    const levels = new Set(LEVELS.map((level) => `${level.language}/${level.code}`));
+    const topics = new Set(CATEGORIES.map((category) => category.slug));
+    for (const set of wordListSets) {
+      expect(levels.has(`${set.language}/${set.level}`), set.slug).toBe(true);
+      expect(topics.has(set.category ?? ''), set.slug).toBe(true);
+    }
+  });
+
+  it('splits topics into numbered parts of at most MAX_PART_SIZE words', () => {
+    for (const set of wordListSets) {
+      expect(set.items.length, set.slug).toBeGreaterThan(0);
+      expect(set.items.length, set.slug).toBeLessThanOrEqual(MAX_PART_SIZE);
+      expect(set.slug).toBe(`${set.level?.toLowerCase()}-${set.category}-${set.part}`);
+    }
+  });
+
+  it('gives every word a Vietnamese meaning, a part of speech and a source', () => {
+    for (const set of wordListSets) {
+      for (const item of set.items) {
+        expect(item.meaning?.vi, `${set.slug}/${item.text}`).toBeTruthy();
+        expect(item.partOfSpeech, `${set.slug}/${item.text}`).toBeTruthy();
+        expect(item.source, `${set.slug}/${item.text}`).toBeTruthy();
+      }
+    }
+  });
+
+  it('never lists the same word twice in one topic of a level', () => {
+    for (const { language, level } of WORD_LISTS) {
+      const keys = wordListSets
+        .filter((s) => s.language === language && s.level === level)
+        .flatMap((s) => s.items.map((i) => [i.text, i.reading ?? '', i.partOfSpeech, s.category].join('|')));
+      const duplicates = keys.filter((key, index) => keys.indexOf(key) !== index);
+      expect(duplicates, `${language}/${level}`).toEqual([]);
+    }
   });
 });
