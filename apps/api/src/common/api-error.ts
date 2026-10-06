@@ -25,7 +25,9 @@ export type ErrorCode =
   | 'QUESTION_ALREADY_ANSWERED'
   | 'INVALID_ANSWER'
   | 'TIMER_NOT_STARTED'
-  | 'TIME_UP';
+  | 'TIME_UP'
+  | 'TRANSLATION_SAME_LANGUAGE'
+  | 'TRANSLATION_UNAVAILABLE';
 
 /**
  * Every error the API returns has a stable `code` the web app can translate:
