@@ -110,6 +110,26 @@ enum ItemRelationKind {
   CONFUSABLE
 }
 
+enum PartOfSpeech {
+  NOUN
+  VERB
+  ADJECTIVE
+  ADVERB
+  PRONOUN
+  DETERMINER
+  NUMERAL
+  /// Counts things: 枚, 명, Stück
+  COUNTER
+  PREPOSITION
+  CONJUNCTION
+  PARTICLE
+  INTERJECTION
+  /// Set expressions and greetings: お元気ですか, auf Wiedersehen
+  PHRASE
+  /// Only used attached to another word: ～さん, ～中
+  AFFIX
+}
+
 model Language {
   /// BCP 47 primary tag: en, de, ja, ko
   code       String   @id
@@ -123,8 +143,56 @@ model Language {
 
   sets         LearningSet[]
   gameSessions GameSession[]
+  levels       ProficiencyLevel[]
 
   @@map("languages")
+}
+
+/// One step of a language's official exam ladder: JLPT N5, CEFR B1, TOPIK I.
+model ProficiencyLevel {
+  languageCode String @map("language_code")
+  /// N5, B1, TOPIK1
+  code         String
+  /// JLPT, CEFR, TOPIK
+  framework    String
+  /// { en, vi }
+  title        Json
+  /// Easiest first
+  sortOrder    Int    @default(0) @map("sort_order")
+
+  language Language      @relation(fields: [languageCode], references: [code])
+  sets     LearningSet[]
+
+  @@id([languageCode, code])
+  @@map("proficiency_levels")
+}
+
+/// Topics shared by every language, so "Food" groups German and Japanese sets alike.
+model VocabularyCategory {
+  slug      String  @id
+  /// { en, vi }
+  title     Json
+  emoji     String?
+  sortOrder Int     @default(0) @map("sort_order")
+
+  sets LearningSet[]
+
+  @@map("vocabulary_categories")
+}
+
+/// Where learning content came from and under which licence; listed to learners as attribution.
+model ContentSource {
+  /// jlpt-waller, krdict, cefrj
+  id          String @id
+  name        String
+  url         String
+  license     String
+  /// The credit line the licence asks for
+  attribution String
+
+  items LearningItem[]
+
+  @@map("content_sources")
 }
 
 /// The unit a user picks to study and the unit achievements refer to: "Hiragana: basic", "German: food".
@@ -137,17 +205,24 @@ model LearningSet {
   script       String?
   /// Topic for vocabulary sets (food, animals…), shared across languages to group sets
   category     String?
+  /// Exam level for vocabulary sets (N5, B1…); null for alphabets and the starter sets
+  level        String?
+  /// Large topics are split into parts of a few dozen words: 1, 2, 3…
+  part         Int?            @db.SmallInt
   /// { en, vi }
   title        Json
   sortOrder    Int             @default(0) @map("sort_order")
   createdAt    DateTime        @default(now()) @map("created_at")
   updatedAt    DateTime        @updatedAt @map("updated_at")
 
-  language     Language       @relation(fields: [languageCode], references: [code])
-  items        LearningItem[]
-  gameSessions GameSession[]
+  language         Language            @relation(fields: [languageCode], references: [code])
+  vocabularyTopic  VocabularyCategory? @relation(fields: [category], references: [slug])
+  proficiencyLevel ProficiencyLevel?   @relation(fields: [languageCode, level], references: [languageCode, code])
+  items            LearningItem[]
+  gameSessions     GameSession[]
 
   @@unique([languageCode, slug])
+  @@index([languageCode, level])
   @@map("learning_sets")
 }
 
@@ -179,7 +254,11 @@ model LearningItem {
   /// Other spellings accepted when typing: shi → si, tsu → tu
   acceptedAnswers String[]         @default([]) @map("accepted_answers")
   conceptId       String?          @map("concept_id") @db.Uuid
-  /// Language-specific extras, e.g. German { gender, article }
+  /// { en?, vi? }: the word's own meaning; when a key is missing the concept's gloss is used
+  meaning         Json?
+  partOfSpeech    PartOfSpeech?    @map("part_of_speech")
+  sourceId        String?          @map("source_id")
+  /// Language-specific extras, e.g. German { gender, article, plural }, Japanese { hanViet }
   attributes      Json?
   /// Recorded audio; when empty the web app falls back to speech synthesis
   audioUrl        String?          @map("audio_url")
@@ -191,6 +270,7 @@ model LearningItem {
 
   set         LearningSet        @relation(fields: [setId], references: [id], onDelete: Cascade)
   concept     Concept?           @relation(fields: [conceptId], references: [id], onDelete: SetNull)
+  source      ContentSource?     @relation(fields: [sourceId], references: [id])
   components  ItemComponent[]    @relation("ItemComponents")
   partOf      ItemComponent[]    @relation("ComponentItem")
   relations   ItemRelation[]     @relation("RelationFrom")
@@ -202,6 +282,7 @@ model LearningItem {
 
   @@unique([setId, text])
   @@index([conceptId])
+  @@index([text])
   @@map("learning_items")
 }
 
@@ -490,4 +571,23 @@ model UserAchievement {
   @@id([userId, achievementKey])
   @@index([sessionId])
   @@map("user_achievements")
+}
+
+// ─── Translation ─────────────────────────────────────────────────────────────
+
+/// Machine translations already fetched, so asking for the same text again costs no provider quota.
+model TranslationCache {
+  id             String   @id @default(uuid()) @db.Uuid
+  sourceLang     String   @map("source_lang")
+  targetLang     String   @map("target_lang")
+  sourceText     String   @map("source_text")
+  translatedText String   @map("translated_text")
+  /// mymemory, libretranslate, deepl
+  provider       String
+  hits           Int      @default(0)
+  createdAt      DateTime @default(now()) @map("created_at")
+  lastUsedAt     DateTime @default(now()) @map("last_used_at")
+
+  @@unique([sourceLang, targetLang, sourceText])
+  @@map("translation_cache")
 }
