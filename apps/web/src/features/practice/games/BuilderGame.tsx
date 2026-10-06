@@ -98,7 +98,7 @@ function BuilderRound({ state, game, studyLang, speechLang, question }: GameScre
                       disabled={!playing}
                       onClick={() => choose(tile)}
                       className={`flex min-h-12 min-w-12 items-center justify-center rounded-xl border-2 border-b-4 px-3 text-2xl font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
-                        selected ? 'border-primary-500 bg-primary-500/15' : 'border-line-soft bg-surface-raised hover:border-primary-400'
+                        selected ? 'border-primary-500 bg-brand/15' : 'border-line-soft bg-surface-raised hover:border-primary-400'
                       }`}
                     >
                       <span lang={studyLang}>{tile.text}</span>

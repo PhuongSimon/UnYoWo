@@ -48,7 +48,7 @@ function GrammarTopicPage() {
                   state={linkState}
                   className={({ isActive }) =>
                     `flex gap-2 rounded-lg px-2 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-accent ${
-                      isActive ? 'bg-primary-500/15 font-semibold text-accent' : 'text-muted hover:bg-surface-raised hover:text-fg'
+                      isActive ? 'bg-brand/15 font-semibold text-accent' : 'text-muted hover:bg-surface-raised hover:text-fg'
                     }`
                   }
                 >
@@ -72,7 +72,7 @@ function GrammarTopicPage() {
 
         <header className="mt-4">
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="rounded-full bg-primary-500/15 px-3 py-0.5 font-extrabold text-accent">{language.levelLabels[topic.level]}</span>
+            <span className="rounded-full bg-brand/15 px-3 py-0.5 font-extrabold text-accent">{language.levelLabels[topic.level]}</span>
             <span className="text-muted">{t('learn.grammar.lessonOf', { current: index + 1, total: content.grammar.length })}</span>
           </div>
           <h2 className="mt-3 text-2xl font-extrabold sm:text-3xl">{loc(topic.title)}</h2>
@@ -112,7 +112,7 @@ function TopicSection({ section }: { section: Section }) {
         <ul className="space-y-2">
           {section.bullets.map((bullet, index) => (
             <li key={index} className="flex gap-2.5 leading-relaxed">
-              <span aria-hidden="true" className="mt-2.5 size-1.5 shrink-0 rounded-full bg-primary-500" />
+              <span aria-hidden="true" className="mt-2.5 size-1.5 shrink-0 rounded-full bg-brand" />
               <span>
                 <RichText text={loc(bullet)} />
               </span>

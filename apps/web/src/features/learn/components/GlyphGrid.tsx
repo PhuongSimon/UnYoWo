@@ -53,7 +53,7 @@ function GlyphGrid({ columns, rows }: GlyphGridProps) {
                       disabled={!speechSupported}
                       aria-label={`${cell.char} ${cell.roman ?? ''} – ${t('learn.listen', { text: toSpeechText(speakText) })}`}
                       className={`flex w-full min-w-12 flex-col items-center rounded-lg px-1 py-1.5 transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:cursor-default ${
-                        active ? 'bg-primary-500 text-primary-950' : 'hover:bg-primary-50 dark:hover:bg-espresso-700'
+                        active ? 'bg-brand text-on-brand' : 'hover:bg-primary-50 dark:hover:bg-espresso-700'
                       }`}
                     >
                       <span lang={language.code} className="text-xl leading-tight font-bold sm:text-2xl">

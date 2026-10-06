@@ -123,7 +123,7 @@ function DrillRound({ cells, lang, speechLang, mode, speak, onFinish, onQuit }: 
             maxLength={12}
             placeholder={t('drill.round.placeholder')}
             aria-describedby="drill-answer-hint"
-            className="min-h-14 min-w-0 flex-1 rounded-2xl border-2 border-line-soft bg-surface-raised px-4 text-center text-2xl font-semibold tracking-wide transition-colors outline-none placeholder:text-base placeholder:font-normal placeholder:tracking-normal placeholder:text-muted focus:border-primary-500"
+            className="min-h-14 min-w-0 flex-1 rounded-2xl border-2 border-line-soft bg-surface-raised px-4 text-center text-2xl font-semibold tracking-wide transition-colors outline-none placeholder:text-base placeholder:font-normal placeholder:tracking-normal placeholder:text-muted focus:border-accent"
           />
           <Button type="submit" disabled={!text.trim()} className="shrink-0" aria-label={t('drill.round.submit')}>
             <ArrowRight size={20} aria-hidden="true" />

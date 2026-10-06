@@ -45,7 +45,7 @@ function GameShell({ answered, total, combo, backTo, hint, extra, timer, childre
           <span
             key={combo}
             aria-label={t('practice.combo', { count: combo })}
-            className="flex shrink-0 items-center gap-0.5 rounded-full bg-primary-500/15 px-2 py-1 text-sm font-extrabold text-accent motion-safe:animate-fade-in"
+            className="flex shrink-0 items-center gap-0.5 rounded-full bg-brand/15 px-2 py-1 text-sm font-extrabold text-accent motion-safe:animate-fade-in"
           >
             <Flame size={16} aria-hidden="true" />
             {combo}

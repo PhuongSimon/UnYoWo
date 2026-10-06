@@ -34,7 +34,7 @@ function GameTimer({ deadlineAt, limitSeconds }: { deadlineAt: number | null; li
         className="h-2.5 flex-1 overflow-hidden rounded-full bg-line-soft/70"
       >
         <div
-          className={`h-full rounded-full transition-[width] duration-200 ease-linear motion-reduce:transition-none ${warning ? 'bg-red-500' : 'bg-primary-500'}`}
+          className={`h-full rounded-full transition-[width] duration-200 ease-linear motion-reduce:transition-none ${warning ? 'bg-red-500' : 'bg-brand'}`}
           style={{ width: `${percent}%` }}
         />
       </div>

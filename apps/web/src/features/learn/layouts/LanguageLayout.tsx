@@ -93,7 +93,7 @@ function LanguageShell({ language }: { language: StudyLanguage }) {
                 end={end}
                 className={({ isActive }) =>
                   `flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-accent ${
-                    isActive ? 'bg-primary-500 text-primary-950 shadow-sm' : 'text-muted hover:bg-surface-raised hover:text-fg'
+                    isActive ? 'bg-brand text-on-brand shadow-sm' : 'text-muted hover:bg-surface-raised hover:text-fg'
                   }`
                 }
               >

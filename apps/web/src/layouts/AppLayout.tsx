@@ -12,7 +12,7 @@ import ProgressBadges from '@/features/progress/components/ProgressBadges'
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   `flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-accent ${
-    isActive ? 'bg-primary-500/15 text-accent' : 'text-muted hover:bg-surface-raised hover:text-fg'
+    isActive ? 'bg-brand/15 text-accent' : 'text-muted hover:bg-surface-raised hover:text-fg'
   }`
 
 const fitsViewport = (handle: unknown) =>

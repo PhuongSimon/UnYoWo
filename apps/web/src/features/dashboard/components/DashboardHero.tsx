@@ -28,7 +28,7 @@ function DashboardHero({
   return (
     <section
       aria-labelledby="dashboard-greeting"
-      className="relative isolate flex shrink-0 items-center gap-4 overflow-hidden rounded-3xl bg-gradient-to-br from-primary-500 via-primary-400 to-secondary-400 px-5 py-4 text-primary-950 shadow-sm sm:px-8 fit:py-3 tall:py-7 dark:from-primary-700 dark:via-primary-600 dark:to-secondary-700 dark:text-primary-50"
+      className="relative isolate flex shrink-0 items-center gap-4 overflow-hidden rounded-3xl bg-gradient-to-br from-primary-500 via-primary-400 to-secondary-400 px-5 py-4 text-primary-950 shadow-sm sm:px-8 fit:py-3 tall:py-7 dark:from-primary-800 dark:via-primary-700 dark:to-secondary-800 dark:text-primary-50"
     >
       <span
         aria-hidden="true"

@@ -70,7 +70,7 @@ function ScriptPicker({ scripts }: { scripts: DrillScript[] }) {
               <span
                 lang={script.lang}
                 aria-hidden="true"
-                className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-primary-500/15 text-4xl font-bold text-accent"
+                className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-brand/15 text-4xl font-bold text-accent"
               >
                 {script.sample}
               </span>

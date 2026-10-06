@@ -150,6 +150,13 @@
   --line-soft: var(--color-espresso-200);
   --accent: var(--color-primary-700);
   --danger: var(--color-red-700);
+  /* Filled controls: primary button, active tab or chip, progress bar.
+     Separate from the primary scale because some themes fill with a dark
+     color (violet, navy) and need light text on it. */
+  --brand: var(--color-primary-500);
+  --brand-hover: var(--color-primary-400);
+  --on-brand: var(--color-primary-950);
+  --brand-edge: var(--color-primary-700);
   --float-glow: rgb(225 115 70 / 0.25);
 }
 
@@ -177,12 +184,16 @@
   --color-line-soft: var(--line-soft);
   --color-accent: var(--accent);
   --color-danger: var(--danger);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-on-brand: var(--on-brand);
+  --color-brand-edge: var(--brand-edge);
 }
 
-/* The "floating" card from the auth screens: a solid orange edge plus a soft glow */
+/* The "floating" card from the auth screens: a solid brand edge plus a soft glow */
 @utility shadow-float {
   box-shadow:
-    0 6px 0 0 var(--color-primary-500),
+    0 6px 0 0 var(--brand),
     0 24px 40px -12px var(--float-glow);
 }
 

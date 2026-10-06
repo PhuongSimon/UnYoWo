@@ -36,7 +36,7 @@ function SpeakButton({ text, lang, size = 'sm', className = '' }: SpeakButtonPro
       title={label}
       className={`inline-flex shrink-0 items-center justify-center rounded-full border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${SIZES[size].box} ${
         active
-          ? 'border-primary-600 bg-primary-500 text-primary-950'
+          ? 'border-brand-edge bg-brand text-on-brand'
           : 'border-line-soft bg-surface-raised text-accent hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-espresso-700'
       } ${className}`}
     >

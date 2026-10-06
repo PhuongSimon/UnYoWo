@@ -109,13 +109,13 @@ function CellToggle({ cell, lang, checked, onClick }: { cell: DrillCell; lang: s
       aria-label={`${cell.char} ${cell.answers[0]}`}
       onClick={onClick}
       className={`flex min-h-13 w-full min-w-11 flex-col items-center justify-center rounded-lg border px-1 py-1 transition-colors focus-visible:outline-2 focus-visible:outline-accent ${
-        checked ? 'border-primary-600 bg-primary-500 text-primary-950' : 'border-transparent hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-espresso-700'
+        checked ? 'border-brand-edge bg-brand text-on-brand' : 'border-transparent hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-espresso-700'
       }`}
     >
       <span lang={lang} className="text-xl leading-tight font-bold sm:text-2xl">
         {cell.char}
       </span>
-      <span className={`text-xs font-medium ${checked ? 'text-primary-950/80' : 'text-muted'}`}>{cell.answers[0]}</span>
+      <span className={`text-xs font-medium ${checked ? 'text-on-brand/80' : 'text-muted'}`}>{cell.answers[0]}</span>
     </button>
   )
 }
@@ -153,7 +153,7 @@ export function CheckBox({ state }: { state: CheckState }) {
     <span
       aria-hidden="true"
       className={`flex size-4.5 shrink-0 items-center justify-center rounded border-2 transition-colors ${
-        state ? 'border-primary-600 bg-primary-500 text-primary-950' : 'border-line bg-surface-raised'
+        state ? 'border-brand-edge bg-brand text-on-brand' : 'border-line bg-surface-raised'
       }`}
     >
       {state === true && <Check size={12} strokeWidth={3.5} />}

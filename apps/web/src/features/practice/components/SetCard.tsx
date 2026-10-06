@@ -42,7 +42,7 @@ function SetCard({ set, starting, disabled, onStart }: SetCardProps) {
             {title}
           </h3>
           {due > 0 && (
-            <span className="shrink-0 rounded-full bg-primary-500/15 px-2 py-0.5 text-xs font-bold text-accent">
+            <span className="shrink-0 rounded-full bg-brand/15 px-2 py-0.5 text-xs font-bold text-accent">
               {t('practice.set.due', { count: due })}
             </span>
           )}

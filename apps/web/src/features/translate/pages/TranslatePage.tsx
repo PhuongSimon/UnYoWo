@@ -38,7 +38,7 @@ function savePair(pair: { source: Source; target: TranslationLanguage }) {
 }
 
 const SELECT =
-  'min-h-11 w-full rounded-xl border-2 border-line bg-surface px-3 text-base font-semibold text-fg outline-none transition-colors hover:border-primary-400 focus:border-primary-500'
+  'min-h-11 w-full rounded-xl border-2 border-line bg-surface px-3 text-base font-semibold text-fg outline-none transition-colors hover:border-primary-400 focus:border-accent'
 
 function TranslatePage() {
   const { t } = useTranslation()
@@ -79,7 +79,7 @@ function TranslatePage() {
   return (
     <div className="mx-auto w-full max-w-app px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
       <header className="flex items-center gap-3">
-        <span className="hidden size-12 shrink-0 items-center justify-center rounded-full bg-primary-500/15 text-accent sm:flex">
+        <span className="hidden size-12 shrink-0 items-center justify-center rounded-full bg-brand/15 text-accent sm:flex">
           <Languages size={24} aria-hidden="true" />
         </span>
         <div>
@@ -151,7 +151,7 @@ function TranslatePage() {
               rows={5}
               lang={pair.source === 'auto' ? undefined : pair.source}
               placeholder={t('translate.placeholder')}
-              className="w-full resize-y rounded-2xl border-2 border-line bg-surface p-4 pr-12 text-base text-fg outline-none transition-colors placeholder:text-muted/60 hover:border-primary-400 focus:border-primary-500"
+              className="w-full resize-y rounded-2xl border-2 border-line bg-surface p-4 pr-12 text-base text-fg outline-none transition-colors placeholder:text-muted/60 hover:border-primary-400 focus:border-accent"
             />
             {text && (
               <button
@@ -279,7 +279,7 @@ function DictionaryCard({ entries }: { entries: DictionaryEntry[] }) {
                     {entry.text}
                   </span>
                   {pronunciation && <span className="text-sm text-muted">{pronunciation}</span>}
-                  {entry.level && <span className="rounded-full bg-primary-500/15 px-2 py-0.5 text-xs font-bold text-accent">{entry.level}</span>}
+                  {entry.level && <span className="rounded-full bg-brand/15 px-2 py-0.5 text-xs font-bold text-accent">{entry.level}</span>}
                 </p>
                 {meaning && <p className="font-medium">{meaning}</p>}
                 {entry.attributes?.hanViet && <p className="text-xs text-muted">{t('practice.words.hanViet', { value: entry.attributes.hanViet })}</p>}

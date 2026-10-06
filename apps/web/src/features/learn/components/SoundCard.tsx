@@ -56,7 +56,7 @@ function ExampleChip({ text }: { text: string }) {
       disabled={!speechSupported}
       onClick={() => speak(text, language.speechLang, speechKey)}
       className={`rounded-full border px-3 py-1 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:cursor-default ${
-        active ? 'border-primary-600 bg-primary-500 text-primary-950 [&_strong]:text-primary-950' : 'border-line-soft bg-surface hover:border-primary-400'
+        active ? 'border-brand-edge bg-brand text-on-brand [&_strong]:text-on-brand' : 'border-line-soft bg-surface hover:border-primary-400'
       }`}
     >
       <RichText text={text} />

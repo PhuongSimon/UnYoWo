@@ -93,7 +93,7 @@ function GrammarListPage() {
                 aria-pressed={active}
                 onClick={() => updateParams({ level: filter.value })}
                 className={`flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-accent ${
-                  active ? 'border-primary-600 bg-primary-500 text-primary-950' : 'border-line-soft bg-surface-raised text-muted hover:border-primary-400 hover:text-fg'
+                  active ? 'border-brand-edge bg-brand text-on-brand' : 'border-line-soft bg-surface-raised text-muted hover:border-primary-400 hover:text-fg'
                 }`}
               >
                 {filter.label}
@@ -124,7 +124,7 @@ function GrammarListPage() {
           return (
             <section key={item} aria-labelledby={`level-${item}`} className="space-y-4">
               <h2 id={`level-${item}`} className="flex flex-wrap items-center gap-x-3 gap-y-1 text-lg font-bold sm:text-xl">
-                <span className="rounded-full bg-primary-500/15 px-3 py-0.5 text-sm font-extrabold text-accent">{language.levelLabels[item]}</span>
+                <span className="rounded-full bg-brand/15 px-3 py-0.5 text-sm font-extrabold text-accent">{language.levelLabels[item]}</span>
                 {t(`learn.grammar.level.${item}`)}
                 <span className="text-sm font-medium text-muted">{t('learn.grammar.lessonCount', { count: items.length })}</span>
               </h2>

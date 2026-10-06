@@ -41,7 +41,7 @@ function Pagination({ page, pageCount, onChange, label, className = '' }: Pagina
                 onClick={() => onChange(item)}
                 aria-current={item === page ? 'page' : undefined}
                 aria-label={t('pagination.page', { page: item })}
-                className={`${BUTTON} ${item === page ? 'border-primary-600 bg-primary-500 text-primary-950' : ''}`}
+                className={`${BUTTON} ${item === page ? 'border-brand-edge bg-brand text-on-brand' : ''}`}
               >
                 {item}
               </button>

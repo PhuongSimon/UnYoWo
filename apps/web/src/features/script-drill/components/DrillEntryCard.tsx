@@ -15,7 +15,7 @@ function DrillEntryCard({ language }: { language: StudyLanguageCode }) {
       aria-labelledby="drill-entry"
       className="flex flex-col gap-4 rounded-2xl border border-line-soft bg-surface-raised p-5 shadow-sm sm:flex-row sm:items-center"
     >
-      <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-500/15 text-accent">
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand/15 text-accent">
         <Keyboard size={24} aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1">

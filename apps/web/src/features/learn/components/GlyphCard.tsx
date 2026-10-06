@@ -58,7 +58,7 @@ function GlyphCard({ glyph }: GlyphCardProps) {
           <span
             aria-hidden="true"
             className={`flex size-8 shrink-0 items-center justify-center rounded-full border transition-colors ${
-              active ? 'border-primary-600 bg-primary-500 text-primary-950' : 'border-line-soft text-accent group-hover:border-primary-400'
+              active ? 'border-brand-edge bg-brand text-on-brand' : 'border-line-soft text-accent group-hover:border-primary-400'
             }`}
           >
             <Volume2 size={16} className={active ? 'motion-safe:animate-pulse' : ''} />
@@ -72,7 +72,7 @@ function GlyphCard({ glyph }: GlyphCardProps) {
         <dl className="space-y-1 text-sm">
           {glyph.readings.on && (
             <div className="flex items-baseline gap-2">
-              <dt className="w-9 shrink-0 rounded bg-primary-500/15 px-1 text-center text-[11px] font-bold text-accent uppercase">{t('learn.glyph.on')}</dt>
+              <dt className="w-9 shrink-0 rounded bg-brand/15 px-1 text-center text-[11px] font-bold text-accent uppercase">{t('learn.glyph.on')}</dt>
               <dd lang="ja">{glyph.readings.on}</dd>
             </div>
           )}

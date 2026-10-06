@@ -33,7 +33,7 @@ function SearchField({ value, onChange, label, placeholder, className = '' }: Se
         placeholder={placeholder}
         autoComplete="off"
         enterKeyHint="search"
-        className="min-h-11 w-full rounded-xl border-2 border-line bg-surface py-2 pr-11 pl-10 text-base text-fg outline-none transition-colors placeholder:text-muted/60 hover:border-primary-400 focus:border-primary-500 [&::-webkit-search-cancel-button]:hidden"
+        className="min-h-11 w-full rounded-xl border-2 border-line bg-surface py-2 pr-11 pl-10 text-base text-fg outline-none transition-colors placeholder:text-muted/60 hover:border-primary-400 focus:border-accent [&::-webkit-search-cancel-button]:hidden"
       />
       {value && (
         <button

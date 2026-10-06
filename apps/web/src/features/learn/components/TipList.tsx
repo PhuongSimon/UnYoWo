@@ -20,7 +20,7 @@ function TipList({ title, tips }: TipListProps) {
       <ul className="mt-3 space-y-2 text-sm leading-relaxed">
         {tips.map((tip, index) => (
           <li key={index} className="flex gap-2.5">
-            <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-primary-500" />
+            <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-brand" />
             <span>
               <RichText text={loc(tip)} />
             </span>
