@@ -69,7 +69,8 @@
     "hidePassword": "Ẩn mật khẩu",
     "captchaError": "Xác minh thất bại. Vui lòng thử lại.",
     "toggleTheme": "Chuyển chế độ sáng/tối",
-    "language": "Ngôn ngữ"
+    "language": "Ngôn ngữ",
+    "clearSearch": "Xoá tìm kiếm"
   },
   "notFound": {
     "title": "Lạc giữa các ngôn ngữ rồi",
@@ -455,11 +456,8 @@
       "topics_one": "{{count}} chủ đề",
       "topics_other": "{{count}} chủ đề",
       "jump": "Lọc theo chủ đề",
-      "part": "Phần {{part}}",
-      "allWords": "Toàn bộ chủ đề",
       "search": "Tìm chủ đề",
       "searchPlaceholder": "Tìm chủ đề: đồ ăn, gia đình…",
-      "clearSearch": "Xoá tìm kiếm",
       "noTopic": "Không có chủ đề nào khớp “{{query}}”.",
       "showing_one": "{{count}} chủ đề",
       "showing_other": "{{count}} chủ đề",
@@ -470,7 +468,12 @@
       "open": "Xem danh sách từ: {{title}}",
       "back": "Về trang luyện tập",
       "practise": "Học bằng thẻ ghi nhớ",
-      "more": "Xem thêm",
+      "search": "Tìm từ",
+      "searchPlaceholder": "Tìm theo từ, cách đọc hoặc nghĩa…",
+      "found_one": "{{count}}/{{total}} từ khớp",
+      "found_other": "{{count}}/{{total}} từ khớp",
+      "noMatch": "Không có từ nào khớp “{{query}}”.",
+      "pageLabel": "Danh sách từ",
       "plural": "Số nhiều: {{value}}",
       "hanViet": "Hán Việt: {{value}}",
       "hanja": "Hán tự: {{value}}",
@@ -494,6 +497,102 @@
     },
     "sources": {
       "title": "Nguồn dữ liệu từ vựng"
+    }
+  },
+  "drill": {
+    "title": "Luyện nhìn chữ, gõ phiên âm",
+    "titleFor": "Luyện {{script}}: nhìn chữ, gõ phiên âm",
+    "back": "Về Luyện tập",
+    "changeScript": "Đổi bảng chữ",
+    "pick": "Bạn muốn luyện bảng chữ nào?",
+    "charCount_one": "{{count}} chữ",
+    "charCount_other": "{{count}} chữ",
+    "scripts": {
+      "hiragana": "Hiragana",
+      "katakana": "Katakana",
+      "hangul": "Hangul"
+    },
+    "scriptHint": {
+      "hiragana": "Nét mềm, dùng cho từ thuần Nhật và ngữ pháp. Nên học trước.",
+      "katakana": "Nét góc cạnh, dùng cho từ mượn và tên nước ngoài.",
+      "hangul": "Mỗi khối là một âm tiết: phụ âm + nguyên âm."
+    },
+    "entry": {
+      "title": "Luyện nhớ bảng chữ",
+      "description": {
+        "ja": "Chữ Hiragana/Katakana hiện ngẫu nhiên, bạn gõ phiên âm romaji. Tự chọn hàng, cột muốn ôn.",
+        "ko": "Chữ Hangul hiện ngẫu nhiên, bạn gõ phiên âm Latin. Tự chọn phụ âm, nguyên âm muốn ôn."
+      },
+      "open": "Luyện ngay"
+    },
+    "romanization": {
+      "hiragana": "Gõ theo Hepburn (shi, chi, tsu, fu, ja) hoặc kiểu gõ bàn phím (si, ti, tu, hu, zya) đều đúng. を gõ wo hoặc o, ん gõ n (chế độ Enter nhận cả nn).",
+      "katakana": "Gõ theo Hepburn (shi, chi, tsu, fu, ja) hoặc kiểu gõ bàn phím (si, ti, tu, hu, zya) đều đúng. ヲ gõ wo hoặc o, ン gõ n (chế độ Enter nhận cả nn).",
+      "hangul": "Gõ theo Romaja chuẩn của Hàn Quốc (RR): 어 = eo, 으 = eu, 애 = ae, 의 = ui. ㄹ gõ r hoặc l, 시 gõ si hoặc shi đều đúng."
+    },
+    "tables": {
+      "basic": "Chữ cơ bản",
+      "dakuten": "Âm đục ゛ và bán đục ゜",
+      "yoon": "Âm ghép (ゃ ゅ ょ nhỏ)",
+      "plain": "Phụ âm cơ bản × nguyên âm cơ bản",
+      "tense": "Phụ âm căng (đôi)",
+      "compound": "Nguyên âm ghép"
+    },
+    "select": {
+      "intro": "Bấm vào chữ để chọn. Bấm chữ đầu hàng hoặc đầu cột để chọn cả hàng, cả cột.",
+      "all": "Chọn tất cả",
+      "none": "Bỏ chọn tất cả",
+      "table": "Cả bảng",
+      "tableLabel": "Chọn cả bảng {{table}}",
+      "row": "Chọn cả hàng {{label}}",
+      "column": "Chọn cả cột {{label}}",
+      "count_one": "Đã chọn {{count}} chữ",
+      "count_other": "Đã chọn {{count}} chữ"
+    },
+    "mode": {
+      "label": "Cách nộp đáp án",
+      "continuous": "Liên tục",
+      "continuousHint": "Gõ đủ phiên âm là tự chuyển chữ, không cần Enter.",
+      "enter": "Nhấn Enter",
+      "enterHint": "Gõ xong nhấn Enter để nộp."
+    },
+    "sound": "Đọc chữ sau mỗi câu",
+    "start": "Bắt đầu",
+    "round": {
+      "progressLabel": "Tiến độ",
+      "progress": "{{current}}/{{total}}",
+      "charLabel": "Chữ:",
+      "label": "Phiên âm của chữ này",
+      "placeholder": "Gõ phiên âm…",
+      "submit": "Nộp",
+      "hint": {
+        "continuous": "Gõ đủ là tự chuyển chữ. Nhấn Enter để nộp sớm.",
+        "enter": "Nhấn Enter để nộp."
+      },
+      "skip": "Bỏ qua",
+      "end": "Kết thúc",
+      "correct": "Đúng",
+      "wrong": "Sai",
+      "youTyped": "bạn gõ “{{given}}”",
+      "skipped": "bỏ qua"
+    },
+    "result": {
+      "title": "Hoàn thành!",
+      "accuracy": "Độ chính xác",
+      "correct": "Đúng",
+      "time": "Thời gian",
+      "average": "TB mỗi chữ",
+      "seconds": "{{value}} giây",
+      "bestStreak": "Chuỗi đúng dài nhất",
+      "mistakes_zero": "Chữ cần ôn lại",
+      "mistakes_one": "{{count}} chữ cần ôn lại",
+      "mistakes_other": "{{count}} chữ cần ôn lại",
+      "noMistakes": "Không sai chữ nào. Tuyệt vời!",
+      "typed": "Bạn gõ:",
+      "retry": "Làm lại",
+      "retryMistakes_one": "Luyện lại {{count}} chữ sai",
+      "retryMistakes_other": "Luyện lại {{count}} chữ sai",
+      "reselect": "Chọn lại chữ"
     }
   },
   "review": {

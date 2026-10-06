@@ -69,7 +69,8 @@
     "hidePassword": "Hide password",
     "captchaError": "Verification failed. Please try again.",
     "toggleTheme": "Toggle dark mode",
-    "language": "Language"
+    "language": "Language",
+    "clearSearch": "Clear search"
   },
   "notFound": {
     "title": "Lost in translation",
@@ -455,11 +456,8 @@
       "topics_one": "{{count}} topic",
       "topics_other": "{{count}} topics",
       "jump": "Filter by topic",
-      "part": "Part {{part}}",
-      "allWords": "Whole topic",
       "search": "Search topics",
       "searchPlaceholder": "Search topics: food, family…",
-      "clearSearch": "Clear search",
       "noTopic": "No topic matches “{{query}}”.",
       "showing_one": "{{count}} topic",
       "showing_other": "{{count}} topics",
@@ -470,7 +468,12 @@
       "open": "See the words: {{title}}",
       "back": "Back to practice",
       "practise": "Study with flashcards",
-      "more": "Show more",
+      "search": "Search words",
+      "searchPlaceholder": "Search by word, reading or meaning…",
+      "found_one": "{{count}} of {{total}} words matches",
+      "found_other": "{{count}} of {{total}} words match",
+      "noMatch": "No word matches “{{query}}”.",
+      "pageLabel": "Words",
       "plural": "Plural: {{value}}",
       "hanViet": "Sino-Vietnamese: {{value}}",
       "hanja": "Hanja: {{value}}",
@@ -494,6 +497,102 @@
     },
     "sources": {
       "title": "Vocabulary data sources"
+    }
+  },
+  "drill": {
+    "title": "See the character, type its sound",
+    "titleFor": "{{script}} drill: see the character, type its sound",
+    "back": "Back to practice",
+    "changeScript": "Change script",
+    "pick": "Which script do you want to practise?",
+    "charCount_one": "{{count}} character",
+    "charCount_other": "{{count}} characters",
+    "scripts": {
+      "hiragana": "Hiragana",
+      "katakana": "Katakana",
+      "hangul": "Hangul"
+    },
+    "scriptHint": {
+      "hiragana": "Rounded strokes, for native words and grammar. Learn it first.",
+      "katakana": "Angular strokes, for loanwords and foreign names.",
+      "hangul": "Each block is one syllable: consonant + vowel."
+    },
+    "entry": {
+      "title": "Learn the script by heart",
+      "description": {
+        "ja": "Hiragana or katakana come up in random order; type the romaji. Pick the rows and columns to review.",
+        "ko": "Hangul syllables come up in random order; type the romanisation. Pick the consonants and vowels to review."
+      },
+      "open": "Start drilling"
+    },
+    "romanization": {
+      "hiragana": "Hepburn (shi, chi, tsu, fu, ja) and keyboard spellings (si, ti, tu, hu, zya) both count. Type を as wo or o, ん as n (Enter mode also takes nn).",
+      "katakana": "Hepburn (shi, chi, tsu, fu, ja) and keyboard spellings (si, ti, tu, hu, zya) both count. Type ヲ as wo or o, ン as n (Enter mode also takes nn).",
+      "hangul": "Use the Revised Romanization of Korean: 어 = eo, 으 = eu, 애 = ae, 의 = ui. ㄹ can be r or l, 시 si or shi."
+    },
+    "tables": {
+      "basic": "Basic characters",
+      "dakuten": "Voiced ゛ and p-sounds ゜",
+      "yoon": "Combinations (small ゃ ゅ ょ)",
+      "plain": "Basic consonants × basic vowels",
+      "tense": "Tense (double) consonants",
+      "compound": "Compound vowels"
+    },
+    "select": {
+      "intro": "Tap a character to pick it. Tap the first character of a row or the top of a column to pick the whole row or column.",
+      "all": "Select all",
+      "none": "Clear all",
+      "table": "Whole table",
+      "tableLabel": "Select the whole {{table}} table",
+      "row": "Select the {{label}} row",
+      "column": "Select the {{label}} column",
+      "count_one": "{{count}} character selected",
+      "count_other": "{{count}} characters selected"
+    },
+    "mode": {
+      "label": "How to submit",
+      "continuous": "Continuous",
+      "continuousHint": "Moves on as soon as the romanisation is complete. No Enter needed.",
+      "enter": "Press Enter",
+      "enterHint": "Type, then press Enter to submit."
+    },
+    "sound": "Read each character aloud",
+    "start": "Start",
+    "round": {
+      "progressLabel": "Progress",
+      "progress": "{{current}}/{{total}}",
+      "charLabel": "Character:",
+      "label": "Romanisation of this character",
+      "placeholder": "Type the sound…",
+      "submit": "Submit",
+      "hint": {
+        "continuous": "Moves on when complete. Press Enter to submit early.",
+        "enter": "Press Enter to submit."
+      },
+      "skip": "Skip",
+      "end": "Finish",
+      "correct": "Correct",
+      "wrong": "Wrong",
+      "youTyped": "you typed “{{given}}”",
+      "skipped": "skipped"
+    },
+    "result": {
+      "title": "Done!",
+      "accuracy": "Accuracy",
+      "correct": "Correct",
+      "time": "Time",
+      "average": "Per character",
+      "seconds": "{{value}} s",
+      "bestStreak": "Best streak",
+      "mistakes_zero": "Characters to review",
+      "mistakes_one": "{{count}} character to review",
+      "mistakes_other": "{{count}} characters to review",
+      "noMistakes": "No mistakes. Excellent!",
+      "typed": "You typed:",
+      "retry": "Try again",
+      "retryMistakes_one": "Practise the {{count}} mistake",
+      "retryMistakes_other": "Practise the {{count}} mistakes",
+      "reselect": "Choose characters"
     }
   },
   "review": {
