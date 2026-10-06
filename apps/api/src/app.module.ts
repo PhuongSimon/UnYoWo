@@ -7,6 +7,7 @@ import { PrismaModule } from './infrastructure/database/prisma.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { ContentModule } from './modules/content/content.module.js';
 import { GamesModule } from './modules/games/games.module.js';
+import { DashboardModule } from './modules/dashboard/dashboard.module.js';
 import { GamificationModule } from './modules/gamification/gamification.module.js';
 import { ProgressModule } from './modules/progress/progress.module.js';
 import { HealthModule } from './modules/health/health.module.js';
@@ -22,6 +23,7 @@ import { HealthModule } from './modules/health/health.module.js';
     GamesModule,
     ProgressModule,
     GamificationModule,
+    DashboardModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
