@@ -1,8 +1,23 @@
 import { http } from '@/lib/http'
-import type { AnswerInput, AnswerResult, GameSession, LearningSet, NewGame, SessionSummary, SessionTimer } from './types'
+import type {
+  AnswerInput,
+  AnswerResult,
+  ContentSource,
+  GameSession,
+  LearningSet,
+  NewGame,
+  SessionSummary,
+  SessionTimer,
+  SetItemsPage,
+} from './types'
 
 export const practiceApi = {
   listSets: (language: string) => http.get<LearningSet[]>(`/languages/${language}/sets`).then((r) => r.data),
+
+  listSources: (language: string) => http.get<ContentSource[]>(`/languages/${language}/sources`).then((r) => r.data),
+
+  listItems: (setId: string, page: number, pageSize = 100) =>
+    http.get<SetItemsPage>(`/learning-sets/${setId}/items`, { params: { page, pageSize } }).then((r) => r.data),
 
   createSession: (game: NewGame) => http.post<GameSession>('/game-sessions', game).then((r) => r.data),
 

@@ -1,6 +1,7 @@
-import { Gamepad2, Layers } from 'lucide-react'
+import { Gamepad2, Layers, List } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router'
 import DotsLoader from '@/components/ui/DotsLoader'
 import { useLocalized } from '@/features/learn/hooks/useLocalized'
 import type { GameType, LearningSet } from '../types'
@@ -9,6 +10,10 @@ import ProgressBar from './ProgressBar'
 
 interface SetCardProps {
   set: LearningSet
+  /** Replaces the set title, e.g. "Part 2" inside a topic that already shows its name */
+  heading?: string
+  /** h4 when the card sits under a topic heading */
+  headingLevel?: 3 | 4
   /** Game currently being created for this set, if any */
   starting: GameType | null
   disabled: boolean
@@ -19,23 +24,34 @@ const BUTTON =
   'inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-b-4 border-line-soft bg-surface px-2 text-sm font-bold whitespace-nowrap transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400 disabled:opacity-60'
 
 /** Flashcards one tap away; every other game in the picker, so the card stays small. */
-function SetCard({ set, starting, disabled, onStart }: SetCardProps) {
+function SetCard({ set, heading, headingLevel = 3, starting, disabled, onStart }: SetCardProps) {
   const { t } = useTranslation()
   const loc = useLocalized()
   const [picking, setPicking] = useState(false)
   const title = loc(set.title)
   const { seen, mastered, due } = set.progress
   const flashcards = t('practice.games.FLASHCARD')
+  const Heading = headingLevel === 4 ? 'h4' : 'h3'
 
   return (
     <article className="flex flex-col rounded-2xl border border-line-soft bg-surface-raised p-4 shadow-sm sm:p-5">
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="font-bold">{title}</h3>
-        {due > 0 && (
-          <span className="shrink-0 rounded-full bg-primary-500/15 px-2 py-0.5 text-xs font-bold text-accent">
-            {t('practice.set.due', { count: due })}
-          </span>
-        )}
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 pt-1">
+          <Heading className="font-bold">{heading ?? title}</Heading>
+          {due > 0 && (
+            <span className="shrink-0 rounded-full bg-primary-500/15 px-2 py-0.5 text-xs font-bold text-accent">
+              {t('practice.set.due', { count: due })}
+            </span>
+          )}
+        </div>
+        <Link
+          to={`/app/${set.languageCode}/practice/sets/${set.id}`}
+          aria-label={t('practice.words.open', { title })}
+          title={t('practice.words.open', { title })}
+          className="-mt-1.5 -mr-1.5 inline-flex size-11 shrink-0 items-center justify-center rounded-xl text-accent transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-primary-400"
+        >
+          <List size={20} aria-hidden="true" />
+        </Link>
       </div>
       <p className="mt-1 text-sm text-muted">
         {t('practice.set.items', { count: set.itemCount })} · {t('practice.set.mastered', { count: mastered })}
@@ -61,16 +77,19 @@ function SetCard({ set, starting, disabled, onStart }: SetCardProps) {
         </button>
       </div>
 
-      <GamePicker
-        set={set}
-        title={title}
-        open={picking}
-        onClose={() => setPicking(false)}
-        onPick={(gameType) => {
-          setPicking(false)
-          onStart(gameType)
-        }}
-      />
+      {/* Mounted only while open: a level can list a hundred sets, each with its own picker. */}
+      {picking && (
+        <GamePicker
+          set={set}
+          title={title}
+          open
+          onClose={() => setPicking(false)}
+          onPick={(gameType) => {
+            setPicking(false)
+            onStart(gameType)
+          }}
+        />
+      )}
     </article>
   )
 }
