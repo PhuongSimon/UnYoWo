@@ -4,17 +4,17 @@
 
 ## 1. Tổng quan
 
-| Ngôn ngữ | Cấp độ | Số từ | Số bộ (≤ 30 từ/bộ) | Nguồn danh sách từ | Nghĩa tiếng Việt |
+| Ngôn ngữ | Cấp độ | Số từ | Số bộ (1 bộ / chủ đề) | Nguồn danh sách từ | Nghĩa tiếng Việt |
 |---|---|---|---|---|---|
-| Tiếng Anh | B1 | 2.403 | 96 | CEFR-J Wordlist 1.5 | UnYoWo biên soạn |
-| Tiếng Anh | B2 | 2.732 | 106 | CEFR-J Wordlist 1.5 | UnYoWo biên soạn |
-| Tiếng Đức | A1 | 746 | 39 | Goethe A1 (chỉ lấy từ đầu mục) + nhóm từ A1 (số, thứ, tháng, màu…) | UnYoWo biên soạn (kèm mạo từ, số nhiều, nghĩa tiếng Anh) |
-| Tiếng Đức | A2 | 581 | 36 | Goethe A2 (bỏ từ đã có ở A1) | UnYoWo biên soạn |
-| Tiếng Nhật | N5 | 946 | 46 | JLPT N5 (Jonathan Waller) + file Minna của bạn | File N5.csv của bạn (đã sửa) + UnYoWo |
-| Tiếng Nhật | N4 | 667 | 36 | JLPT N4 (Jonathan Waller) | UnYoWo biên soạn (kèm Hán Việt) |
-| Tiếng Hàn | TOPIK I | 2.390 | 92 | 한국어기초사전 – từ cấp 초급 | 한국어기초사전 (đã soát, sửa ~150 mục) |
+| Tiếng Anh | B1 | 2.403 | 29 | CEFR-J Wordlist 1.5 | UnYoWo biên soạn |
+| Tiếng Anh | B2 | 2.732 | 29 | CEFR-J Wordlist 1.5 | UnYoWo biên soạn |
+| Tiếng Đức | A1 | 746 | 29 | Goethe A1 (chỉ lấy từ đầu mục) + nhóm từ A1 (số, thứ, tháng, màu…) | UnYoWo biên soạn (kèm mạo từ, số nhiều, nghĩa tiếng Anh) |
+| Tiếng Đức | A2 | 581 | 29 | Goethe A2 (bỏ từ đã có ở A1) | UnYoWo biên soạn |
+| Tiếng Nhật | N5 | 946 | 29 | JLPT N5 (Jonathan Waller) + file Minna của bạn | File N5.csv của bạn (đã sửa) + UnYoWo |
+| Tiếng Nhật | N4 | 667 | 28 | JLPT N4 (Jonathan Waller) | UnYoWo biên soạn (kèm Hán Việt) |
+| Tiếng Hàn | TOPIK I | 2.390 | 29 | 한국어기초사전 – từ cấp 초급 | 한국어기초사전 (đã soát, sửa ~150 mục) |
 
-Tổng: **10.465 từ, 451 bộ**, chia vào **29 chủ đề** dùng chung cho mọi ngôn ngữ (13 chủ đề cũ giữ nguyên slug). Các bộ "Khởi động" cũ (79 khái niệm × 4 ngôn ngữ) vẫn giữ nguyên.
+Tổng: **10.465 từ, 202 bộ**, mỗi bộ là một trong **29 chủ đề** dùng chung cho mọi ngôn ngữ (13 chủ đề cũ giữ nguyên slug). Các bộ "Khởi động" cũ (79 khái niệm × 4 ngôn ngữ) vẫn giữ nguyên.
 
 ## 2. Nguồn & giấy phép
 
@@ -46,7 +46,7 @@ erDiagram
 | `proficiency_levels` (PK `language_code` + `code`) | Bậc thi: N5, B1, TOPIK1… + `framework` (JLPT/CEFR/TOPIK), `title {en,vi}`, `sort_order` |
 | `vocabulary_categories` (PK `slug`) | 29 chủ đề dùng chung, `title {en,vi}`, `emoji` |
 | `content_sources` (PK `id`) | Nguồn dữ liệu + giấy phép + dòng ghi công |
-| `learning_sets.level`, `learning_sets.part` | Bộ thuộc cấp độ nào, phần thứ mấy của chủ đề. FK kép `(language_code, level)` |
+| `learning_sets.level` | Bộ thuộc cấp độ nào. FK kép `(language_code, level)`. Mỗi (cấp độ, chủ đề) là đúng một bộ, slug `n5-food` |
 | `learning_sets.category` | Nay là FK tới `vocabulary_categories` |
 | `learning_items.meaning` (JSONB `{en?, vi?}`) | Nghĩa riêng của từ. Thiếu key nào thì lấy `concepts.gloss` |
 | `learning_items.part_of_speech` (enum) | Từ loại: dùng để chọn đáp án nhiễu cùng từ loại |
@@ -73,7 +73,9 @@ Dữ liệu nằm ở `apps/api/prisma/seed/vocabulary/<ngôn ngữ>/<cấp đ�
 
 Sau khi sửa: `pnpm --filter api test` (test kiểm tra từ loại, chủ đề, trùng lặp, cách đọc kanji…) rồi `pnpm db:seed`.
 
-Seed **idempotent** và giữ tiến độ học: một từ được nhận diện theo (chữ, cách đọc, từ loại, chủ đề) trong cùng ngôn ngữ + cấp độ, nên khi chủ đề được chia lại phần thì từ chỉ "chuyển bộ", không mất id. Từ bị xoá khỏi CSV sẽ bị xoá khỏi DB **trừ khi** đã có người học (giữ lịch sử). Mỗi chủ đề được chia đều thành các phần ≤ 30 từ (`MAX_PART_SIZE`).
+Seed **idempotent** và giữ tiến độ học: một từ được nhận diện theo (chữ, cách đọc, từ loại, chủ đề) trong cùng ngôn ngữ + cấp độ, nên khi các bộ được tổ chức lại thì từ chỉ "chuyển bộ", không mất id. Từ bị xoá khỏi CSV sẽ bị xoá khỏi DB **trừ khi** đã có người học (giữ lịch sử).
+
+Mỗi chủ đề của một cấp độ là **một bộ**, kể cả chủ đề lớn (nhiều nhất ~280 từ: động từ B2). Không cần chia nhỏ vì mỗi lượt chơi chỉ lấy 15 từ (Thẻ ghi nhớ) hoặc 6–10 câu, theo thứ tự: từ đến hạn ôn → từ mới theo thứ tự bài → từ còn lại; trang danh sách từ có tìm kiếm và phân trang. (Trước đây chủ đề được chia thành các phần ≤ 30 từ; migration `merge_topic_parts` đã gộp lại, giữ id của phần 1 và id của mọi từ.)
 
 ## 5. Những chỉnh sửa trên file N5.csv của bạn
 

@@ -7,7 +7,7 @@ import { CATEGORIES, LEVELS, SOURCES } from './vocabulary-meta.js';
 // Exam-level vocabulary lives in CSV files (prisma/seed/vocabulary/<language>/<level>.csv) so it can
 // be edited in a spreadsheet. Each row is one word; the columns every file shares are listed in
 // CORE_COLUMNS, and any other column becomes an attribute of the item (han_viet → hanViet).
-// Rows keep their file order inside a topic, and a topic with many words is split into parts.
+// Rows keep their file order inside a topic, and each topic of a level is one set.
 
 export interface WordList {
   language: string;
@@ -24,9 +24,6 @@ export const WORD_LISTS: WordList[] = [
   { language: 'ja', level: 'N4', file: 'ja/n4.csv' },
   { language: 'ko', level: 'TOPIK1', file: 'ko/topik1.csv' },
 ];
-
-/** Words per set at most: about three game sessions, so a learner sees a set finished soon. */
-export const MAX_PART_SIZE = 30;
 
 const CORE_COLUMNS = new Set(['text', 'reading', 'romanization', 'accepted', 'pos', 'category', 'meaning_vi', 'meaning_en', 'source', 'note']);
 
@@ -89,14 +86,10 @@ export function rowToItem(row: Record<string, string>, difficulty: number, where
   };
 }
 
-/** Splits into the fewest parts of at most `max`, sized evenly: 31 words → 16 + 15, not 30 + 1. */
-export function splitIntoParts<T>(items: T[], max: number): T[][] {
-  const count = Math.ceil(items.length / max);
-  const size = Math.ceil(items.length / count);
-  return Array.from({ length: count }, (_, index) => items.slice(index * size, (index + 1) * size));
-}
-
-/** The sets of one word list: topics in CATEGORIES order, each split into parts. */
+/**
+ * The sets of one word list: one per topic, in CATEGORIES order. A big topic stays whole (up to ~280
+ * words): a game session takes at most 15 words in learning order, and the word list pages them.
+ */
 export function buildWordListSets(list: WordList, rows: Record<string, string>[], level: SeedLevel, categories: SeedCategory[] = CATEGORIES): SeedSet[] {
   const byCategory = new Map<string, SeedItem[]>();
   rows.forEach((row, index) => {
@@ -106,26 +99,20 @@ export function buildWordListSets(list: WordList, rows: Record<string, string>[]
     byCategory.set(category.slug, [...(byCategory.get(category.slug) ?? []), rowToItem(row, level.difficulty, where)]);
   });
 
-  return categories.flatMap((category) => {
+  return categories.flatMap((category): SeedSet[] => {
     const items = byCategory.get(category.slug);
     if (!items) return [];
-    const parts = splitIntoParts(items, MAX_PART_SIZE);
-    return parts.map(
-      (partItems, index): SeedSet => ({
+    return [
+      {
         language: list.language,
-        // Always numbered, so a topic that later grows into two parts keeps its first set.
-        slug: `${list.level.toLowerCase()}-${category.slug}-${index + 1}`,
+        slug: `${list.level.toLowerCase()}-${category.slug}`,
         kind: 'VOCABULARY',
         category: category.slug,
         level: list.level,
-        part: index + 1,
-        title:
-          parts.length === 1
-            ? category.title
-            : { en: `${category.title.en} ${index + 1}`, vi: `${category.title.vi} ${index + 1}` },
-        items: partItems,
-      }),
-    );
+        title: category.title,
+        items,
+      },
+    ];
   });
 }
 

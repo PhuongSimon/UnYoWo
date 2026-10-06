@@ -3,7 +3,7 @@ import { composeSyllable, decomposeSyllable, romanizeSyllable } from './data/han
 import { splitDakuten, toKatakana } from './data/kana.js';
 import { VOCABULARY_LANGUAGES } from './data/vocabulary.js';
 import { CATEGORIES, LEVELS } from './data/vocabulary-meta.js';
-import { MAX_PART_SIZE, WORD_LISTS } from './data/word-lists.js';
+import { WORD_LISTS } from './data/word-lists.js';
 
 const catalog = buildCatalog();
 const findSet = (language: string, slug: string) => {
@@ -203,11 +203,15 @@ describe('word lists', () => {
     }
   });
 
-  it('splits topics into numbered parts of at most MAX_PART_SIZE words', () => {
+  it('makes one set per topic and level, each holding each text once', () => {
+    const keys = wordListSets.map((set) => `${set.language}/${set.level}/${set.category}`);
+    expect(new Set(keys).size).toBe(keys.length);
     for (const set of wordListSets) {
       expect(set.items.length, set.slug).toBeGreaterThan(0);
-      expect(set.items.length, set.slug).toBeLessThanOrEqual(MAX_PART_SIZE);
-      expect(set.slug).toBe(`${set.level?.toLowerCase()}-${set.category}-${set.part}`);
+      expect(set.slug).toBe(`${set.level?.toLowerCase()}-${set.category}`);
+      // The database allows a text once per set (learning_items set_id + text is unique).
+      const texts = set.items.map((item) => item.text);
+      expect(new Set(texts).size, set.slug).toBe(texts.length);
     }
   });
 

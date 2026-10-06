@@ -52,7 +52,6 @@ export interface SeedSet {
   category?: string;
   /** Exam level (N5, B1…) of a vocabulary set built from a word list */
   level?: string;
-  part?: number;
   title: Localized;
   items: SeedItem[];
 }

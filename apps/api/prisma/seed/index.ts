@@ -47,8 +47,8 @@ const wordKey = (word: { text: string; reading: string | null; partOfSpeech: str
 /**
  * Exam-level word lists. A word is matched to its stored row by text + reading + part of speech
  * + topic within the language and level (the topic tells homonyms apart: 눈 "eye" and 눈 "snow"),
- * not by set, so when a topic is re-split into parts the word moves to its new set and keeps its
- * id (and every learner's progress on it). A word whose part of speech or topic was corrected
+ * not by set, so when the sets of a level are reorganised the word moves to its new set and keeps
+ * its id (and every learner's progress on it). A word whose part of speech or topic was corrected
  * reuses the row with the same text already in its target set.
  *
  * Matching runs in memory first, then rows that left the list are deleted, and only then are rows
@@ -162,7 +162,6 @@ async function seed(db: Prisma.TransactionClient, catalog: Catalog) {
       script: set.script ?? null,
       category: set.category ?? null,
       level: set.level ?? null,
-      part: set.part ?? null,
       title: set.title,
       sortOrder,
     };

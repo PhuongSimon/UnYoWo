@@ -207,8 +207,6 @@ model LearningSet {
   category     String?
   /// Exam level for vocabulary sets (N5, B1…); null for alphabets and the starter sets
   level        String?
-  /// Large topics are split into parts of a few dozen words: 1, 2, 3…
-  part         Int?            @db.SmallInt
   /// { en, vi }
   title        Json
   sortOrder    Int             @default(0) @map("sort_order")
