@@ -39,8 +39,6 @@ export interface LearningSetSummary {
   category: string | null;
   /** Exam level of a word-list set; null for alphabets and starter sets */
   level: LevelSummary | null;
-  /** Word-list topics are split into parts: 1, 2, 3… */
-  part: number | null;
   /** The vocabulary topic, with its shared title and emoji */
   topic: TopicSummary | null;
   title: Localized;

@@ -11,7 +11,6 @@ const set = (id: string, slug: string): LearningSetSummary => ({
   script: 'hiragana',
   category: null,
   level: null,
-  part: null,
   topic: null,
   title: { en: slug, vi: slug },
   itemCount: 3,

@@ -22,7 +22,6 @@ const setSelect = {
   kind: true,
   script: true,
   category: true,
-  part: true,
   title: true,
   proficiencyLevel: { select: { code: true, framework: true, title: true, sortOrder: true } },
   vocabularyTopic: { select: { slug: true, title: true, emoji: true } },

@@ -8,10 +8,11 @@ export class ListItemsQuery {
   @Min(1)
   page = 1;
 
+  // 200 holds the largest set (an alphabet chart of 140), so the word list can load a set in one request.
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(100)
+  @Max(200)
   pageSize = 50;
 }
