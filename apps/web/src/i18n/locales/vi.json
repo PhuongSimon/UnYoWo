@@ -454,9 +454,17 @@
       "starter": "Khởi động",
       "topics_one": "{{count}} chủ đề",
       "topics_other": "{{count}} chủ đề",
-      "jump": "Chuyển nhanh tới chủ đề",
+      "jump": "Lọc theo chủ đề",
       "part": "Phần {{part}}",
-      "allWords": "Toàn bộ chủ đề"
+      "allWords": "Toàn bộ chủ đề",
+      "search": "Tìm chủ đề",
+      "searchPlaceholder": "Tìm chủ đề: đồ ăn, gia đình…",
+      "clearSearch": "Xoá tìm kiếm",
+      "noTopic": "Không có chủ đề nào khớp “{{query}}”.",
+      "showing_one": "{{count}} chủ đề",
+      "showing_other": "{{count}} chủ đề",
+      "topicsLabel": "Chủ đề",
+      "setsLabel": "Bộ từ"
     },
     "words": {
       "open": "Xem danh sách từ: {{title}}",
@@ -607,5 +615,12 @@
   },
   "mascot": {
     "name": "Bé Hộp"
+  },
+  "pagination": {
+    "label": "Phân trang {{label}}",
+    "previous": "Trang trước",
+    "next": "Trang sau",
+    "status": "{{page}} / {{count}}",
+    "page": "Trang {{page}}"
   }
 }

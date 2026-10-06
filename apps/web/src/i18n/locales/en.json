@@ -454,9 +454,17 @@
       "starter": "Starter",
       "topics_one": "{{count}} topic",
       "topics_other": "{{count}} topics",
-      "jump": "Jump to a topic",
+      "jump": "Filter by topic",
       "part": "Part {{part}}",
-      "allWords": "Whole topic"
+      "allWords": "Whole topic",
+      "search": "Search topics",
+      "searchPlaceholder": "Search topics: food, family…",
+      "clearSearch": "Clear search",
+      "noTopic": "No topic matches “{{query}}”.",
+      "showing_one": "{{count}} topic",
+      "showing_other": "{{count}} topics",
+      "topicsLabel": "Topics",
+      "setsLabel": "Sets"
     },
     "words": {
       "open": "See the words: {{title}}",
@@ -607,5 +615,12 @@
   },
   "mascot": {
     "name": "Box Bunny"
+  },
+  "pagination": {
+    "label": "{{label}} pages",
+    "previous": "Previous page",
+    "next": "Next page",
+    "status": "{{page}} / {{count}}",
+    "page": "Page {{page}}"
   }
 }
