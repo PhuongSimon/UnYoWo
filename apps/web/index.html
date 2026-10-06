@@ -12,6 +12,8 @@
         if (saved === 'dark' || (!saved && prefersDark)) {
           document.documentElement.classList.add('dark')
         }
+        const colorTheme = localStorage.getItem('color-theme')
+        if (colorTheme) document.documentElement.dataset.theme = colorTheme
       } catch {}
     </script>
   </head>

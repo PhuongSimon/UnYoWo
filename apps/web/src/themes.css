@@ -1,0 +1,300 @@
+/* Color themes, picked in the user menu and stored on <html data-theme>.
+   The default "warm" theme lives in index.css; each theme here swaps the
+   palette scales and the semantic tokens for both light and dark mode.
+   Values come from OKLCH ramps; text pairs meet WCAG AA in every theme. */
+
+/* violet: #3D007A + #E8ECF1 */
+:root[data-theme='violet'] {
+  --color-primary-50: #f8f5ff;
+  --color-primary-100: #f0e9ff;
+  --color-primary-200: #e2d4ff;
+  --color-primary-300: #d1b9ff;
+  --color-primary-400: #bd9af9;
+  --color-primary-500: #a77bec;
+  --color-primary-600: #8e64ce;
+  --color-primary-700: #7550ac;
+  --color-primary-800: #5a3e85;
+  --color-primary-900: #432f62;
+  --color-primary-950: #281b3b;
+  --color-espresso-50: #f6f6fd;
+  --color-espresso-100: #e9eaf7;
+  --color-espresso-200: #d5d5e9;
+  --color-espresso-300: #b8b8d1;
+  --color-espresso-400: #9595b2;
+  --color-espresso-500: #747491;
+  --color-espresso-600: #5b5b75;
+  --color-espresso-700: #44435c;
+  --color-espresso-800: #2d2d40;
+  --color-espresso-900: #1a1a28;
+  --color-espresso-950: #0f0f19;
+  --surface: #E8ECF1;
+  --surface-raised: #ffffff;
+  --fg: #1a1828;
+  --muted: #5b5b75;
+  --label: #44435c;
+  --line: #797986;
+  --line-soft: #d3d7e2;
+  --accent: #6336a5;
+  --danger: var(--color-red-700);
+  --brand: #3D007A;
+  --brand-hover: #562595;
+  --on-brand: #ffffff;
+  --brand-edge: #270650;
+  --float-glow: rgb(61 0 122 / 0.25);
+}
+
+:root[data-theme='violet'].dark {
+  --surface: #171324;
+  --surface-raised: #282238;
+  --fg: #d9dfe6;
+  --muted: #b8b8d1;
+  --label: #d5d5e9;
+  --line: #848495;
+  --line-soft: #44435c;
+  --accent: #c7aff5;
+  --danger: var(--color-red-400);
+  --brand: #b699eb;
+  --brand-hover: #c7aff5;
+  --on-brand: #2a0052;
+  --brand-edge: #8864c0;
+  --float-glow: rgb(0 0 0 / 0.6);
+}
+
+/* lime: #CFFF74 + #2F3A1D */
+:root[data-theme='lime'] {
+  --color-primary-50: #f5f8f0;
+  --color-primary-100: #e8f1db;
+  --color-primary-200: #d2e4b9;
+  --color-primary-300: #b8d38f;
+  --color-primary-400: #9cbe62;
+  --color-primary-500: #80a630;
+  --color-primary-600: #698d13;
+  --color-primary-700: #557403;
+  --color-primary-800: #415908;
+  --color-primary-900: #31430d;
+  --color-primary-950: #1c2706;
+  --color-espresso-50: #f5f8f1;
+  --color-espresso-100: #e8eedf;
+  --color-espresso-200: #d3dbc6;
+  --color-espresso-300: #b4bfa4;
+  --color-espresso-400: #919e7e;
+  --color-espresso-500: #707d5d;
+  --color-espresso-600: #576345;
+  --color-espresso-700: #414b30;
+  --color-espresso-800: #2b321d;
+  --color-espresso-900: #181e0e;
+  --color-espresso-950: #0e1207;
+  --surface: #f4f7ed;
+  --surface-raised: #ffffff;
+  --fg: #2F3A1D;
+  --muted: #576345;
+  --label: #414b30;
+  --line: #777d70;
+  --line-soft: #d3dbc6;
+  --accent: #436416;
+  --danger: var(--color-red-700);
+  --brand: #CFFF74;
+  --brand-hover: #e2ffac;
+  --on-brand: #2F3A1D;
+  --brand-edge: #8db541;
+  --float-glow: rgb(207 255 116 / 0.25);
+}
+
+:root[data-theme='lime'].dark {
+  --surface: #1a210e;
+  --surface-raised: #2F3A1D;
+  --fg: #dee5cf;
+  --muted: #b4bfa4;
+  --label: #d3dbc6;
+  --line: #828979;
+  --line-soft: #485139;
+  --accent: #bee572;
+  --danger: var(--color-red-400);
+  --brand: #CFFF74;
+  --brand-hover: #e2ffac;
+  --on-brand: #2F3A1D;
+  --brand-edge: #8db541;
+  --float-glow: rgb(0 0 0 / 0.6);
+}
+
+/* cobalt: #0038FF + #FFD8B8 */
+:root[data-theme='cobalt'] {
+  --color-primary-50: #f3f7ff;
+  --color-primary-100: #e4edff;
+  --color-primary-200: #cbddff;
+  --color-primary-300: #acc7ff;
+  --color-primary-400: #87aeff;
+  --color-primary-500: #6292fb;
+  --color-primary-600: #4d79dd;
+  --color-primary-700: #3c62b9;
+  --color-primary-800: #2e4c8e;
+  --color-primary-900: #243969;
+  --color-primary-950: #142140;
+  --color-secondary-50: #fdf5f0;
+  --color-secondary-100: #fbe9dc;
+  --color-secondary-200: #f9d4ba;
+  --color-secondary-300: #f2ba90;
+  --color-secondary-400: #e59d65;
+  --color-secondary-500: #d37f36;
+  --color-secondary-600: #b7681d;
+  --color-secondary-700: #98530f;
+  --color-secondary-800: #75410f;
+  --color-secondary-900: #573110;
+  --color-secondary-950: #341c08;
+  --color-espresso-50: #f4f7fc;
+  --color-espresso-100: #e6ebf6;
+  --color-espresso-200: #cfd8e8;
+  --color-espresso-300: #b0bbd0;
+  --color-espresso-400: #8c99b0;
+  --color-espresso-500: #6b7890;
+  --color-espresso-600: #535e74;
+  --color-espresso-700: #3c465a;
+  --color-espresso-800: #272f3e;
+  --color-espresso-900: #161c27;
+  --color-espresso-950: #0c1019;
+  --surface: #ffe8d6;
+  --surface-raised: #fffbf8;
+  --fg: #0e1a32;
+  --muted: #535e74;
+  --label: #3c465a;
+  --line: #747b87;
+  --line-soft: #FFD8B8;
+  --accent: #0038FF;
+  --danger: var(--color-red-700);
+  --brand: #0038FF;
+  --brand-hover: #205cff;
+  --on-brand: #ffffff;
+  --brand-edge: #0126a3;
+  --float-glow: rgb(0 56 255 / 0.25);
+}
+
+:root[data-theme='cobalt'].dark {
+  --surface: #0a152c;
+  --surface-raised: #182541;
+  --fg: #f0d9c7;
+  --muted: #b0bbd0;
+  --label: #cfd8e8;
+  --line: #7e8696;
+  --line-soft: #3c465a;
+  --accent: #9dbdff;
+  --danger: var(--color-red-400);
+  --brand: #77a2fc;
+  --brand-hover: #93b7ff;
+  --on-brand: #010e42;
+  --brand-edge: #3c6cdc;
+  --float-glow: rgb(0 0 0 / 0.6);
+}
+
+/* neon: #C8FF00 + #06110D */
+:root[data-theme='neon'] {
+  --color-primary-50: #f5f8ef;
+  --color-primary-100: #e8f1da;
+  --color-primary-200: #d3e4b7;
+  --color-primary-300: #bad38a;
+  --color-primary-400: #9ebd5b;
+  --color-primary-500: #83a61f;
+  --color-primary-600: #6d8c00;
+  --color-primary-700: #587300;
+  --color-primary-800: #445900;
+  --color-primary-900: #334305;
+  --color-primary-950: #1d2704;
+  --color-espresso-50: #f2f9f5;
+  --color-espresso-100: #e1efe8;
+  --color-espresso-200: #c8ddd3;
+  --color-espresso-300: #a6c2b5;
+  --color-espresso-400: #80a192;
+  --color-espresso-500: #5f8071;
+  --color-espresso-600: #476658;
+  --color-espresso-700: #314d41;
+  --color-espresso-800: #1e352b;
+  --color-espresso-900: #0f2019;
+  --color-espresso-950: #08130e;
+  --surface: #eef4ef;
+  --surface-raised: #ffffff;
+  --fg: #06110D;
+  --muted: #476658;
+  --label: #314d41;
+  --line: #707e77;
+  --line-soft: #c8ddd3;
+  --accent: #376a0d;
+  --danger: var(--color-red-700);
+  --brand: #C8FF00;
+  --brand-hover: #daff8f;
+  --on-brand: #06110D;
+  --brand-edge: #86af17;
+  --float-glow: rgb(200 255 0 / 0.25);
+}
+
+:root[data-theme='neon'].dark {
+  --surface: #06110D;
+  --surface-raised: #11211a;
+  --fg: #cbd8cd;
+  --muted: #a6c2b5;
+  --label: #c8ddd3;
+  --line: #798b82;
+  --line-soft: #293a32;
+  --accent: #b7e056;
+  --danger: var(--color-red-400);
+  --brand: #C8FF00;
+  --brand-hover: #daff8f;
+  --on-brand: #06110D;
+  --brand-edge: #86af17;
+  --float-glow: rgb(0 0 0 / 0.6);
+}
+
+/* navy: #0B1F33 + #C6A15B + #F7F3EA */
+:root[data-theme='navy'] {
+  --color-primary-50: #f3f7fb;
+  --color-primary-100: #e5eef8;
+  --color-primary-200: #cddff2;
+  --color-primary-300: #aecbe9;
+  --color-primary-400: #8fb3da;
+  --color-primary-500: #6f9bc8;
+  --color-primary-600: #5982ad;
+  --color-primary-700: #476b8f;
+  --color-primary-800: #37526e;
+  --color-primary-900: #2a3e52;
+  --color-primary-950: #172431;
+  --color-espresso-50: #f3f7fb;
+  --color-espresso-100: #e4ecf4;
+  --color-espresso-200: #cdd9e5;
+  --color-espresso-300: #aebccc;
+  --color-espresso-400: #899aad;
+  --color-espresso-500: #68798c;
+  --color-espresso-600: #505f70;
+  --color-espresso-700: #3a4857;
+  --color-espresso-800: #25303c;
+  --color-espresso-900: #141d25;
+  --color-espresso-950: #0b1117;
+  --surface: #F7F3EA;
+  --surface-raised: #fefcf7;
+  --fg: #0B1F33;
+  --muted: #505f70;
+  --label: #3a4857;
+  --line: #727b86;
+  --line-soft: #e1dacc;
+  --accent: #285077;
+  --danger: var(--color-red-700);
+  --brand: #0B1F33;
+  --brand-hover: #16324d;
+  --on-brand: #F7F3EA;
+  --brand-edge: #C6A15B;
+  --float-glow: rgb(11 31 51 / 0.25);
+}
+
+:root[data-theme='navy'].dark {
+  --surface: #0B1F33;
+  --surface-raised: #192f46;
+  --fg: #ece7dd;
+  --muted: #aebccc;
+  --label: #cdd9e5;
+  --line: #7b8895;
+  --line-soft: #30445a;
+  --accent: #dbb879;
+  --danger: var(--color-red-400);
+  --brand: #C6A15B;
+  --brand-hover: #d8b576;
+  --on-brand: #0B1F33;
+  --brand-edge: #967437;
+  --float-glow: rgb(0 0 0 / 0.6);
+}
