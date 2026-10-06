@@ -112,7 +112,9 @@
     "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again.",
     "NO_MISTAKES": "No mistakes to practise in this language yet. Nice!",
     "TIMER_NOT_STARTED": "Press Start before answering.",
-    "TIME_UP": "Time's up!"
+    "TIME_UP": "Time's up!",
+    "TRANSLATION_SAME_LANGUAGE": "Pick two different languages.",
+    "TRANSLATION_UNAVAILABLE": "The translation service is busy or out of free quota for today. Please try again later."
   },
   "dashboard": {
     "loading": "Loading your dashboard…",
@@ -445,6 +447,45 @@
       },
       "goalDone": "Goal reached: {{goal}}",
       "unlocked": "Achievement unlocked"
+    },
+    "shelves": {
+      "label": "Practice groups",
+      "alphabet": "Alphabet",
+      "starter": "Starter",
+      "topics_one": "{{count}} topic",
+      "topics_other": "{{count}} topics",
+      "jump": "Jump to a topic",
+      "part": "Part {{part}}",
+      "allWords": "Whole topic"
+    },
+    "words": {
+      "open": "See the words: {{title}}",
+      "back": "Back to practice",
+      "practise": "Study with flashcards",
+      "more": "Show more",
+      "plural": "Plural: {{value}}",
+      "hanViet": "Sino-Vietnamese: {{value}}",
+      "hanja": "Hanja: {{value}}",
+      "masu": "ます form: {{value}}"
+    },
+    "pos": {
+      "NOUN": "noun",
+      "VERB": "verb",
+      "ADJECTIVE": "adjective",
+      "ADVERB": "adverb",
+      "PRONOUN": "pronoun",
+      "DETERMINER": "determiner",
+      "NUMERAL": "numeral",
+      "COUNTER": "counter",
+      "PREPOSITION": "preposition",
+      "CONJUNCTION": "conjunction",
+      "PARTICLE": "particle",
+      "INTERJECTION": "interjection",
+      "PHRASE": "phrase",
+      "AFFIX": "affix"
+    },
+    "sources": {
+      "title": "Vocabulary data sources"
     }
   },
   "review": {
@@ -537,6 +578,31 @@
     "SPEED_DEMON": {
       "title": "Speed demon",
       "description": "Answer 20 questions correctly in a row."
+    }
+  },
+  "translate": {
+    "title": "Translate",
+    "description": "Translate between Vietnamese, English, German, Japanese and Korean, with matching words from the word lists.",
+    "from": "From",
+    "to": "To",
+    "auto": "Detect",
+    "swap": "Swap languages",
+    "textLabel": "Text to translate",
+    "placeholder": "Type a word or a sentence…",
+    "clear": "Clear text",
+    "shortcut": "Ctrl + Enter to translate",
+    "submit": "Translate",
+    "empty": "The translation will appear here.",
+    "detected": "Detected: {{language}}",
+    "copy": "Copy the translation",
+    "copied": "Copied",
+    "copyFailed": "Could not copy",
+    "provider": "Machine translation by {{provider}}",
+    "cached": "from cache",
+    "noMachine": "Machine translation is unavailable right now, but the words below may help.",
+    "dictionary": {
+      "title": "In the word lists",
+      "open": "Open set"
     }
   },
   "mascot": {

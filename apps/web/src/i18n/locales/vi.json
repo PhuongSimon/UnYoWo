@@ -112,7 +112,9 @@
     "NETWORK_ERROR": "Không kết nối được máy chủ. Vui lòng kiểm tra mạng và thử lại.",
     "NO_MISTAKES": "Bạn chưa có lỗi sai nào ở ngôn ngữ này. Tuyệt vời!",
     "TIMER_NOT_STARTED": "Hãy bấm Bắt đầu trước khi trả lời.",
-    "TIME_UP": "Hết giờ!"
+    "TIME_UP": "Hết giờ!",
+    "TRANSLATION_SAME_LANGUAGE": "Hãy chọn hai ngôn ngữ khác nhau.",
+    "TRANSLATION_UNAVAILABLE": "Dịch vụ dịch đang bận hoặc đã hết lượt miễn phí hôm nay. Vui lòng thử lại sau."
   },
   "dashboard": {
     "loading": "Đang tải bảng tin…",
@@ -445,6 +447,45 @@
       },
       "goalDone": "Đạt mục tiêu: {{goal}}",
       "unlocked": "Mở khoá thành tích"
+    },
+    "shelves": {
+      "label": "Nhóm bài luyện",
+      "alphabet": "Chữ viết",
+      "starter": "Khởi động",
+      "topics_one": "{{count}} chủ đề",
+      "topics_other": "{{count}} chủ đề",
+      "jump": "Chuyển nhanh tới chủ đề",
+      "part": "Phần {{part}}",
+      "allWords": "Toàn bộ chủ đề"
+    },
+    "words": {
+      "open": "Xem danh sách từ: {{title}}",
+      "back": "Về trang luyện tập",
+      "practise": "Học bằng thẻ ghi nhớ",
+      "more": "Xem thêm",
+      "plural": "Số nhiều: {{value}}",
+      "hanViet": "Hán Việt: {{value}}",
+      "hanja": "Hán tự: {{value}}",
+      "masu": "Thể ます: {{value}}"
+    },
+    "pos": {
+      "NOUN": "danh từ",
+      "VERB": "động từ",
+      "ADJECTIVE": "tính từ",
+      "ADVERB": "trạng từ",
+      "PRONOUN": "đại từ",
+      "DETERMINER": "từ hạn định",
+      "NUMERAL": "số từ",
+      "COUNTER": "lượng từ",
+      "PREPOSITION": "giới từ",
+      "CONJUNCTION": "liên từ",
+      "PARTICLE": "trợ từ",
+      "INTERJECTION": "thán từ",
+      "PHRASE": "mẫu câu",
+      "AFFIX": "phụ tố"
+    },
+    "sources": {
+      "title": "Nguồn dữ liệu từ vựng"
     }
   },
   "review": {
@@ -537,6 +578,31 @@
     "SPEED_DEMON": {
       "title": "Tia chớp",
       "description": "Trả lời đúng 20 câu liên tiếp."
+    }
+  },
+  "translate": {
+    "title": "Dịch",
+    "description": "Dịch giữa tiếng Việt, Anh, Đức, Nhật và Hàn, kèm từ có sẵn trong kho từ vựng.",
+    "from": "Từ",
+    "to": "Sang",
+    "auto": "Tự động",
+    "swap": "Đổi chiều dịch",
+    "textLabel": "Nội dung cần dịch",
+    "placeholder": "Nhập từ hoặc câu cần dịch…",
+    "clear": "Xoá nội dung",
+    "shortcut": "Ctrl + Enter để dịch",
+    "submit": "Dịch",
+    "empty": "Bản dịch sẽ hiện ở đây.",
+    "detected": "Đã nhận diện: {{language}}",
+    "copy": "Sao chép bản dịch",
+    "copied": "Đã sao chép",
+    "copyFailed": "Không sao chép được",
+    "provider": "Dịch máy bởi {{provider}}",
+    "cached": "đã lưu sẵn",
+    "noMachine": "Chưa dịch máy được lúc này, nhưng bạn có thể xem các từ bên dưới.",
+    "dictionary": {
+      "title": "Có trong kho từ vựng",
+      "open": "Xem bộ từ"
     }
   },
   "mascot": {
