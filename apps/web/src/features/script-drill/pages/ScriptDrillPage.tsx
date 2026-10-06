@@ -11,7 +11,7 @@ import { mistakeCells, shuffle, summarize, type DrillSummary } from '../drill'
 import { drillScriptsFor, scriptCells, type DrillCell, type DrillScript } from '../scripts'
 import { useDrillPrefs } from '../useDrillSettings'
 
-const LINK = 'inline-flex min-h-11 items-center gap-1.5 rounded-lg text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400'
+const LINK = 'inline-flex min-h-11 items-center gap-1.5 rounded-lg text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-accent'
 
 /**
  * See a character, type its romanisation: hiragana and katakana for Japanese, hangul for Korean.
@@ -65,7 +65,7 @@ function ScriptPicker({ scripts }: { scripts: DrillScript[] }) {
           <li key={script.id}>
             <Link
               to={`?script=${script.id}`}
-              className="flex h-full items-center gap-4 rounded-2xl border-2 border-line-soft bg-surface-raised p-5 shadow-sm transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400"
+              className="flex h-full items-center gap-4 rounded-2xl border-2 border-line-soft bg-surface-raised p-5 shadow-sm transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent"
             >
               <span
                 lang={script.lang}

@@ -47,7 +47,7 @@ function GrammarTopicPage() {
                   to={`${listPath}/${item.id}`}
                   state={linkState}
                   className={({ isActive }) =>
-                    `flex gap-2 rounded-lg px-2 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-primary-400 ${
+                    `flex gap-2 rounded-lg px-2 py-1.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-accent ${
                       isActive ? 'bg-primary-500/15 font-semibold text-accent' : 'text-muted hover:bg-surface-raised hover:text-fg'
                     }`
                   }
@@ -64,7 +64,7 @@ function GrammarTopicPage() {
       <article className="max-w-4xl min-w-0">
         <Link
           to={{ pathname: listPath, search: listSearch }}
-          className="inline-flex items-center gap-1.5 rounded-lg text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="inline-flex items-center gap-1.5 rounded-lg text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
         >
           <ArrowLeft size={16} aria-hidden="true" />
           {t('learn.grammar.backToList')}
@@ -142,7 +142,7 @@ function PagerLink({ to, state, topic, direction }: PagerLinkProps) {
     <Link
       to={to}
       state={state}
-      className={`group flex flex-col rounded-2xl border border-line-soft bg-surface-raised p-4 transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400 ${
+      className={`group flex flex-col rounded-2xl border border-line-soft bg-surface-raised p-4 transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent ${
         isNext ? 'sm:col-start-2 sm:items-end sm:text-right' : ''
       }`}
     >

@@ -92,7 +92,7 @@ function GrammarListPage() {
                 type="button"
                 aria-pressed={active}
                 onClick={() => updateParams({ level: filter.value })}
-                className={`flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-primary-400 ${
+                className={`flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-accent ${
                   active ? 'border-primary-600 bg-primary-500 text-primary-950' : 'border-line-soft bg-surface-raised text-muted hover:border-primary-400 hover:text-fg'
                 }`}
               >
@@ -110,7 +110,7 @@ function GrammarListPage() {
           <button
             type="button"
             onClick={clearFilters}
-            className="inline-flex items-center gap-1.5 rounded-full border border-line-soft bg-surface-raised px-4 py-2 text-sm font-semibold transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400"
+            className="inline-flex items-center gap-1.5 rounded-full border border-line-soft bg-surface-raised px-4 py-2 text-sm font-semibold transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent"
           >
             <X size={16} aria-hidden="true" />
             {t('learn.grammar.clear')}
@@ -134,7 +134,7 @@ function GrammarListPage() {
                     <Link
                       to={topic.id}
                       state={{ listSearch: searchParams.toString() }}
-                      className="group flex h-full items-start gap-3 rounded-2xl border border-line-soft bg-surface-raised p-4 transition-all hover:-translate-y-0.5 hover:border-primary-400 hover:shadow-md focus-visible:outline-2 focus-visible:outline-primary-400"
+                      className="group flex h-full items-start gap-3 rounded-2xl border border-line-soft bg-surface-raised p-4 transition-all hover:-translate-y-0.5 hover:border-primary-400 hover:shadow-md focus-visible:outline-2 focus-visible:outline-accent"
                     >
                       <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary-100 text-sm font-bold text-secondary-800 tabular-nums dark:bg-espresso-700 dark:text-secondary-200">
                         {number}

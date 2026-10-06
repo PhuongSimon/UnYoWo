@@ -26,7 +26,7 @@ function DrillEntryCard({ language }: { language: StudyLanguageCode }) {
       </div>
       <Link
         to={`/app/${language}/practice/script`}
-        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-b-4 border-line-soft bg-surface-raised px-6 py-3 text-sm font-bold transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400 sm:w-auto"
+        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-b-4 border-line-soft bg-surface-raised px-6 py-3 text-sm font-bold transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent sm:w-auto"
       >
         {t('drill.entry.open')}
         <ArrowRight size={18} aria-hidden="true" />

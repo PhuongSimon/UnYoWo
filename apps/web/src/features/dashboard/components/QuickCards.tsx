@@ -14,7 +14,7 @@ const TINTS: Record<string, string> = {
   ko: "bg-violet-50 dark:bg-violet-950/40",
 };
 const CARD =
-  "group flex min-w-0 flex-col justify-between gap-1.5 rounded-2xl border border-line-soft p-3 transition-all hover:-translate-y-0.5 hover:border-primary-400 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400 motion-reduce:hover:translate-y-0 tall:gap-2 tall:p-4";
+  "group flex min-w-0 flex-col justify-between gap-1.5 rounded-2xl border border-line-soft p-3 transition-all hover:-translate-y-0.5 hover:border-primary-400 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent motion-reduce:hover:translate-y-0 tall:gap-2 tall:p-4";
 
 function QuickCards({ languages }: { languages: LanguageStats[] }) {
   const { t } = useTranslation();

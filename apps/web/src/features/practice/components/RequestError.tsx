@@ -18,7 +18,7 @@ function RequestError({ message, onRetry }: RequestErrorProps) {
       <button
         type="button"
         onClick={onRetry}
-        className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-line-soft bg-surface-raised px-4 font-bold transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400"
+        className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-line-soft bg-surface-raised px-4 font-bold transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent"
       >
         <RotateCcw size={16} aria-hidden="true" />
         {t('practice.retry')}

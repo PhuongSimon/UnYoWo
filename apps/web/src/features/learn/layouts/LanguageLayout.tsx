@@ -56,7 +56,7 @@ function LanguageShell({ language }: { language: StudyLanguage }) {
         <div className="mx-auto w-full max-w-app px-4 pt-4 pb-5 sm:px-6 sm:pt-6 sm:pb-7 lg:px-8">
           <Link
             to="/app"
-            className="inline-flex items-center gap-1.5 rounded-lg text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+            className="inline-flex items-center gap-1.5 rounded-lg text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
           >
             <ArrowLeft size={16} aria-hidden="true" />
             {t('learn.allLanguages')}
@@ -92,7 +92,7 @@ function LanguageShell({ language }: { language: StudyLanguage }) {
                 to={to}
                 end={end}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-primary-400 ${
+                  `flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-accent ${
                     isActive ? 'bg-primary-500 text-primary-950 shadow-sm' : 'text-muted hover:bg-surface-raised hover:text-fg'
                   }`
                 }

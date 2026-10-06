@@ -58,7 +58,7 @@ function UserMenu() {
         aria-controls={menuId}
         aria-label={t('userMenu.open')}
         title={user.fullName}
-        className="flex size-8 items-center justify-center overflow-hidden rounded-full bg-primary-500 text-sm font-bold text-primary-950 shadow-sm ring-2 ring-surface transition-shadow hover:ring-primary-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400"
+        className="flex size-8 items-center justify-center overflow-hidden rounded-full bg-primary-500 text-sm font-bold text-primary-950 shadow-sm ring-2 ring-surface transition-shadow hover:ring-primary-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         {user.avatarUrl ? <img src={user.avatarUrl} alt="" referrerPolicy="no-referrer" className="size-full object-cover" /> : initial}
       </button>

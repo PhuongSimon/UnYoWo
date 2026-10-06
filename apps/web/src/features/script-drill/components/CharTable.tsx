@@ -108,7 +108,7 @@ function CellToggle({ cell, lang, checked, onClick }: { cell: DrillCell; lang: s
       aria-checked={checked}
       aria-label={`${cell.char} ${cell.answers[0]}`}
       onClick={onClick}
-      className={`flex min-h-13 w-full min-w-11 flex-col items-center justify-center rounded-lg border px-1 py-1 transition-colors focus-visible:outline-2 focus-visible:outline-primary-400 ${
+      className={`flex min-h-13 w-full min-w-11 flex-col items-center justify-center rounded-lg border px-1 py-1 transition-colors focus-visible:outline-2 focus-visible:outline-accent ${
         checked ? 'border-primary-600 bg-primary-500 text-primary-950' : 'border-transparent hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-espresso-700'
       }`}
     >
@@ -138,7 +138,7 @@ function GroupToggle({ state, onClick, label, ariaLabel, lang, className = '' }:
       aria-checked={state}
       aria-label={ariaLabel}
       onClick={onClick}
-      className={`inline-flex min-h-11 min-w-11 items-center gap-1.5 rounded-lg px-1.5 text-sm font-bold text-label transition-colors hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-400 dark:hover:bg-espresso-700 ${className}`}
+      className={`inline-flex min-h-11 min-w-11 items-center gap-1.5 rounded-lg px-1.5 text-sm font-bold text-label transition-colors hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-accent dark:hover:bg-espresso-700 ${className}`}
     >
       <CheckBox state={state} />
       <span lang={lang} className="whitespace-nowrap">

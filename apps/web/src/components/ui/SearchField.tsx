@@ -40,7 +40,7 @@ function SearchField({ value, onChange, label, placeholder, className = '' }: Se
           type="button"
           onClick={() => onChange('')}
           aria-label={t('common.clearSearch')}
-          className="absolute top-1/2 right-0.5 flex size-11 -translate-y-1/2 items-center justify-center rounded-xl text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="absolute top-1/2 right-0.5 flex size-11 -translate-y-1/2 items-center justify-center rounded-xl text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
         >
           <X size={18} aria-hidden="true" />
         </button>

@@ -136,7 +136,7 @@ function ShelfPicker({ shelves, active, onPick }: { shelves: Shelf[]; active: Sh
                 aria-pressed={selected}
                 onClick={() => onPick(shelf.key)}
                 title={shelf.level ? loc(shelf.level.title) : undefined}
-                className={`flex min-h-11 flex-col items-start justify-center rounded-xl border px-4 py-1.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-primary-400 ${
+                className={`flex min-h-11 flex-col items-start justify-center rounded-xl border px-4 py-1.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-accent ${
                   selected
                     ? 'border-primary-600 bg-primary-500 text-primary-950 shadow-sm'
                     : 'border-line-soft bg-surface-raised hover:border-primary-400'
@@ -267,7 +267,7 @@ function TopicChips({ sets, selected, onPick }: { sets: LearningSet[]; selected:
                 type="button"
                 aria-pressed={pressed}
                 onClick={() => onPick(pressed ? null : topic.slug)}
-                className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-primary-400 sm:min-h-9 ${
+                className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-accent sm:min-h-9 ${
                   pressed ? 'border-primary-600 bg-primary-500 text-primary-950' : 'border-line-soft bg-surface-raised hover:border-primary-400'
                 }`}
               >

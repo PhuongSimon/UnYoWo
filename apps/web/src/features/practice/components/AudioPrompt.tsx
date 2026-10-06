@@ -31,7 +31,7 @@ function AudioPrompt({ clip }: { clip: AudioClip }) {
       type="button"
       onClick={play}
       aria-label={t('practice.listening.replay')}
-      className="mx-auto mt-4 flex size-24 items-center justify-center rounded-full bg-primary-500 text-primary-950 shadow-lg shadow-primary-500/30 transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-400 active:scale-95 motion-reduce:transition-none sm:size-28"
+      className="mx-auto mt-4 flex size-24 items-center justify-center rounded-full bg-primary-500 text-primary-950 shadow-lg shadow-primary-500/30 transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent active:scale-95 motion-reduce:transition-none sm:size-28"
     >
       <Volume2 size={44} aria-hidden="true" />
     </button>

@@ -38,7 +38,7 @@ function GlyphCard({ glyph }: GlyphCardProps) {
         onClick={() => speak(speakText, language.speechLang, speechKey)}
         disabled={!speechSupported}
         aria-label={t('learn.listen', { text: toSpeechText(speakText) })}
-        className="group -m-1 flex items-start justify-between gap-2 rounded-xl p-1 text-left focus-visible:outline-2 focus-visible:outline-primary-400 disabled:cursor-default"
+        className="group -m-1 flex items-start justify-between gap-2 rounded-xl p-1 text-left focus-visible:outline-2 focus-visible:outline-accent disabled:cursor-default"
       >
         <span className="min-w-0">
           <span

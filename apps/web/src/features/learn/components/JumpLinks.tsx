@@ -14,7 +14,7 @@ function JumpLinks({ label, links }: JumpLinksProps) {
           <li key={link.id} className="shrink-0">
             <a
               href={`#${link.id}`}
-              className="inline-flex rounded-full border border-line-soft bg-surface-raised px-3 py-1.5 text-sm font-medium text-muted transition-colors hover:border-primary-400 hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+              className="inline-flex rounded-full border border-line-soft bg-surface-raised px-3 py-1.5 text-sm font-medium text-muted transition-colors hover:border-primary-400 hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
             >
               {link.label}
             </a>

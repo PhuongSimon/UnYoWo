@@ -115,7 +115,7 @@ function TranslatePage() {
               disabled={pair.source === 'auto' && !result}
               aria-label={t('translate.swap')}
               title={t('translate.swap')}
-              className="flex size-11 items-center justify-center rounded-full border border-line-soft bg-surface text-accent transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400 disabled:opacity-40"
+              className="flex size-11 items-center justify-center rounded-full border border-line-soft bg-surface text-accent transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40"
             >
               <ArrowLeftRight size={18} aria-hidden="true" />
             </button>
@@ -161,7 +161,7 @@ function TranslatePage() {
                   mutation.reset()
                 }}
                 aria-label={t('translate.clear')}
-                className="absolute top-1.5 right-1.5 flex size-11 items-center justify-center rounded-full text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+                className="absolute top-1.5 right-1.5 flex size-11 items-center justify-center rounded-full text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
               >
                 <X size={18} aria-hidden="true" />
               </button>
@@ -234,7 +234,7 @@ function TranslationCard({ result }: { result: TranslationResult }) {
               onClick={() => void copy()}
               aria-label={t('translate.copy')}
               title={t('translate.copy')}
-              className="inline-flex size-10 items-center justify-center rounded-full border border-line-soft bg-surface-raised text-accent transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400"
+              className="inline-flex size-10 items-center justify-center rounded-full border border-line-soft bg-surface-raised text-accent transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent"
             >
               <Copy size={18} aria-hidden="true" />
             </button>
@@ -286,7 +286,7 @@ function DictionaryCard({ entries }: { entries: DictionaryEntry[] }) {
               </div>
               <Link
                 to={`/app/${entry.language}/practice/sets/${entry.setId}`}
-                className="inline-flex min-h-11 shrink-0 items-center rounded-xl px-2 text-sm font-semibold text-accent hover:underline focus-visible:outline-2 focus-visible:outline-primary-400"
+                className="inline-flex min-h-11 shrink-0 items-center rounded-xl px-2 text-sm font-semibold text-accent hover:underline focus-visible:outline-2 focus-visible:outline-accent"
               >
                 {t('translate.dictionary.open')}
               </Link>

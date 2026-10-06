@@ -74,7 +74,7 @@ function TypingRound({ state, game, studyLang, speechLang, question }: GameScree
           <button
             type="button"
             onClick={() => game.answer({ text: '' })}
-            className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-lg text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+            className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-lg text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
           >
             <HelpCircle size={16} aria-hidden="true" />
             {t('practice.typing.dontKnow')}

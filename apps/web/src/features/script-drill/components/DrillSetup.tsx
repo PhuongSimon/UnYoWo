@@ -85,7 +85,7 @@ function DrillOptions({ mode, speak, onModeChange, onSpeakChange }: DrillPrefsPr
           {MODES.map((value) => (
             <label
               key={value}
-              className={`flex min-h-11 cursor-pointer items-start gap-3 rounded-xl border-2 p-3 transition-colors has-focus-visible:outline-2 has-focus-visible:outline-primary-400 ${
+              className={`flex min-h-11 cursor-pointer items-start gap-3 rounded-xl border-2 p-3 transition-colors has-focus-visible:outline-2 has-focus-visible:outline-accent ${
                 mode === value ? 'border-primary-500 bg-primary-50 dark:bg-espresso-700' : 'border-line-soft hover:border-primary-400'
               }`}
             >
@@ -100,7 +100,7 @@ function DrillOptions({ mode, speak, onModeChange, onSpeakChange }: DrillPrefsPr
       </fieldset>
 
       {speechSupported && (
-        <label className="flex min-h-11 cursor-pointer items-center gap-3 self-start rounded-xl px-1 has-focus-visible:outline-2 has-focus-visible:outline-primary-400 sm:mt-7">
+        <label className="flex min-h-11 cursor-pointer items-center gap-3 self-start rounded-xl px-1 has-focus-visible:outline-2 has-focus-visible:outline-accent sm:mt-7">
           <input type="checkbox" checked={speak} onChange={(event) => onSpeakChange(event.target.checked)} className="sr-only" />
           <CheckBox state={speak} />
           <Volume2 size={18} aria-hidden="true" className="text-muted" />

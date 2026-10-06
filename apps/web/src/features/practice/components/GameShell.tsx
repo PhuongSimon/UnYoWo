@@ -28,7 +28,7 @@ function GameShell({ answered, total, combo, backTo, hint, extra, timer, childre
           to={backTo}
           aria-label={t('practice.quit')}
           title={t('practice.quit')}
-          className="-ml-2 flex size-11 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-raised hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="-ml-2 flex size-11 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-raised hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
         >
           <X size={22} aria-hidden="true" />
         </Link>

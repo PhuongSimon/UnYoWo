@@ -62,7 +62,7 @@ function OverviewPage() {
               <li key={to}>
                 <Link
                   to={to}
-                  className="group flex h-full flex-col rounded-2xl border border-line-soft bg-surface-raised p-5 transition-all hover:-translate-y-0.5 hover:border-primary-400 hover:shadow-md focus-visible:outline-2 focus-visible:outline-primary-400"
+                  className="group flex h-full flex-col rounded-2xl border border-line-soft bg-surface-raised p-5 transition-all hover:-translate-y-0.5 hover:border-primary-400 hover:shadow-md focus-visible:outline-2 focus-visible:outline-accent"
                 >
                   <span className="flex items-center gap-3">
                     <span className="flex size-9 items-center justify-center rounded-full bg-primary-500/15 text-sm font-extrabold text-accent">{index + 1}</span>

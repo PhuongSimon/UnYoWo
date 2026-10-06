@@ -124,7 +124,7 @@ function TodayPlan({ suggestions }: { suggestions: Suggestion[] }) {
                     })
                   }
                   aria-label={`${t(`dashboard.plan.action.${suggestion.kind}`)}: ${target}`}
-                  className={`inline-flex min-h-11 min-w-20 shrink-0 items-center justify-center rounded-full px-3 text-sm sm:min-w-24 sm:px-4 font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400 disabled:opacity-60 ${
+                  className={`inline-flex min-h-11 min-w-20 shrink-0 items-center justify-center rounded-full px-3 text-sm sm:min-w-24 sm:px-4 font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60 ${
                     primary
                       ? "bg-primary-500 text-primary-950 hover:bg-primary-400"
                       : "border border-line-soft bg-surface-raised hover:border-primary-400"

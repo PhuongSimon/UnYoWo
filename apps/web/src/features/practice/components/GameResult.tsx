@@ -81,7 +81,7 @@ function GameResult({ gameType, summary, backTo, starting, onPlayAgain }: GameRe
         </Button>
         <Link
           to={backTo}
-          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-b-4 border-line-soft bg-surface-raised px-6 py-3 text-sm font-bold transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-b-4 border-line-soft bg-surface-raised px-6 py-3 text-sm font-bold transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent"
         >
           <ArrowLeft size={18} aria-hidden="true" />
           {t('practice.result.back')}

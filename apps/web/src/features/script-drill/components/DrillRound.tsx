@@ -138,7 +138,7 @@ function DrillRound({ cells, lang, speechLang, mode, speak, onFinish, onQuit }: 
         <button
           type="button"
           onClick={() => commit('')}
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-1 text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-1 text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
         >
           <SkipForward size={16} aria-hidden="true" />
           {t('drill.round.skip')}
@@ -146,7 +146,7 @@ function DrillRound({ cells, lang, speechLang, mode, speak, onFinish, onQuit }: 
         <button
           type="button"
           onClick={end}
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-1 text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-1 text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
         >
           <Flag size={16} aria-hidden="true" />
           {t('drill.round.end')}

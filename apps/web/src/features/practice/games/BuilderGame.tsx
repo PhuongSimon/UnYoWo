@@ -68,7 +68,7 @@ function BuilderRound({ state, game, studyLang, speechLang, question }: GameScre
                       ? t('practice.builder.clear', { part: tile.text, role: t(`practice.builder.roles.${slots[slot][0].role}`) })
                       : t('practice.builder.empty', { role: t(`practice.builder.roles.${slots[slot][0].role}`) })
                   }
-                  className={`flex size-14 flex-col items-center justify-center rounded-xl border-2 border-dashed text-2xl font-bold transition-colors focus-visible:outline-2 focus-visible:outline-primary-400 disabled:cursor-default ${
+                  className={`flex size-14 flex-col items-center justify-center rounded-xl border-2 border-dashed text-2xl font-bold transition-colors focus-visible:outline-2 focus-visible:outline-accent disabled:cursor-default ${
                     tile ? `border-solid border-line-soft bg-surface ${ROLE_COLOURS[tile.role]}` : 'border-line text-muted'
                   }`}
                 >
@@ -97,7 +97,7 @@ function BuilderRound({ state, game, studyLang, speechLang, question }: GameScre
                       aria-pressed={selected}
                       disabled={!playing}
                       onClick={() => choose(tile)}
-                      className={`flex min-h-12 min-w-12 items-center justify-center rounded-xl border-2 border-b-4 px-3 text-2xl font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400 ${
+                      className={`flex min-h-12 min-w-12 items-center justify-center rounded-xl border-2 border-b-4 px-3 text-2xl font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
                         selected ? 'border-primary-500 bg-primary-500/15' : 'border-line-soft bg-surface-raised hover:border-primary-400'
                       }`}
                     >
