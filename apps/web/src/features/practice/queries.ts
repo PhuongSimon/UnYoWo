@@ -1,5 +1,8 @@
-import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query'
+import { queryOptions } from '@tanstack/react-query'
 import { practiceApi } from './api'
+
+/** The API's largest page size, which holds the biggest set. */
+const SET_ITEMS_LIMIT = 200
 
 export const learningSetsQuery = (language: string) =>
   queryOptions({
@@ -15,13 +18,14 @@ export const contentSourcesQuery = (language: string) =>
     staleTime: Infinity,
   })
 
-/** A set's words, 100 per page (a word-list set holds at most 30, an alphabet set up to 140). */
+/**
+ * Every word of a set in one request: the word list searches and pages them in the browser.
+ * A set is small: vocabulary sets are split into parts of at most 30 words, alphabet charts hold up to 140.
+ */
 export const setItemsQuery = (setId: string) =>
-  infiniteQueryOptions({
+  queryOptions({
     queryKey: ['set-items', setId],
-    queryFn: ({ pageParam }) => practiceApi.listItems(setId, pageParam),
-    initialPageParam: 1,
-    getNextPageParam: (last) => (last.page * last.pageSize < last.total ? last.page + 1 : undefined),
+    queryFn: () => practiceApi.listItems(setId, 1, SET_ITEMS_LIMIT),
     staleTime: 5 * 60_000,
   })
 

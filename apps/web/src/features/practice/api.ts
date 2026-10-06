@@ -16,7 +16,7 @@ export const practiceApi = {
 
   listSources: (language: string) => http.get<ContentSource[]>(`/languages/${language}/sources`).then((r) => r.data),
 
-  listItems: (setId: string, page: number, pageSize = 100) =>
+  listItems: (setId: string, page: number, pageSize: number) =>
     http.get<SetItemsPage>(`/learning-sets/${setId}/items`, { params: { page, pageSize } }).then((r) => r.data),
 
   createSession: (game: NewGame) => http.post<GameSession>('/game-sessions', game).then((r) => r.data),

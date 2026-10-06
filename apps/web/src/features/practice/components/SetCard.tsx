@@ -1,5 +1,5 @@
 import { Gamepad2, Layers, List } from 'lucide-react'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import DotsLoader from '@/components/ui/DotsLoader'
@@ -10,10 +10,6 @@ import ProgressBar from './ProgressBar'
 
 interface SetCardProps {
   set: LearningSet
-  /** Replaces the set title, e.g. "Part 2" inside a topic that already shows its name */
-  heading?: string
-  /** h4 when the card sits under a topic heading */
-  headingLevel?: 3 | 4
   /** Game currently being created for this set, if any */
   starting: GameType | null
   disabled: boolean
@@ -24,20 +20,27 @@ const BUTTON =
   'inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-b-4 border-line-soft bg-surface px-2 text-sm font-bold whitespace-nowrap transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400 disabled:opacity-60'
 
 /** Flashcards one tap away; every other game in the picker, so the card stays small. */
-function SetCard({ set, heading, headingLevel = 3, starting, disabled, onStart }: SetCardProps) {
+function SetCard({ set, starting, disabled, onStart }: SetCardProps) {
   const { t } = useTranslation()
   const loc = useLocalized()
   const [picking, setPicking] = useState(false)
   const title = loc(set.title)
   const { seen, mastered, due } = set.progress
   const flashcards = t('practice.games.FLASHCARD')
-  const Heading = headingLevel === 4 ? 'h4' : 'h3'
+  const titleId = useId()
 
   return (
-    <article className="flex flex-col rounded-2xl border border-line-soft bg-surface-raised p-4 shadow-sm sm:p-5">
+    <article aria-labelledby={titleId} className="flex flex-col rounded-2xl border border-line-soft bg-surface-raised p-4 shadow-sm sm:p-5">
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 pt-1">
-          <Heading className="font-bold">{heading ?? title}</Heading>
+          <h3 id={titleId} className="font-bold">
+            {set.topic?.emoji && (
+              <span aria-hidden="true" className="mr-1.5">
+                {set.topic.emoji}
+              </span>
+            )}
+            {title}
+          </h3>
           {due > 0 && (
             <span className="shrink-0 rounded-full bg-primary-500/15 px-2 py-0.5 text-xs font-bold text-accent">
               {t('practice.set.due', { count: due })}

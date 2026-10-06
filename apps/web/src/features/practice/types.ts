@@ -63,8 +63,6 @@ export interface LearningSet {
   category: string | null
   /** Exam level of a word-list set; null for alphabets and starter sets */
   level: ProficiencyLevel | null
-  /** Big topics are split into parts: 1, 2, 3… */
-  part: number | null
   topic: Topic | null
   title: Localized
   itemCount: number
