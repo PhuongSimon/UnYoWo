@@ -61,7 +61,7 @@ function GrammarTopicPage() {
         </nav>
       </aside>
 
-      <article className="min-w-0">
+      <article className="max-w-4xl min-w-0">
         <Link
           to={{ pathname: listPath, search: listSearch }}
           className="inline-flex items-center gap-1.5 rounded-lg text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"

@@ -1,6 +1,6 @@
 import { RotateCcw } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { NavLink, Outlet, ScrollRestoration } from 'react-router'
+import { NavLink, Outlet, ScrollRestoration, useMatches } from 'react-router'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import Logo from '@/components/Logo'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -10,15 +10,20 @@ import { useLocalized } from '@/features/learn/hooks/useLocalized'
 import { STUDY_LANGUAGES } from '@/features/learn/languages'
 import ProgressBadges from '@/features/progress/components/ProgressBadges'
 
+const fitsViewport = (handle: unknown) =>
+  typeof handle === 'object' && handle !== null && 'fitViewport' in handle && handle.fitViewport === true
+
 function AppLayout() {
   const { t } = useTranslation()
   const loc = useLocalized()
   useTimezoneSync()
+  // The dashboard fills exactly one screen on tablets and desktops instead of scrolling.
+  const fit = useMatches().some((match) => fitsViewport(match.handle))
 
   return (
-    <div className="flex min-h-dvh flex-col">
-      <header className="sticky top-0 z-40 border-b border-line-soft bg-surface/85 backdrop-blur-md">
-        <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
+    <div className={`flex min-h-dvh flex-col ${fit ? 'fit:h-dvh fit:overflow-hidden' : ''}`}>
+      <header className="sticky top-0 z-40 shrink-0 border-b border-line-soft bg-surface/85 backdrop-blur-md">
+        <div className="mx-auto flex h-14 w-full max-w-app items-center gap-3 px-4 sm:px-6 lg:px-8">
           <Logo className="text-xl" />
 
           <nav aria-label={t('learn.languagesNav')} className="ml-4 hidden md:block">
@@ -65,11 +70,11 @@ function AppLayout() {
         </div>
       </header>
 
-      <main className="flex flex-1 flex-col">
+      <main className="flex min-h-0 flex-1 flex-col">
         <Outlet />
       </main>
 
-      <footer className="border-t border-line-soft px-4 py-6 text-center text-xs text-muted">
+      <footer className="shrink-0 border-t border-line-soft px-4 py-3 text-center text-xs text-muted">
         {t('auth.layout.copyright', { year: new Date().getFullYear() })}
       </footer>
 

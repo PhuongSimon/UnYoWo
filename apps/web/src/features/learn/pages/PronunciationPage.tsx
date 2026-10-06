@@ -41,7 +41,7 @@ function PronunciationPage() {
               </p>
             )}
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             {group.sounds.map((sound, index) => (
               <SoundCard key={`${sound.ipa}-${index}`} sound={sound} />
             ))}

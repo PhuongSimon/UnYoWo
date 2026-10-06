@@ -1,15 +1,16 @@
-import { AudioLines, Blocks, Keyboard, ListChecks, Puzzle, X, Zap, type LucideIcon } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { GameType, LearningSet } from '../types'
+import GameIcon from './GameIcon'
 
-const GAMES: { type: GameType; Icon: LucideIcon; needsParts?: boolean }[] = [
-  { type: 'MULTIPLE_CHOICE', Icon: ListChecks },
-  { type: 'MATCHING', Icon: Puzzle },
-  { type: 'TYPING', Icon: Keyboard },
-  { type: 'LISTENING', Icon: AudioLines },
-  { type: 'SPEED', Icon: Zap },
-  { type: 'BUILDER', Icon: Blocks, needsParts: true },
+const GAMES: { type: GameType; needsParts?: boolean }[] = [
+  { type: 'MULTIPLE_CHOICE' },
+  { type: 'MATCHING' },
+  { type: 'TYPING' },
+  { type: 'LISTENING' },
+  { type: 'SPEED' },
+  { type: 'BUILDER', needsParts: true },
 ]
 
 interface GamePickerProps {
@@ -54,7 +55,7 @@ function GamePicker({ set, title, open, onClose, onPick }: GamePickerProps) {
         </button>
       </div>
       <ul className="max-h-[70dvh] overflow-y-auto p-2">
-        {GAMES.filter((game) => !game.needsParts || set.buildable).map(({ type, Icon }) => (
+        {GAMES.filter((game) => !game.needsParts || set.buildable).map(({ type }) => (
           <li key={type}>
             <button
               type="button"
@@ -62,7 +63,7 @@ function GamePicker({ set, title, open, onClose, onPick }: GamePickerProps) {
               className="flex w-full items-center gap-3 rounded-2xl p-3 text-left transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-primary-400"
             >
               <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-500/15 text-accent">
-                <Icon size={22} aria-hidden="true" />
+                <GameIcon gameType={type} size={22} />
               </span>
               <span className="min-w-0">
                 <span className="block font-bold">{t(`practice.games.${type}`)}</span>

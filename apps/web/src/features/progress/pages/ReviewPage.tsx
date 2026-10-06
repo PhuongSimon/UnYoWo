@@ -17,7 +17,7 @@ function ReviewPage() {
   const start = useStartGame()
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
+    <div className="mx-auto w-full max-w-app px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
       <h1 className="text-3xl font-extrabold">{t('review.title')}</h1>
       <p className="mt-2 text-muted">{t('review.subtitle')}</p>
 
@@ -36,7 +36,7 @@ function ReviewPage() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="grid gap-6 xl:grid-cols-2">
             {data.map((language) => (
               <LanguageReview
                 key={language.languageCode}

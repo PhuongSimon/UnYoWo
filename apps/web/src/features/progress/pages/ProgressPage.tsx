@@ -21,7 +21,7 @@ function ProgressPage() {
   const unlocked = achievements.data.filter((achievement) => achievement.unlockedAt).length
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
+    <div className="mx-auto w-full max-w-app px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
       <h1 className="text-3xl font-extrabold">{t('progress.title')}</h1>
 
       <dl className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -51,7 +51,7 @@ function ProgressPage() {
             {unlocked}/{achievements.data.length}
           </span>
         </h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {achievements.data.map((achievement) => (
             <AchievementCard key={achievement.key} achievement={achievement} />
           ))}

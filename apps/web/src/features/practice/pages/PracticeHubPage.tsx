@@ -82,7 +82,7 @@ function SetSection({ title, sets, busy, startingFor, onStart }: SetSectionProps
   return (
     <section>
       <h2 className="text-xl font-bold">{title}</h2>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {sets.map((set) => (
           <SetCard
             key={set.id}
