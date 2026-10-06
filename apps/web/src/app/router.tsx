@@ -69,6 +69,7 @@ export const router = createBrowserRouter([
               { path: 'grammar', lazy: page(() => import('@/features/learn/pages/GrammarListPage')) },
               { path: 'grammar/:topicId', lazy: page(() => import('@/features/learn/pages/GrammarTopicPage')) },
               { path: 'practice', lazy: page(() => import('@/features/practice/pages/PracticeHubPage')) },
+              { path: 'practice/script', lazy: page(() => import('@/features/script-drill/pages/ScriptDrillPage')) },
               { path: 'practice/sets/:setId', lazy: page(() => import('@/features/practice/pages/SetWordsPage')) },
               { path: '*', element: <NotFoundState /> },
             ],
