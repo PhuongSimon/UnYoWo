@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ArrowLeft, AudioLines, BookOpen, Compass, PenLine } from 'lucide-react'
+import { ArrowLeft, AudioLines, BookOpen, Compass, Gamepad2, PenLine } from 'lucide-react'
 import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, Outlet, useLocation, useParams } from 'react-router'
@@ -46,13 +46,14 @@ function LanguageShell({ language }: { language: StudyLanguage }) {
     { to: 'writing', end: false, Icon: PenLine, label: loc(language.writingLabel) },
     { to: 'pronunciation', end: false, Icon: AudioLines, label: t('learn.tabs.pronunciation') },
     { to: 'grammar', end: false, Icon: BookOpen, label: t('learn.tabs.grammar') },
+    { to: 'practice', end: false, Icon: Gamepad2, label: t('learn.tabs.practice') },
   ]
 
   return (
     // keep-all stops Korean words from breaking mid-word; Korean puts spaces between words like English.
     <div className={`flex flex-1 flex-col ${language.code === 'ko' ? 'break-keep wrap-break-word' : ''}`}>
       <section className="border-b border-line-soft bg-surface-raised/50">
-        <div className="mx-auto w-full max-w-6xl px-4 pt-4 pb-5 sm:px-6 sm:pt-6 sm:pb-7">
+        <div className="mx-auto w-full max-w-app px-4 pt-4 pb-5 sm:px-6 sm:pt-6 sm:pb-7 lg:px-8">
           <Link
             to="/app"
             className="inline-flex items-center gap-1.5 rounded-lg text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
@@ -84,7 +85,7 @@ function LanguageShell({ language }: { language: StudyLanguage }) {
       </section>
 
       <nav aria-label={t('learn.sectionsNav')} className="sticky top-14 z-30 border-b border-line-soft bg-surface/90 backdrop-blur-md">
-        <ul ref={tabListRef} className="relative mx-auto flex w-full max-w-6xl gap-1 overflow-x-auto px-4 py-2 scrollbar-none sm:px-6">
+        <ul ref={tabListRef} className="relative mx-auto flex w-full max-w-app gap-1 overflow-x-auto px-4 py-2 scrollbar-none sm:px-6 lg:px-8">
           {tabs.map(({ to, end, Icon, label }) => (
             <li key={to} className="shrink-0">
               <NavLink
@@ -104,7 +105,7 @@ function LanguageShell({ language }: { language: StudyLanguage }) {
         </ul>
       </nav>
 
-      <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
+      <div className="mx-auto w-full max-w-app flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         {isPending ? (
           <LoadingState />
         ) : isError || !studyValue ? (

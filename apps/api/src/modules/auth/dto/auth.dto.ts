@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsEmail, IsEnum, IsNotEmpty, IsString, Length, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsString, IsTimeZone, Length, Matches, MaxLength, MinLength } from 'class-validator';
 import { OtpPurpose } from '../entities/otp-code.entity.js';
 
 const normalizeEmail = ({ value }: { value: unknown }) =>
@@ -65,4 +65,10 @@ export class ResetPasswordDto {
   @MinLength(PASSWORD_MIN_LENGTH)
   @MaxLength(128)
   password: string;
+}
+
+export class UpdateProfileDto {
+  /** IANA zone sent by the browser, e.g. Asia/Ho_Chi_Minh */
+  @IsTimeZone()
+  timezone: string;
 }

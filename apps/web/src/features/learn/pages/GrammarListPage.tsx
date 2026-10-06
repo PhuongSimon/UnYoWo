@@ -128,7 +128,7 @@ function GrammarListPage() {
                 {t(`learn.grammar.level.${item}`)}
                 <span className="text-sm font-medium text-muted">{t('learn.grammar.lessonCount', { count: items.length })}</span>
               </h2>
-              <ul className="grid gap-3 md:grid-cols-2">
+              <ul className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
                 {items.map(({ topic, number }) => (
                   <li key={topic.id}>
                     <Link

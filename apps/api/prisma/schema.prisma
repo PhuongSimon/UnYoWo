@@ -18,10 +18,19 @@ model User {
   avatarUrl       String?   @map("avatar_url")
   emailVerifiedAt DateTime? @map("email_verified_at")
   lastLoginAt     DateTime? @map("last_login_at")
+  /// IANA zone (e.g. Asia/Ho_Chi_Minh): decides where the user's "today" starts for streaks and daily goals.
+  timezone        String    @default("UTC")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
   refreshTokens RefreshToken[]
+  itemProgress  UserItemProgress[]
+  gameSessions  GameSession[]
+  attempts      LearningAttempt[]
+  stats         UserStats?
+  dailyActivity UserDailyActivity[]
+  xpEvents      XpEvent[]
+  achievements  UserAchievement[]
 
   @@map("users")
 }
@@ -60,4 +69,425 @@ model RefreshToken {
 
   @@index([userId])
   @@map("refresh_tokens")
+}
+
+// ─── Learning content ────────────────────────────────────────────────────────
+// Shared by every user. Games never read these tables directly: they ask the
+// content module for items, so adding a language only means adding seed data.
+
+enum LearningSetKind {
+  ALPHABET
+  VOCABULARY
+}
+
+enum LearningItemType {
+  /// One letter, kana or jamo: あ, ㄱ
+  CHARACTER
+  /// A unit built from components: 가, きゃ, が
+  SYLLABLE
+  WORD
+}
+
+enum ComponentRole {
+  /// Hangul syllable block parts
+  INITIAL
+  VOWEL
+  FINAL
+  /// Kana: the main character, a small ゃゅょ, or the ゛ ゜ marks
+  BASE
+  SMALL
+  MARK
+}
+
+enum ItemRelationKind {
+  /// あ ↔ ア (stored in both directions)
+  SCRIPT_COUNTERPART
+  /// か → が
+  VOICED
+  /// は → ぱ
+  SEMI_VOICED
+  /// さ ↔ き: curated look-alikes used as distractors (stored in both directions)
+  CONFUSABLE
+}
+
+model Language {
+  /// BCP 47 primary tag: en, de, ja, ko
+  code       String   @id
+  nativeName String   @map("native_name")
+  /// Voice tag for speech synthesis: ja-JP
+  speechLang String   @map("speech_lang")
+  sortOrder  Int      @default(0) @map("sort_order")
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  sets         LearningSet[]
+  gameSessions GameSession[]
+
+  @@map("languages")
+}
+
+/// The unit a user picks to study and the unit achievements refer to: "Hiragana: basic", "German: food".
+model LearningSet {
+  id           String          @id @default(uuid()) @db.Uuid
+  languageCode String          @map("language_code")
+  slug         String
+  kind         LearningSetKind
+  /// Writing system for alphabet sets: hiragana, katakana, hangul
+  script       String?
+  /// Topic for vocabulary sets (food, animals…), shared across languages to group sets
+  category     String?
+  /// { en, vi }
+  title        Json
+  sortOrder    Int             @default(0) @map("sort_order")
+  createdAt    DateTime        @default(now()) @map("created_at")
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+
+  language     Language       @relation(fields: [languageCode], references: [code])
+  items        LearningItem[]
+  gameSessions GameSession[]
+
+  @@unique([languageCode, slug])
+  @@map("learning_sets")
+}
+
+/// A meaning shared across languages: apple ↔ Apfel ↔ りんご ↔ 사과.
+model Concept {
+  id        String   @id @default(uuid()) @db.Uuid
+  slug      String   @unique
+  /// { en, vi }: the meaning shown in the learner's UI language
+  gloss     Json
+  emoji     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  items LearningItem[]
+
+  @@map("concepts")
+}
+
+model LearningItem {
+  id              String           @id @default(uuid()) @db.Uuid
+  setId           String           @map("set_id") @db.Uuid
+  type            LearningItemType
+  /// What the learner sees in the target language: ぬ, 가, Apfel, 犬
+  text            String
+  /// Kana reading for words written with kanji: 犬 → いぬ
+  reading         String?
+  romanization    String?
+  ipa             String?
+  /// Other spellings accepted when typing: shi → si, tsu → tu
+  acceptedAnswers String[]         @default([]) @map("accepted_answers")
+  conceptId       String?          @map("concept_id") @db.Uuid
+  /// Language-specific extras, e.g. German { gender, article }
+  attributes      Json?
+  /// Recorded audio; when empty the web app falls back to speech synthesis
+  audioUrl        String?          @map("audio_url")
+  /// 1 (easiest) to 5
+  difficulty      Int              @default(1) @db.SmallInt
+  sortOrder       Int              @default(0) @map("sort_order")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  set         LearningSet        @relation(fields: [setId], references: [id], onDelete: Cascade)
+  concept     Concept?           @relation(fields: [conceptId], references: [id], onDelete: SetNull)
+  components  ItemComponent[]    @relation("ItemComponents")
+  partOf      ItemComponent[]    @relation("ComponentItem")
+  relations   ItemRelation[]     @relation("RelationFrom")
+  relatedFrom ItemRelation[]     @relation("RelationTo")
+  progress    UserItemProgress[]
+  questions   GameQuestion[]
+  attempts    LearningAttempt[]  @relation("AttemptItem")
+  confusedIn  LearningAttempt[]  @relation("AttemptConfusedWith")
+
+  @@unique([setId, text])
+  @@index([conceptId])
+  @@map("learning_items")
+}
+
+/// Keeps how a syllable is built: 곡 = ㄱ (INITIAL) + ㅗ (VOWEL) + ㄱ (FINAL), きゃ = き (BASE) + ゃ (SMALL).
+model ItemComponent {
+  itemId          String        @map("item_id") @db.Uuid
+  position        Int           @db.SmallInt
+  role            ComponentRole
+  text            String
+  /// Set when the component is itself a learning item (ㄱ, き); null for marks like ゛
+  componentItemId String?       @map("component_item_id") @db.Uuid
+
+  item          LearningItem  @relation("ItemComponents", fields: [itemId], references: [id], onDelete: Cascade)
+  componentItem LearningItem? @relation("ComponentItem", fields: [componentItemId], references: [id], onDelete: SetNull)
+
+  @@id([itemId, position])
+  @@index([componentItemId])
+  @@map("item_components")
+}
+
+model ItemRelation {
+  itemId        String           @map("item_id") @db.Uuid
+  relatedItemId String           @map("related_item_id") @db.Uuid
+  kind          ItemRelationKind
+
+  item        LearningItem @relation("RelationFrom", fields: [itemId], references: [id], onDelete: Cascade)
+  relatedItem LearningItem @relation("RelationTo", fields: [relatedItemId], references: [id], onDelete: Cascade)
+
+  @@id([itemId, relatedItemId, kind])
+  @@index([relatedItemId])
+  @@map("item_relations")
+}
+
+// ─── Progress ────────────────────────────────────────────────────────────────
+
+/// One row per (user, item) once the user has met the item. Accuracy and the
+/// incorrect count are derived from attempt_count / correct_count, not stored.
+model UserItemProgress {
+  userId          String    @map("user_id") @db.Uuid
+  itemId          String    @map("item_id") @db.Uuid
+  attemptCount    Int       @default(0) @map("attempt_count")
+  correctCount    Int       @default(0) @map("correct_count")
+  /// Correct answers in a row; resets to 0 on a mistake
+  correctStreak   Int       @default(0) @map("correct_streak")
+  /// 0 (new) to 5, decided by the review scheduler
+  masteryLevel    Int       @default(0) @map("mastery_level") @db.SmallInt
+  intervalMinutes Int       @default(0) @map("interval_minutes")
+  lastReviewedAt  DateTime? @map("last_reviewed_at")
+  dueAt           DateTime? @map("due_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item LearningItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@id([userId, itemId])
+  @@index([userId, dueAt])
+  @@index([itemId])
+  @@map("user_item_progress")
+}
+
+enum ReviewRating {
+  AGAIN
+  HARD
+  GOOD
+  EASY
+}
+
+/// Every answer the user gives, in any game. Mistakes, confusion pairs and
+/// statistics are all derived from this log.
+model LearningAttempt {
+  id                 String       @id @default(uuid()) @db.Uuid
+  userId             String       @map("user_id") @db.Uuid
+  itemId             String       @map("item_id") @db.Uuid
+  sessionId          String?      @map("session_id") @db.Uuid
+  questionId         String?      @map("question_id") @db.Uuid
+  /// Generated by the client per answer, so a retried request is recorded once
+  idempotencyKey     String       @map("idempotency_key") @db.Uuid
+  givenAnswer        String?      @map("given_answer")
+  isCorrect          Boolean      @map("is_correct")
+  /// The item whose option the user picked instead (ぬ answered as "ne" → ね)
+  confusedWithItemId String?      @map("confused_with_item_id") @db.Uuid
+  rating             ReviewRating
+  responseMs         Int?         @map("response_ms")
+  createdAt          DateTime     @default(now()) @map("created_at")
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  item         LearningItem  @relation("AttemptItem", fields: [itemId], references: [id], onDelete: Cascade)
+  confusedWith LearningItem? @relation("AttemptConfusedWith", fields: [confusedWithItemId], references: [id], onDelete: SetNull)
+  session      GameSession?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  question     GameQuestion? @relation(fields: [questionId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, idempotencyKey])
+  @@index([userId, createdAt])
+  @@index([userId, itemId])
+  @@index([questionId])
+  @@map("learning_attempts")
+}
+
+// ─── Games ───────────────────────────────────────────────────────────────────
+
+enum GameType {
+  FLASHCARD
+  MULTIPLE_CHOICE
+  MATCHING
+  TYPING
+  LISTENING
+  SPEED
+  BUILDER
+}
+
+enum SessionSource {
+  /// Items of one learning set
+  SET
+  /// Items whose review time has passed, across a language
+  DUE
+  /// Items the user keeps getting wrong, with their look-alikes as options
+  MISTAKES
+}
+
+enum SessionStatus {
+  ACTIVE
+  COMPLETED
+}
+
+/// What a question shows and what it asks for: TEXT_TO_ROMANIZATION shows ぬ and asks for "nu".
+enum QuestionKind {
+  FLASHCARD
+  TEXT_TO_ROMANIZATION
+  ROMANIZATION_TO_TEXT
+  TEXT_TO_MEANING
+  MEANING_TO_TEXT
+  EMOJI_TO_TEXT
+  /// Hear the item, pick what it is (さ) or what it means (quả táo)
+  AUDIO_TO_TEXT
+  AUDIO_TO_MEANING
+  /// Pick the parts of a syllable in order: g + o + k → 곡
+  BUILD
+}
+
+/// Questions and their answers are generated and kept by the server; the client
+/// only ever submits a choice. An ACTIVE session past expires_at counts as expired.
+model GameSession {
+  id               String        @id @default(uuid()) @db.Uuid
+  userId           String        @map("user_id") @db.Uuid
+  gameType         GameType      @map("game_type")
+  languageCode     String        @map("language_code")
+  source           SessionSource
+  setId            String?       @map("set_id") @db.Uuid
+  /// UI language the meanings were generated in (en / vi)
+  locale           String
+  status           SessionStatus @default(ACTIVE)
+  startedAt        DateTime      @default(now()) @map("started_at")
+  /// Timed games (Speed Challenge): length of the round
+  timeLimitSeconds Int?          @map("time_limit_seconds")
+  /// Set when the player presses Start; answers after start + limit are refused
+  timerStartedAt   DateTime?     @map("timer_started_at")
+  expiresAt        DateTime      @map("expires_at")
+  completedAt      DateTime?     @map("completed_at")
+  /// Snapshot written once on completion
+  score            Int           @default(0)
+  correctCount     Int           @default(0) @map("correct_count")
+  incorrectCount   Int           @default(0) @map("incorrect_count")
+  maxCombo         Int           @default(0) @map("max_combo")
+
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  language  Language          @relation(fields: [languageCode], references: [code])
+  set       LearningSet?      @relation(fields: [setId], references: [id], onDelete: SetNull)
+  questions GameQuestion[]
+  attempts  LearningAttempt[]
+
+  @@index([userId, startedAt])
+  @@index([userId, gameType, languageCode, status])
+  @@map("game_sessions")
+}
+
+model GameQuestion {
+  id              String       @id @default(uuid()) @db.Uuid
+  sessionId       String       @map("session_id") @db.Uuid
+  position        Int          @db.SmallInt
+  itemId          String       @map("item_id") @db.Uuid
+  kind            QuestionKind
+  prompt          String
+  /// Multiple choice: [{ id, text, itemId }]. itemId never leaves the server.
+  options         Json?
+  /// Never sent to the client before the question is answered
+  correctOptionId String?      @map("correct_option_id")
+  /// Typing: every spelling that counts as right (Apfel, der Apfel; さくら, sakura). Never sent to the client.
+  acceptedAnswers String[]     @default([]) @map("accepted_answers")
+  /// Listening: a recorded clip when the item has one; otherwise the client uses speech synthesis
+  audioUrl        String?      @map("audio_url")
+  /// Full item details shown after answering (or on the back of a flashcard)
+  reveal          Json
+  answeredAt      DateTime?    @map("answered_at")
+  isCorrect       Boolean?     @map("is_correct")
+
+  session  GameSession       @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  item     LearningItem      @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  attempts LearningAttempt[]
+
+  @@unique([sessionId, position])
+  @@map("game_questions")
+}
+
+// ─── Gamification ────────────────────────────────────────────────────────────
+
+/// One row per user; the totals the header and dashboard need without aggregating.
+model UserStats {
+  userId           String    @id @map("user_id") @db.Uuid
+  totalXp          Int       @default(0) @map("total_xp")
+  /// Days in a row with at least one answer, in the user's timezone
+  currentStreak    Int       @default(0) @map("current_streak")
+  longestStreak    Int       @default(0) @map("longest_streak")
+  lastStudyDate    DateTime? @map("last_study_date") @db.Date
+  /// Correct answers in a row across all games (for "Speed Demon")
+  answerStreak     Int       @default(0) @map("answer_streak")
+  bestAnswerStreak Int       @default(0) @map("best_answer_streak")
+  gamesCompleted   Int       @default(0) @map("games_completed")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_stats")
+}
+
+/// Counters per local day and language: daily goals and the "practice Japanese" goal read these.
+model UserDailyActivity {
+  userId         String   @map("user_id") @db.Uuid
+  /// The user's local date (see users.timezone)
+  activityDate   DateTime @map("activity_date") @db.Date
+  languageCode   String   @map("language_code")
+  xp             Int      @default(0)
+  attempts       Int      @default(0)
+  correct        Int      @default(0)
+  /// First answer ever on an item
+  newItems       Int      @default(0) @map("new_items")
+  /// Answers on items the user had already seen
+  reviews        Int      @default(0)
+  gamesCompleted Int      @default(0) @map("games_completed")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, activityDate, languageCode])
+  @@map("user_daily_activity")
+}
+
+enum XpSource {
+  ANSWER
+  SESSION_COMPLETE
+  PERFECT_SESSION
+  DAILY_GOAL
+}
+
+/// XP ledger. The unique key makes every reward idempotent: one XP per question,
+/// one bonus per session, one reward per goal per day.
+model XpEvent {
+  id           String   @id @default(uuid()) @db.Uuid
+  userId       String   @map("user_id") @db.Uuid
+  amount       Int
+  source       XpSource
+  /// Question id, session id, or "2026-10-05:LEARN_NEW"
+  sourceKey    String   @map("source_key")
+  /// The session that earned it, so its results screen can list the rewards
+  sessionId    String?  @map("session_id") @db.Uuid
+  languageCode String?  @map("language_code")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, source, sourceKey])
+  @@index([userId, createdAt])
+  @@index([sessionId])
+  @@map("xp_events")
+}
+
+/// Achievement definitions live in code (gamification/achievements.ts); this stores who unlocked what.
+model UserAchievement {
+  userId         String   @map("user_id") @db.Uuid
+  achievementKey String   @map("achievement_key")
+  /// The session that unlocked it, if any
+  sessionId      String?  @map("session_id") @db.Uuid
+  unlockedAt     DateTime @default(now()) @map("unlocked_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, achievementKey])
+  @@index([sessionId])
+  @@map("user_achievements")
 }

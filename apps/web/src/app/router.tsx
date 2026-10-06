@@ -1,4 +1,7 @@
+import type { ComponentType } from 'react'
 import { createBrowserRouter } from 'react-router'
+import PageLoader from '@/components/PageLoader'
+import RouteError from '@/components/RouteError'
 import { GuestOnly, HomeRedirect, RequireAuth } from '@/features/auth/components/RouteGuards'
 import AuthLayout from '@/features/auth/layouts/AuthLayout'
 import ForgotPasswordPage from '@/features/auth/pages/ForgotPasswordPage'
@@ -8,20 +11,22 @@ import RegisterPage from '@/features/auth/pages/RegisterPage'
 import ResetPasswordPage from '@/features/auth/pages/ResetPasswordPage'
 import VerifyOtpPage from '@/features/auth/pages/VerifyOtpPage'
 import { NotFoundState } from '@/features/learn/components/ContentState'
-import LanguageLayout from '@/features/learn/layouts/LanguageLayout'
-import GrammarListPage from '@/features/learn/pages/GrammarListPage'
-import GrammarTopicPage from '@/features/learn/pages/GrammarTopicPage'
-import HomePage from '@/features/learn/pages/HomePage'
-import OverviewPage from '@/features/learn/pages/OverviewPage'
-import PronunciationPage from '@/features/learn/pages/PronunciationPage'
-import WritingPage from '@/features/learn/pages/WritingPage'
 import AppLayout from '@/layouts/AppLayout'
 import NotFoundPage from '@/pages/NotFoundPage'
+
+/** Each signed-in page is its own chunk, downloaded the first time it is opened. */
+const page = (load: () => Promise<{ default: ComponentType }>) => async () => ({ Component: (await load()).default })
+
+/** Pages that fill the screen without scrolling on tablets and desktops (see AppLayout). */
+export interface RouteHandle {
+  fitViewport?: boolean
+}
 
 export const router = createBrowserRouter([
   { path: '/', element: <HomeRedirect /> },
   {
     element: <AuthLayout />,
+    errorElement: <RouteError />,
     children: [
       {
         element: <GuestOnly />,
@@ -38,21 +43,31 @@ export const router = createBrowserRouter([
   },
   {
     element: <RequireAuth />,
+    errorElement: <RouteError />,
+    hydrateFallbackElement: <PageLoader />,
     children: [
       {
         path: '/app',
         element: <AppLayout />,
         children: [
-          { index: true, element: <HomePage /> },
+          {
+            index: true,
+            handle: { fitViewport: true } satisfies RouteHandle,
+            lazy: page(() => import('@/features/dashboard/pages/DashboardPage')),
+          },
+          { path: 'play/:sessionId', lazy: page(() => import('@/features/practice/pages/PlayPage')) },
+          { path: 'review', lazy: page(() => import('@/features/progress/pages/ReviewPage')) },
+          { path: 'progress', lazy: page(() => import('@/features/progress/pages/ProgressPage')) },
           {
             path: ':lang',
-            element: <LanguageLayout />,
+            lazy: page(() => import('@/features/learn/layouts/LanguageLayout')),
             children: [
-              { index: true, element: <OverviewPage /> },
-              { path: 'writing', element: <WritingPage /> },
-              { path: 'pronunciation', element: <PronunciationPage /> },
-              { path: 'grammar', element: <GrammarListPage /> },
-              { path: 'grammar/:topicId', element: <GrammarTopicPage /> },
+              { index: true, lazy: page(() => import('@/features/learn/pages/OverviewPage')) },
+              { path: 'writing', lazy: page(() => import('@/features/learn/pages/WritingPage')) },
+              { path: 'pronunciation', lazy: page(() => import('@/features/learn/pages/PronunciationPage')) },
+              { path: 'grammar', lazy: page(() => import('@/features/learn/pages/GrammarListPage')) },
+              { path: 'grammar/:topicId', lazy: page(() => import('@/features/learn/pages/GrammarTopicPage')) },
+              { path: 'practice', lazy: page(() => import('@/features/practice/pages/PracticeHubPage')) },
               { path: '*', element: <NotFoundState /> },
             ],
           },

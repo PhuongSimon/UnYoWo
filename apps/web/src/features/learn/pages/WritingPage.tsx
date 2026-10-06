@@ -52,7 +52,7 @@ function ChartSection({ chart }: { chart: ScriptChart }) {
       </div>
 
       {chart.kind === 'cards' && chart.glyphs && (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
           {chart.glyphs.map((glyph, index) => (
             <GlyphCard key={`${glyph.char}-${index}`} glyph={glyph} />
           ))}

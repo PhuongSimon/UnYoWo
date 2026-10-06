@@ -77,6 +77,12 @@
     "home": "Về trang chủ",
     "back": "Quay lại"
   },
+  "routeError": {
+    "title": "Đã có lỗi xảy ra",
+    "description": "Không hiển thị được trang này. Tải lại trang thường sẽ khắc phục được, nhất là ngay sau khi ứng dụng vừa cập nhật.",
+    "reload": "Tải lại trang",
+    "home": "Về bảng tin"
+  },
   "apiErrors": {
     "VALIDATION_ERROR": "Thông tin chưa hợp lệ. Vui lòng kiểm tra lại.",
     "CAPTCHA_FAILED": "Xác minh thất bại. Vui lòng thử lại.",
@@ -92,32 +98,87 @@
     "RESET_TOKEN_INVALID": "Phiên đặt lại mật khẩu đã hết hạn. Vui lòng thực hiện lại.",
     "SESSION_EXPIRED": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
     "UNAUTHORIZED": "Vui lòng đăng nhập để tiếp tục.",
+    "LANGUAGE_NOT_FOUND": "Ngôn ngữ này chưa được hỗ trợ.",
+    "SET_NOT_FOUND": "Bộ bài học này không tồn tại.",
+    "NOT_ENOUGH_ITEMS": "Bộ này chưa đủ mục để tạo trò chơi.",
+    "NOTHING_TO_REVIEW": "Hiện chưa có gì cần ôn.",
+    "GAME_SESSION_NOT_FOUND": "Trò chơi này không tồn tại.",
+    "GAME_SESSION_EXPIRED": "Lượt chơi đã hết hạn. Hãy bắt đầu lượt mới.",
+    "GAME_SESSION_COMPLETED": "Lượt chơi này đã kết thúc.",
+    "QUESTION_NOT_FOUND": "Câu hỏi không thuộc lượt chơi này.",
+    "QUESTION_ALREADY_ANSWERED": "Câu hỏi này đã được trả lời.",
+    "INVALID_ANSWER": "Không đọc được câu trả lời. Vui lòng thử lại.",
     "ThrottlerException": "Bạn thao tác quá nhanh. Vui lòng thử lại sau.",
-    "NETWORK_ERROR": "Không kết nối được máy chủ. Vui lòng kiểm tra mạng và thử lại."
+    "NETWORK_ERROR": "Không kết nối được máy chủ. Vui lòng kiểm tra mạng và thử lại.",
+    "NO_MISTAKES": "Bạn chưa có lỗi sai nào ở ngôn ngữ này. Tuyệt vời!",
+    "TIMER_NOT_STARTED": "Hãy bấm Bắt đầu trước khi trả lời.",
+    "TIME_UP": "Hết giờ!"
   },
-  "home": {
+  "dashboard": {
+    "loading": "Đang tải bảng tin…",
     "greeting": "Chào {{name}} 👋",
-    "subtitle": "Chọn một ngôn ngữ và bắt đầu từ những điều cơ bản nhất: chữ viết, phát âm và ngữ pháp nền tảng.",
-    "languagesTitle": "Chọn ngôn ngữ",
-    "start": "Bắt đầu học",
-    "roadmapTitle": "Lộ trình cho người mới",
-    "roadmapSubtitle": "Bốn bước này áp dụng được cho mọi ngôn ngữ.",
-    "roadmap": {
-      "writing": {
-        "title": "Làm quen chữ viết",
-        "description": "Bảng chữ cái, kana hay Hangul — bấm vào chữ bất kỳ để nghe."
+    "streak_one": "Chuỗi {{count}} ngày",
+    "streak_other": "Chuỗi {{count}} ngày",
+    "xp_one": "{{count}} XP",
+    "xp_other": "{{count}} XP",
+    "quotes": {
+      "0": "Mỗi ngày một chút còn hơn thỉnh thoảng thật nhiều.",
+      "1": "Mỗi từ mới là một cánh cửa mới.",
+      "2": "Lỗi sai chỉ là những câu trả lời bạn chưa học thôi.",
+      "3": "Những bước nhỏ mỗi ngày sẽ đưa bạn tới sự trôi chảy.",
+      "4": "Luyện tập hôm nay là tự tin ngày mai."
+    },
+    "languagesNav": "Ngôn ngữ của bạn",
+    "languageStats": "Thuộc {{mastered}} · Đến hạn {{due}}",
+    "languageProgress": "{{language}}: đã luyện {{seen}}/{{total}} mục",
+    "reviewStats": "{{due}} đến hạn · {{weak}} cần sửa",
+    "plan": {
+      "title": "Hôm nay học gì?",
+      "empty": "Bạn đã học hết những gì cần thiết. Chọn một ngôn ngữ ở trên để khám phá thêm nhé!",
+      "REVIEW_DUE_one": "Ôn {{count}} mục đến hạn",
+      "REVIEW_DUE_other": "Ôn {{count}} mục đến hạn",
+      "FIX_MISTAKES_one": "Sửa {{count}} lỗi sai",
+      "FIX_MISTAKES_other": "Sửa {{count}} lỗi sai",
+      "CONTINUE_SET": "Tiếp tục: {{set}}",
+      "START_SET": "Bắt đầu: {{set}}",
+      "detail": "{{language}} · {{game}}",
+      "mostIn": "nhiều nhất ở {{set}}",
+      "seen": "Đã luyện {{count}}/{{total}}",
+      "action": {
+        "REVIEW_DUE": "Ôn ngay",
+        "FIX_MISTAKES": "Luyện",
+        "CONTINUE_SET": "Tiếp tục",
+        "START_SET": "Bắt đầu"
+      }
+    },
+    "cheer": {
+      "allDone": "Tuyệt vời, {{name}}! Bạn đã hoàn thành mọi mục tiêu hôm nay.",
+      "keepGoing_one": "{{name}} ơi, cố lên nhé! Còn {{count}} mục tiêu nữa thôi.",
+      "keepGoing_other": "{{name}} ơi, cố lên nhé! Còn {{count}} mục tiêu nữa thôi.",
+      "weakTitle": "Cần luyện thêm:",
+      "noWeak": "Chưa có lỗi nào cần sửa. Giữ vững phong độ nhé!"
+    },
+    "progress": {
+      "title": "Tiến độ hôm nay",
+      "ringLabel": "Đã hoàn thành {{percent}}% mục tiêu hôm nay",
+      "status": {
+        "start": "Bắt đầu thôi!",
+        "going": "Đang tiến bộ!",
+        "done": "Hoàn thành!"
       },
-      "pronunciation": {
-        "title": "Luyện tai và phát âm",
-        "description": "Ký hiệu IPA, những âm khó và các quy tắc biến âm."
-      },
-      "grammar": {
-        "title": "Ghép câu với ngữ pháp",
-        "description": "Ngữ pháp cốt lõi từ bài đầu tiên, có ví dụ để nghe và đọc theo."
-      },
-      "practice": {
-        "title": "Luyện tập mỗi ngày",
-        "description": "Đọc to các ví dụ 15 phút mỗi ngày — đều đặn quan trọng hơn học dồn."
+      "detail": "{{done}}/{{total}} mục tiêu · {{answers}} câu trả lời · {{xp}} XP"
+    },
+    "recent": {
+      "title": "Kết quả gần đây",
+      "seeAll": "Xem tất cả",
+      "empty": "Chưa có lượt chơi nào. Chọn một gợi ý hôm nay để bắt đầu nhé!",
+      "detail": "{{game}} · Đúng {{correct}}/{{answered}} · {{score}} điểm",
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "source": {
+        "SET": "Luyện tập",
+        "DUE": "Ôn tập",
+        "MISTAKES": "Lỗi sai"
       }
     }
   },
@@ -138,7 +199,8 @@
     "tabs": {
       "overview": "Tổng quan",
       "pronunciation": "Phát âm",
-      "grammar": "Ngữ pháp"
+      "grammar": "Ngữ pháp",
+      "practice": "Luyện tập"
     },
     "notFound": {
       "title": "Chưa có gì ở đây",
@@ -198,6 +260,283 @@
       "final": "Phụ âm cuối (patchim)",
       "none": "Không",
       "romanization": "Phiên âm"
+    }
+  },
+  "practice": {
+    "loading": "Đang chuẩn bị câu hỏi…",
+    "review": {
+      "title": "Ôn tập",
+      "due_one": "Có {{count}} mục cần ôn.",
+      "due_other": "Có {{count}} mục cần ôn.",
+      "none": "Hiện chưa có gì cần ôn. Những gì bạn đã luyện sẽ quay lại đây khi đến lúc.",
+      "start": "Ôn ngay"
+    },
+    "sections": {
+      "alphabet": "Chữ viết",
+      "vocabulary": "Từ vựng"
+    },
+    "set": {
+      "items_one": "{{count}} mục",
+      "items_other": "{{count}} mục",
+      "mastered_one": "{{count}} đã thuộc",
+      "mastered_other": "{{count}} đã thuộc",
+      "due_one": "{{count}} cần ôn",
+      "due_other": "{{count}} cần ôn",
+      "seen": "Đã luyện {{seen}}/{{total}}",
+      "progressLabel": "Tiến độ {{title}}"
+    },
+    "games": {
+      "FLASHCARD": "Thẻ ghi nhớ",
+      "MULTIPLE_CHOICE": "Trắc nghiệm",
+      "MATCHING": "Nối cặp",
+      "TYPING": "Gõ đáp án",
+      "LISTENING": "Nghe",
+      "SPEED": "Tốc độ",
+      "BUILDER": "Ghép chữ"
+    },
+    "gameDescriptions": {
+      "FLASHCARD": "Xem, nhớ lại, rồi tự đánh giá mức độ nhớ.",
+      "MULTIPLE_CHOICE": "Chọn đáp án đúng trong bốn lựa chọn.",
+      "MATCHING": "Ghép mỗi câu hỏi với đáp án của nó.",
+      "TYPING": "Tự gõ câu trả lời.",
+      "LISTENING": "Nghe rồi chọn đúng cái bạn nghe được.",
+      "SPEED": "Trả lời đúng càng nhiều càng tốt trong một phút.",
+      "BUILDER": "Ghép các phần lại thành chữ."
+    },
+    "picker": {
+      "open": "Trò chơi khác",
+      "title": "Chơi: {{title}}",
+      "close": "Đóng"
+    },
+    "start": "{{game}}: {{title}}",
+    "quit": "Rời trò chơi (bạn có thể quay lại sau)",
+    "progress": "Đã trả lời {{current}}/{{total}}",
+    "combo_one": "Đúng {{count}} câu liên tiếp",
+    "combo_other": "Đúng {{count}} câu liên tiếp",
+    "prompt": {
+      "FLASHCARD": "Bạn có nhớ chữ này không?",
+      "TEXT_TO_ROMANIZATION": "Chữ này đọc là gì?",
+      "ROMANIZATION_TO_TEXT": "Chữ nào đọc như thế này?",
+      "TEXT_TO_MEANING": "Từ này nghĩa là gì?",
+      "MEANING_TO_TEXT": "Từ nào có nghĩa này?",
+      "EMOJI_TO_TEXT": "Từ nào hợp với hình?",
+      "AUDIO_TO_TEXT": "Bạn nghe thấy gì?",
+      "AUDIO_TO_MEANING": "Từ bạn vừa nghe nghĩa là gì?",
+      "BUILD": "Ghép chữ đọc là"
+    },
+    "optionCorrect": "đáp án đúng",
+    "optionYours": "bạn đã chọn",
+    "correct": "Chính xác!",
+    "incorrect": "Chưa đúng",
+    "next": "Tiếp tục",
+    "finish": "Xem kết quả",
+    "showAnswer": "Xem đáp án",
+    "rate": "Bạn nhớ chữ này đến đâu?",
+    "rating": {
+      "AGAIN": "Quên",
+      "HARD": "Khó",
+      "GOOD": "Nhớ",
+      "EASY": "Dễ"
+    },
+    "ratingHint": {
+      "AGAIN": "Học lại",
+      "HARD": "Phải nghĩ lâu",
+      "GOOD": "Nhớ ra",
+      "EASY": "Nhớ ngay"
+    },
+    "hint": {
+      "FLASHCARD": "Bàn phím: Space để xem đáp án, 1–4 để đánh giá.",
+      "MULTIPLE_CHOICE": "Bàn phím: 1–4 để chọn đáp án, Enter để tiếp tục.",
+      "MATCHING": "Bàn phím: 1–6 chọn bên trái, A–F chọn bên phải.",
+      "TYPING": "Bàn phím: Enter để kiểm tra, Enter lần nữa để tiếp tục.",
+      "LISTENING": "Bàn phím: R để nghe lại, 1–4 để chọn đáp án.",
+      "SPEED": "Bàn phím: 1–4 để chọn đáp án. Nhanh tay lên!",
+      "BUILDER": "Chọn một phần ở mỗi hàng, rồi nhấn Enter để kiểm tra."
+    },
+    "matching": {
+      "instructions": "Chạm một thẻ mỗi bên để ghép thành cặp.",
+      "prompts": "Câu hỏi",
+      "cards": "Đáp án",
+      "matched": "đã ghép",
+      "miss": "Không phải một cặp. Thử lại nhé!",
+      "mistakes_one": "Ghép sai {{count}} lần",
+      "mistakes_other": "Ghép sai {{count}} lần"
+    },
+    "typing": {
+      "prompt": {
+        "TEXT_TO_ROMANIZATION": "Gõ cách đọc của chữ này",
+        "MEANING_TO_TEXT": "Gõ từ có nghĩa này",
+        "EMOJI_TO_TEXT": "Gõ từ hợp với hình"
+      },
+      "label": "Câu trả lời của bạn",
+      "placeholder": "Gõ câu trả lời…",
+      "submit": "Kiểm tra",
+      "dontKnow": "Tôi không biết",
+      "yourAnswer": "Bạn đã gõ: {{answer}}",
+      "skipped": "Bạn đã bỏ qua câu này.",
+      "hint": {
+        "de": "Có thể gõ kèm mạo từ, ví dụ: der Apfel.",
+        "ja": "Gõ bằng kanji, kana hay romaji đều được, ví dụ: さくら hoặc sakura.",
+        "ko": "Gõ bằng Hangul hay chữ Latin đều được, ví dụ: 사과 hoặc sagwa."
+      }
+    },
+    "listening": {
+      "replay": "Nghe lại",
+      "unsupported": "Thiết bị này không phát được âm thanh nên chưa chơi được phần Nghe. Hãy thử trình duyệt khác."
+    },
+    "speed": {
+      "title": "Thử thách tốc độ",
+      "description_one": "Trả lời càng nhiều câu càng tốt trong {{count}} giây. Đồng hồ chỉ chạy khi bạn bấm Bắt đầu.",
+      "description_other": "Trả lời càng nhiều câu càng tốt trong {{count}} giây. Đồng hồ chỉ chạy khi bạn bấm Bắt đầu.",
+      "start": "Bắt đầu",
+      "timeLeft_one": "Còn {{count}} giây",
+      "timeLeft_other": "Còn {{count}} giây",
+      "hurry": "Còn chưa đến 10 giây!"
+    },
+    "builder": {
+      "instruction": "Ghép chữ đọc là",
+      "slots": "Chữ của bạn, từng phần",
+      "empty": "Trống: {{role}}",
+      "clear": "Bỏ {{part}} ({{role}})",
+      "roles": {
+        "INITIAL": "Phụ âm đầu",
+        "VOWEL": "Nguyên âm",
+        "FINAL": "Phụ âm cuối",
+        "BASE": "Chữ gốc",
+        "SMALL": "Chữ nhỏ",
+        "MARK": "Dấu"
+      },
+      "check": "Kiểm tra",
+      "reset": "Xoá hết các phần",
+      "yourParts": "Bạn đã ghép: {{parts}}"
+    },
+    "sendFailed": "Chưa lưu được câu trả lời. Kiểm tra kết nối rồi thử lại.",
+    "completeFailed": "Chưa lưu được kết quả. Kiểm tra kết nối rồi thử lại.",
+    "completing": "Đang lưu kết quả…",
+    "retry": "Thử lại",
+    "result": {
+      "title": "Hoàn thành lượt chơi!",
+      "score": "điểm",
+      "correct": "Trả lời đúng",
+      "accuracy": "Độ chính xác",
+      "bestCombo": "Chuỗi đúng dài nhất",
+      "time": "Thời gian",
+      "partial": "Bạn đã trả lời {{answered}}/{{total}} câu.",
+      "playAgain": "Chơi lại",
+      "back": "Về trang luyện tập",
+      "pairs": "Số cặp đã ghép",
+      "mistakes": "Ghép sai",
+      "newBest": "Kỷ lục mới!",
+      "best": "Kỷ lục của bạn: {{score}}"
+    },
+    "expired": {
+      "title": "Lượt chơi này đã hết hạn",
+      "description": "Lượt chơi dở được giữ trong một giờ. Câu trả lời của bạn đã được lưu, hãy bắt đầu lượt mới để học tiếp."
+    },
+    "rewards": {
+      "xp": "+{{xp}} XP",
+      "source": {
+        "ANSWER_one": "{{count}} câu trả lời đúng",
+        "ANSWER_other": "{{count}} câu trả lời đúng",
+        "SESSION_COMPLETE": "Hoàn thành lượt chơi",
+        "PERFECT_SESSION": "Lượt chơi hoàn hảo",
+        "DAILY_GOAL_one": "Mục tiêu ngày",
+        "DAILY_GOAL_other": "{{count}} mục tiêu ngày"
+      },
+      "goalDone": "Đạt mục tiêu: {{goal}}",
+      "unlocked": "Mở khoá thành tích"
+    }
+  },
+  "review": {
+    "title": "Ôn tập",
+    "subtitle": "Các mục đến hạn hôm nay và những mục bạn hay sai, theo từng ngôn ngữ.",
+    "due_one": "{{count}} mục đến hạn ôn",
+    "due_other": "{{count}} mục đến hạn ôn",
+    "noneDue": "Chưa có mục nào đến hạn",
+    "reviewDue": "Ôn các mục đến hạn",
+    "weak_one": "{{count}} mục cần sửa",
+    "weak_other": "{{count}} mục cần sửa",
+    "noneWeak": "Không có lỗi nào cần sửa",
+    "practiceMistakes": "Luyện lỗi sai",
+    "weakTitle": "Hay sai",
+    "weakStats": "Sai {{wrong}} trên {{total}} lần trả lời",
+    "confusionsTitle": "Hay nhầm",
+    "versus": "nhầm với",
+    "confusedTimes_one": "{{count}} lần",
+    "confusedTimes_other": "{{count}} lần",
+    "empty": {
+      "title": "Chưa có gì để ôn",
+      "description": "Hãy chơi vài lượt trước: các mục sẽ quay lại đây khi đến hạn, và lỗi sai sẽ hiện ra để bạn sửa.",
+      "cta": "Chọn ngôn ngữ"
+    }
+  },
+  "progress": {
+    "title": "Tiến độ",
+    "streakLabel_one": "Chuỗi {{count}} ngày học",
+    "streakLabel_other": "Chuỗi {{count}} ngày học",
+    "xpLabel_one": "{{count}} XP",
+    "xpLabel_other": "{{count}} XP",
+    "totalXp": "Tổng XP",
+    "todayXp": "XP hôm nay",
+    "streak": "Chuỗi hiện tại",
+    "longest": "Chuỗi dài nhất",
+    "days_one": "{{count}} ngày",
+    "days_other": "{{count}} ngày",
+    "goalsTitle": "Mục tiêu hôm nay",
+    "goals": {
+      "LEARN_NEW_one": "Học {{count}} mục mới",
+      "LEARN_NEW_other": "Học {{count}} mục mới",
+      "REVIEW_one": "Ôn lại {{count}} mục đã học",
+      "REVIEW_other": "Ôn lại {{count}} mục đã học",
+      "PLAY_GAME_one": "Hoàn thành {{count}} lượt chơi",
+      "PLAY_GAME_other": "Hoàn thành {{count}} lượt chơi",
+      "PRACTICE_LANGUAGE_one": "Trả lời {{count}} câu {{language}}",
+      "PRACTICE_LANGUAGE_other": "Trả lời {{count}} câu {{language}}"
+    },
+    "goalNames": {
+      "LEARN_NEW": "học mục mới",
+      "REVIEW": "ôn bài",
+      "PLAY_GAME": "hoàn thành lượt chơi",
+      "PRACTICE_LANGUAGE": "luyện ngôn ngữ đang học"
+    },
+    "goalDone": "đã xong",
+    "goalProgress": "{{label}}: {{current}}/{{target}}",
+    "achievementsTitle": "Thành tích",
+    "unlockedOn": "Mở khoá ngày {{date}}",
+    "achievementProgress": "{{title}}: {{current}}/{{target}}"
+  },
+  "achievements": {
+    "FIRST_STEPS": {
+      "title": "Bước đầu tiên",
+      "description": "Hoàn thành lượt chơi đầu tiên."
+    },
+    "STREAK_7": {
+      "title": "Chuỗi 7 ngày",
+      "description": "Học 7 ngày liên tiếp."
+    },
+    "HIRAGANA_BEGINNER": {
+      "title": "Nhập môn Hiragana",
+      "description": "Trả lời đúng mỗi chữ Hiragana cơ bản ít nhất một lần."
+    },
+    "HIRAGANA_MASTER": {
+      "title": "Bậc thầy Hiragana",
+      "description": "Thuộc lòng toàn bộ Hiragana, kể cả âm đục và âm ghép."
+    },
+    "KATAKANA_BEGINNER": {
+      "title": "Nhập môn Katakana",
+      "description": "Trả lời đúng mỗi chữ Katakana cơ bản ít nhất một lần."
+    },
+    "HANGUL_BEGINNER": {
+      "title": "Nhập môn Hangul",
+      "description": "Trả lời đúng mọi phụ âm và nguyên âm Hangul cơ bản."
+    },
+    "POLYGLOT": {
+      "title": "Đa ngôn ngữ",
+      "description": "Học tất cả ngôn ngữ trên UnYoWo."
+    },
+    "SPEED_DEMON": {
+      "title": "Tia chớp",
+      "description": "Trả lời đúng 20 câu liên tiếp."
     }
   },
   "mascot": {

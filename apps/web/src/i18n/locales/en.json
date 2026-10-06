@@ -77,6 +77,12 @@
     "home": "Go to home",
     "back": "Go back"
   },
+  "routeError": {
+    "title": "Something went wrong",
+    "description": "This page couldn't be shown. Reloading usually fixes it, especially right after an update.",
+    "reload": "Reload page",
+    "home": "Go to the dashboard"
+  },
   "apiErrors": {
     "VALIDATION_ERROR": "Some information is invalid. Please check and try again.",
     "CAPTCHA_FAILED": "Verification failed. Please try again.",
@@ -92,32 +98,87 @@
     "RESET_TOKEN_INVALID": "This reset link has expired. Please start again.",
     "SESSION_EXPIRED": "Your session has expired. Please sign in again.",
     "UNAUTHORIZED": "Please sign in to continue.",
+    "LANGUAGE_NOT_FOUND": "This language isn't available.",
+    "SET_NOT_FOUND": "This lesson set doesn't exist.",
+    "NOT_ENOUGH_ITEMS": "There aren't enough items in this set to make a game yet.",
+    "NOTHING_TO_REVIEW": "Nothing is due for review right now.",
+    "GAME_SESSION_NOT_FOUND": "This game doesn't exist.",
+    "GAME_SESSION_EXPIRED": "This round has expired. Start a new one.",
+    "GAME_SESSION_COMPLETED": "This round is already finished.",
+    "QUESTION_NOT_FOUND": "This question isn't part of the round.",
+    "QUESTION_ALREADY_ANSWERED": "This question has already been answered.",
+    "INVALID_ANSWER": "That answer couldn't be read. Please try again.",
     "ThrottlerException": "Too many requests. Please slow down.",
-    "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again."
+    "NETWORK_ERROR": "Cannot reach the server. Check your connection and try again.",
+    "NO_MISTAKES": "No mistakes to practise in this language yet. Nice!",
+    "TIMER_NOT_STARTED": "Press Start before answering.",
+    "TIME_UP": "Time's up!"
   },
-  "home": {
+  "dashboard": {
+    "loading": "Loading your dashboard…",
     "greeting": "Hi, {{name}} 👋",
-    "subtitle": "Pick a language and start with the essentials: the writing system, pronunciation and core grammar.",
-    "languagesTitle": "Choose a language",
-    "start": "Start learning",
-    "roadmapTitle": "Your beginner roadmap",
-    "roadmapSubtitle": "The same four steps work for every language.",
-    "roadmap": {
-      "writing": {
-        "title": "Learn the script",
-        "description": "Letters, kana or Hangul — tap any character to hear it."
+    "streak_one": "{{count}}-day streak",
+    "streak_other": "{{count}}-day streak",
+    "xp_one": "{{count}} XP",
+    "xp_other": "{{count}} XP",
+    "quotes": {
+      "0": "A little every day beats a lot once in a while.",
+      "1": "Every word you learn opens a new door.",
+      "2": "Mistakes are just answers you haven't learned yet.",
+      "3": "Small steps, every day, add up to fluency.",
+      "4": "Today's practice is tomorrow's confidence."
+    },
+    "languagesNav": "Your languages",
+    "languageStats": "{{mastered}} mastered · {{due}} due",
+    "languageProgress": "{{language}}: {{seen}} of {{total}} items practised",
+    "reviewStats": "{{due}} due · {{weak}} to fix",
+    "plan": {
+      "title": "What to study today",
+      "empty": "You're all caught up. Pick a language above to explore something new!",
+      "REVIEW_DUE_one": "Review {{count}} due item",
+      "REVIEW_DUE_other": "Review {{count}} due items",
+      "FIX_MISTAKES_one": "Fix {{count}} mistake",
+      "FIX_MISTAKES_other": "Fix {{count}} mistakes",
+      "CONTINUE_SET": "Continue: {{set}}",
+      "START_SET": "Start: {{set}}",
+      "detail": "{{language}} · {{game}}",
+      "mostIn": "mostly in {{set}}",
+      "seen": "{{count}} of {{total}} practised",
+      "action": {
+        "REVIEW_DUE": "Review",
+        "FIX_MISTAKES": "Practise",
+        "CONTINUE_SET": "Continue",
+        "START_SET": "Start"
+      }
+    },
+    "cheer": {
+      "allDone": "Brilliant, {{name}}! Every goal for today is done.",
+      "keepGoing_one": "Keep going, {{name}}! Just {{count}} goal left today.",
+      "keepGoing_other": "Keep going, {{name}}! {{count}} goals left today.",
+      "weakTitle": "Needs more practice:",
+      "noWeak": "No mistakes to fix. Keep it up!"
+    },
+    "progress": {
+      "title": "Today's progress",
+      "ringLabel": "{{percent}}% of today's goals done",
+      "status": {
+        "start": "Let's get started!",
+        "going": "Making progress!",
+        "done": "All done!"
       },
-      "pronunciation": {
-        "title": "Train your ear",
-        "description": "IPA symbols, the tricky sounds and the rules that change them."
-      },
-      "grammar": {
-        "title": "Build sentences",
-        "description": "Core grammar from the very first lesson, with examples you can listen to."
-      },
-      "practice": {
-        "title": "Practise every day",
-        "description": "Read the examples aloud for 15 minutes a day — consistency beats long sessions."
+      "detail": "{{done}}/{{total}} goals · {{answers}} answers · {{xp}} XP"
+    },
+    "recent": {
+      "title": "Recent results",
+      "seeAll": "See all",
+      "empty": "No rounds yet. Pick something from today's plan to start!",
+      "detail": "{{game}} · {{correct}}/{{answered}} right · {{score}} pts",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "source": {
+        "SET": "Practice",
+        "DUE": "Review",
+        "MISTAKES": "Mistakes"
       }
     }
   },
@@ -138,7 +199,8 @@
     "tabs": {
       "overview": "Overview",
       "pronunciation": "Pronunciation",
-      "grammar": "Grammar"
+      "grammar": "Grammar",
+      "practice": "Practice"
     },
     "notFound": {
       "title": "Nothing here yet",
@@ -198,6 +260,283 @@
       "final": "Final consonant (batchim)",
       "none": "None",
       "romanization": "Romanization"
+    }
+  },
+  "practice": {
+    "loading": "Getting your questions ready…",
+    "review": {
+      "title": "Review",
+      "due_one": "{{count}} item is due for review.",
+      "due_other": "{{count}} items are due for review.",
+      "none": "Nothing to review right now. Items you practise come back here when it's time.",
+      "start": "Review now"
+    },
+    "sections": {
+      "alphabet": "Writing system",
+      "vocabulary": "Vocabulary"
+    },
+    "set": {
+      "items_one": "{{count}} item",
+      "items_other": "{{count}} items",
+      "mastered_one": "{{count}} mastered",
+      "mastered_other": "{{count}} mastered",
+      "due_one": "{{count}} due",
+      "due_other": "{{count}} due",
+      "seen": "{{seen}}/{{total}} practised",
+      "progressLabel": "Progress in {{title}}"
+    },
+    "games": {
+      "FLASHCARD": "Flashcards",
+      "MULTIPLE_CHOICE": "Quiz",
+      "MATCHING": "Matching",
+      "TYPING": "Typing",
+      "LISTENING": "Listening",
+      "SPEED": "Speed",
+      "BUILDER": "Builder"
+    },
+    "gameDescriptions": {
+      "FLASHCARD": "See it, recall it, rate how well you knew it.",
+      "MULTIPLE_CHOICE": "Pick the right answer out of four.",
+      "MATCHING": "Pair every prompt with its match.",
+      "TYPING": "Type the answer yourself.",
+      "LISTENING": "Hear it, then pick what you heard.",
+      "SPEED": "As many right answers as you can in a minute.",
+      "BUILDER": "Assemble characters from their parts."
+    },
+    "picker": {
+      "open": "More games",
+      "title": "Play {{title}}",
+      "close": "Close"
+    },
+    "start": "{{game}}: {{title}}",
+    "quit": "Leave the game (you can come back to it)",
+    "progress": "{{current}} of {{total}} answered",
+    "combo_one": "{{count}} correct in a row",
+    "combo_other": "{{count}} correct in a row",
+    "prompt": {
+      "FLASHCARD": "Do you remember this?",
+      "TEXT_TO_ROMANIZATION": "How do you read this?",
+      "ROMANIZATION_TO_TEXT": "Which one is it?",
+      "TEXT_TO_MEANING": "What does this mean?",
+      "MEANING_TO_TEXT": "Which word means this?",
+      "EMOJI_TO_TEXT": "Which word fits the picture?",
+      "AUDIO_TO_TEXT": "What did you hear?",
+      "AUDIO_TO_MEANING": "What does the word you heard mean?",
+      "BUILD": "Build the character that reads"
+    },
+    "optionCorrect": "correct answer",
+    "optionYours": "your answer",
+    "correct": "Correct!",
+    "incorrect": "Not quite",
+    "next": "Next",
+    "finish": "See results",
+    "showAnswer": "Show answer",
+    "rate": "How well did you remember it?",
+    "rating": {
+      "AGAIN": "Again",
+      "HARD": "Hard",
+      "GOOD": "Good",
+      "EASY": "Easy"
+    },
+    "ratingHint": {
+      "AGAIN": "Forgot",
+      "HARD": "With effort",
+      "GOOD": "Remembered",
+      "EASY": "Instantly"
+    },
+    "hint": {
+      "FLASHCARD": "Keyboard: Space shows the answer, 1–4 rates it.",
+      "MULTIPLE_CHOICE": "Keyboard: 1–4 picks an answer, Enter continues.",
+      "MATCHING": "Keyboard: 1–6 picks a prompt, A–F picks its match.",
+      "TYPING": "Keyboard: Enter checks your answer, then Enter continues.",
+      "LISTENING": "Keyboard: R plays the sound again, 1–4 picks an answer.",
+      "SPEED": "Keyboard: 1–4 picks an answer. Be quick!",
+      "BUILDER": "Pick one part per row, then press Enter to check."
+    },
+    "matching": {
+      "instructions": "Tap a card on each side to make a pair.",
+      "prompts": "Prompts",
+      "cards": "Matches",
+      "matched": "matched",
+      "miss": "Not a pair. Try again!",
+      "mistakes_one": "{{count}} wrong pair",
+      "mistakes_other": "{{count}} wrong pairs"
+    },
+    "typing": {
+      "prompt": {
+        "TEXT_TO_ROMANIZATION": "Type how you read this",
+        "MEANING_TO_TEXT": "Type the word that means this",
+        "EMOJI_TO_TEXT": "Type the word for this picture"
+      },
+      "label": "Your answer",
+      "placeholder": "Type your answer…",
+      "submit": "Check",
+      "dontKnow": "I don't know",
+      "yourAnswer": "You typed: {{answer}}",
+      "skipped": "You skipped this one.",
+      "hint": {
+        "de": "You can add the article too, e.g. der Apfel.",
+        "ja": "Kanji, kana or romaji all count, e.g. さくら or sakura.",
+        "ko": "Hangul or romanization both count, e.g. 사과 or sagwa."
+      }
+    },
+    "listening": {
+      "replay": "Play the sound again",
+      "unsupported": "This device can't play sounds, so listening rounds won't work here. Try another browser."
+    },
+    "speed": {
+      "title": "Speed challenge",
+      "description_one": "Answer as many questions as you can in {{count}} second. The clock starts when you press Start.",
+      "description_other": "Answer as many questions as you can in {{count}} seconds. The clock starts when you press Start.",
+      "start": "Start",
+      "timeLeft_one": "{{count}} second left",
+      "timeLeft_other": "{{count}} seconds left",
+      "hurry": "Less than 10 seconds left!"
+    },
+    "builder": {
+      "instruction": "Build the character that reads",
+      "slots": "Your character, part by part",
+      "empty": "Empty: {{role}}",
+      "clear": "Remove {{part}} ({{role}})",
+      "roles": {
+        "INITIAL": "First consonant",
+        "VOWEL": "Vowel",
+        "FINAL": "Final consonant",
+        "BASE": "Main character",
+        "SMALL": "Small character",
+        "MARK": "Mark"
+      },
+      "check": "Check",
+      "reset": "Clear all parts",
+      "yourParts": "You built: {{parts}}"
+    },
+    "sendFailed": "Your answer couldn't be saved. Check your connection and try again.",
+    "completeFailed": "Your results couldn't be saved. Check your connection and try again.",
+    "completing": "Saving your results…",
+    "retry": "Try again",
+    "result": {
+      "title": "Round complete!",
+      "score": "points",
+      "correct": "Correct",
+      "accuracy": "Accuracy",
+      "bestCombo": "Best streak",
+      "time": "Time",
+      "partial": "You answered {{answered}} of {{total}} questions.",
+      "playAgain": "Play again",
+      "back": "Back to practice",
+      "pairs": "Pairs found",
+      "mistakes": "Wrong pairs",
+      "newBest": "New personal best!",
+      "best": "Your best: {{score}}"
+    },
+    "expired": {
+      "title": "This round has expired",
+      "description": "Unfinished rounds are kept for an hour. Your answers were saved, so start a new round to keep going."
+    },
+    "rewards": {
+      "xp": "+{{xp}} XP",
+      "source": {
+        "ANSWER_one": "{{count}} correct answer",
+        "ANSWER_other": "{{count}} correct answers",
+        "SESSION_COMPLETE": "Round finished",
+        "PERFECT_SESSION": "Perfect round",
+        "DAILY_GOAL_one": "Daily goal",
+        "DAILY_GOAL_other": "{{count}} daily goals"
+      },
+      "goalDone": "Goal reached: {{goal}}",
+      "unlocked": "Achievement unlocked"
+    }
+  },
+  "review": {
+    "title": "Review",
+    "subtitle": "Items due today and the ones you keep getting wrong, for every language.",
+    "due_one": "{{count}} item is due",
+    "due_other": "{{count}} items are due",
+    "noneDue": "Nothing due right now",
+    "reviewDue": "Review due items",
+    "weak_one": "{{count}} item to fix",
+    "weak_other": "{{count}} items to fix",
+    "noneWeak": "No mistakes to fix",
+    "practiceMistakes": "Practise my mistakes",
+    "weakTitle": "Often missed",
+    "weakStats": "{{wrong}} wrong out of {{total}} answers",
+    "confusionsTitle": "Often mixed up",
+    "versus": "mixed up with",
+    "confusedTimes_one": "{{count}} time",
+    "confusedTimes_other": "{{count}} times",
+    "empty": {
+      "title": "Nothing to review yet",
+      "description": "Play a few rounds first: items come back here when they are due, and mistakes show up so you can fix them.",
+      "cta": "Choose a language"
+    }
+  },
+  "progress": {
+    "title": "Progress",
+    "streakLabel_one": "{{count}}-day streak",
+    "streakLabel_other": "{{count}}-day streak",
+    "xpLabel_one": "{{count}} XP",
+    "xpLabel_other": "{{count}} XP",
+    "totalXp": "Total XP",
+    "todayXp": "XP today",
+    "streak": "Current streak",
+    "longest": "Longest streak",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "goalsTitle": "Today's goals",
+    "goals": {
+      "LEARN_NEW_one": "Learn {{count}} new item",
+      "LEARN_NEW_other": "Learn {{count}} new items",
+      "REVIEW_one": "Review {{count}} item you've seen",
+      "REVIEW_other": "Review {{count}} items you've seen",
+      "PLAY_GAME_one": "Finish {{count}} round",
+      "PLAY_GAME_other": "Finish {{count}} rounds",
+      "PRACTICE_LANGUAGE_one": "Answer {{count}} question in {{language}}",
+      "PRACTICE_LANGUAGE_other": "Answer {{count}} questions in {{language}}"
+    },
+    "goalNames": {
+      "LEARN_NEW": "learn new items",
+      "REVIEW": "review",
+      "PLAY_GAME": "finish a round",
+      "PRACTICE_LANGUAGE": "practise your language"
+    },
+    "goalDone": "done",
+    "goalProgress": "{{label}}: {{current}} of {{target}}",
+    "achievementsTitle": "Achievements",
+    "unlockedOn": "Unlocked on {{date}}",
+    "achievementProgress": "{{title}}: {{current}} of {{target}}"
+  },
+  "achievements": {
+    "FIRST_STEPS": {
+      "title": "First steps",
+      "description": "Finish your first round."
+    },
+    "STREAK_7": {
+      "title": "7-day streak",
+      "description": "Study 7 days in a row."
+    },
+    "HIRAGANA_BEGINNER": {
+      "title": "Hiragana beginner",
+      "description": "Answer every basic hiragana correctly at least once."
+    },
+    "HIRAGANA_MASTER": {
+      "title": "Hiragana master",
+      "description": "Master every hiragana, including dakuten and combinations."
+    },
+    "KATAKANA_BEGINNER": {
+      "title": "Katakana beginner",
+      "description": "Answer every basic katakana correctly at least once."
+    },
+    "HANGUL_BEGINNER": {
+      "title": "Hangul beginner",
+      "description": "Answer every basic Hangul consonant and vowel correctly."
+    },
+    "POLYGLOT": {
+      "title": "Polyglot",
+      "description": "Study every language on UnYoWo."
+    },
+    "SPEED_DEMON": {
+      "title": "Speed demon",
+      "description": "Answer 20 questions correctly in a row."
     }
   },
   "mascot": {

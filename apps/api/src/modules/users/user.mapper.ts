@@ -8,5 +8,6 @@ export function toPublicUser(user: User): PublicUser {
     avatarUrl: user.avatarUrl,
     emailVerified: user.emailVerifiedAt !== null,
     hasPassword: user.passwordHash !== null,
+    timezone: user.timezone,
   };
 }

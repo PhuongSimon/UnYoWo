@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto';
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Throttle } from '@nestjs/throttler';
 import type { CookieOptions, Request, Response } from 'express';
@@ -12,6 +12,7 @@ import {
   RegisterDto,
   ResetPasswordDto,
   SendOtpDto,
+  UpdateProfileDto,
   VerifyOtpDto,
 } from './dto/auth.dto.js';
 import { JwtAuthGuard } from './jwt-auth.guard.js';
@@ -105,6 +106,12 @@ export class AuthController {
   @Get('me')
   me(@CurrentUser() user: AccessTokenPayload) {
     return this.auth.me(user.sub);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('me')
+  updateMe(@CurrentUser() user: AccessTokenPayload, @Body() dto: UpdateProfileDto) {
+    return this.auth.updateProfile(user.sub, dto);
   }
 
   @Get('google')

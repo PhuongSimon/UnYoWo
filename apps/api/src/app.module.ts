@@ -5,6 +5,11 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { validateEnv } from './config/env.validation.js';
 import { PrismaModule } from './infrastructure/database/prisma.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
+import { ContentModule } from './modules/content/content.module.js';
+import { GamesModule } from './modules/games/games.module.js';
+import { DashboardModule } from './modules/dashboard/dashboard.module.js';
+import { GamificationModule } from './modules/gamification/gamification.module.js';
+import { ProgressModule } from './modules/progress/progress.module.js';
 import { HealthModule } from './modules/health/health.module.js';
 
 @Module({
@@ -14,6 +19,11 @@ import { HealthModule } from './modules/health/health.module.js';
     PrismaModule,
     HealthModule,
     AuthModule,
+    ContentModule,
+    GamesModule,
+    ProgressModule,
+    GamificationModule,
+    DashboardModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
