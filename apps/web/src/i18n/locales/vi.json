@@ -77,6 +77,12 @@
     "home": "Về trang chủ",
     "back": "Quay lại"
   },
+  "routeError": {
+    "title": "Đã có lỗi xảy ra",
+    "description": "Không hiển thị được trang này. Tải lại trang thường sẽ khắc phục được, nhất là ngay sau khi ứng dụng vừa cập nhật.",
+    "reload": "Tải lại trang",
+    "home": "Về bảng tin"
+  },
   "apiErrors": {
     "VALIDATION_ERROR": "Thông tin chưa hợp lệ. Vui lòng kiểm tra lại.",
     "CAPTCHA_FAILED": "Xác minh thất bại. Vui lòng thử lại.",
@@ -108,34 +114,73 @@
     "TIMER_NOT_STARTED": "Hãy bấm Bắt đầu trước khi trả lời.",
     "TIME_UP": "Hết giờ!"
   },
-  "home": {
+  "dashboard": {
+    "loading": "Đang tải bảng tin…",
     "greeting": "Chào {{name}} 👋",
-    "subtitle": "Chọn một ngôn ngữ và bắt đầu từ những điều cơ bản nhất: chữ viết, phát âm và ngữ pháp nền tảng.",
-    "languagesTitle": "Chọn ngôn ngữ",
-    "start": "Bắt đầu học",
-    "roadmapTitle": "Lộ trình cho người mới",
-    "roadmapSubtitle": "Bốn bước này áp dụng được cho mọi ngôn ngữ.",
-    "roadmap": {
-      "writing": {
-        "title": "Làm quen chữ viết",
-        "description": "Bảng chữ cái, kana hay Hangul — bấm vào chữ bất kỳ để nghe."
-      },
-      "pronunciation": {
-        "title": "Luyện tai và phát âm",
-        "description": "Ký hiệu IPA, những âm khó và các quy tắc biến âm."
-      },
-      "grammar": {
-        "title": "Ghép câu với ngữ pháp",
-        "description": "Ngữ pháp cốt lõi từ bài đầu tiên, có ví dụ để nghe và đọc theo."
-      },
-      "practice": {
-        "title": "Luyện tập mỗi ngày",
-        "description": "Đọc to các ví dụ 15 phút mỗi ngày — đều đặn quan trọng hơn học dồn."
+    "streak_one": "Chuỗi {{count}} ngày",
+    "streak_other": "Chuỗi {{count}} ngày",
+    "xp_one": "{{count}} XP",
+    "xp_other": "{{count}} XP",
+    "quotes": {
+      "0": "Mỗi ngày một chút còn hơn thỉnh thoảng thật nhiều.",
+      "1": "Mỗi từ mới là một cánh cửa mới.",
+      "2": "Lỗi sai chỉ là những câu trả lời bạn chưa học thôi.",
+      "3": "Những bước nhỏ mỗi ngày sẽ đưa bạn tới sự trôi chảy.",
+      "4": "Luyện tập hôm nay là tự tin ngày mai."
+    },
+    "languagesNav": "Ngôn ngữ của bạn",
+    "languageStats": "Thuộc {{mastered}} · Đến hạn {{due}}",
+    "languageProgress": "{{language}}: đã luyện {{seen}}/{{total}} mục",
+    "reviewStats": "{{due}} đến hạn · {{weak}} cần sửa",
+    "plan": {
+      "title": "Hôm nay học gì?",
+      "empty": "Bạn đã học hết những gì cần thiết. Chọn một ngôn ngữ ở trên để khám phá thêm nhé!",
+      "REVIEW_DUE_one": "Ôn {{count}} mục đến hạn",
+      "REVIEW_DUE_other": "Ôn {{count}} mục đến hạn",
+      "FIX_MISTAKES_one": "Sửa {{count}} lỗi sai",
+      "FIX_MISTAKES_other": "Sửa {{count}} lỗi sai",
+      "CONTINUE_SET": "Tiếp tục: {{set}}",
+      "START_SET": "Bắt đầu: {{set}}",
+      "detail": "{{language}} · {{game}}",
+      "mostIn": "nhiều nhất ở {{set}}",
+      "seen": "Đã luyện {{count}}/{{total}}",
+      "action": {
+        "REVIEW_DUE": "Ôn ngay",
+        "FIX_MISTAKES": "Luyện",
+        "CONTINUE_SET": "Tiếp tục",
+        "START_SET": "Bắt đầu"
       }
     },
-    "shortcuts": "Lối tắt",
-    "reviewShortcut": "Mục đến hạn và lỗi sai của bạn",
-    "progressShortcut": "XP, chuỗi ngày học và thành tích"
+    "cheer": {
+      "allDone": "Tuyệt vời, {{name}}! Bạn đã hoàn thành mọi mục tiêu hôm nay.",
+      "keepGoing_one": "{{name}} ơi, cố lên nhé! Còn {{count}} mục tiêu nữa thôi.",
+      "keepGoing_other": "{{name}} ơi, cố lên nhé! Còn {{count}} mục tiêu nữa thôi.",
+      "weakTitle": "Cần luyện thêm:",
+      "noWeak": "Chưa có lỗi nào cần sửa. Giữ vững phong độ nhé!"
+    },
+    "progress": {
+      "title": "Tiến độ hôm nay",
+      "ringLabel": "Đã hoàn thành {{percent}}% mục tiêu hôm nay",
+      "status": {
+        "start": "Bắt đầu thôi!",
+        "going": "Đang tiến bộ!",
+        "done": "Hoàn thành!"
+      },
+      "detail": "{{done}}/{{total}} mục tiêu · {{answers}} câu trả lời · {{xp}} XP"
+    },
+    "recent": {
+      "title": "Kết quả gần đây",
+      "seeAll": "Xem tất cả",
+      "empty": "Chưa có lượt chơi nào. Chọn một gợi ý hôm nay để bắt đầu nhé!",
+      "detail": "{{game}} · Đúng {{correct}}/{{answered}} · {{score}} điểm",
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua",
+      "source": {
+        "SET": "Luyện tập",
+        "DUE": "Ôn tập",
+        "MISTAKES": "Lỗi sai"
+      }
+    }
   },
   "userMenu": {
     "open": "Mở menu tài khoản",
