@@ -109,7 +109,7 @@ describe('practice hub with exam levels', () => {
     expect(within(screen.getByRole('region', { name: /Animals/ })).getByRole('heading', { name: 'Whole topic' })).toBeInTheDocument()
     expect(screen.getAllByRole('heading', { name: /^Part|^Whole/ })).toHaveLength(3)
 
-    expect(screen.getByRole('link', { name: 'Food & drink' })).toHaveAttribute('href', '#topic-food')
+    expect(screen.getByRole('button', { name: 'Food & drink' })).toHaveAttribute('aria-pressed', 'false')
     expect(screen.getByRole('link', { name: 'JLPT vocabulary lists' })).toHaveAttribute('href', 'https://www.tanos.co.uk/jlpt/')
   })
 

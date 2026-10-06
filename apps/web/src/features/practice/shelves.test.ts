@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { groupIntoShelves } from './shelves'
+import { filterTopics, groupIntoShelves, paginate } from './shelves'
 import type { LearningSet } from './types'
 
 const n5 = { code: 'N5', framework: 'JLPT', title: { en: 'N5', vi: 'N5' }, sortOrder: 4 }
@@ -52,5 +52,27 @@ describe('groupIntoShelves', () => {
       ['food', 2, 49, 8],
       ['animals', 1, 12, 0],
     ])
+  })
+})
+
+describe('filterTopics and paginate', () => {
+  const groups = groupIntoShelves([
+    set('n5-food-1', { level: n5, topic: food }),
+    set('n5-animals-1', { level: n5, topic: animals }),
+  ])[0].topics
+
+  it('finds topics in either language, ignoring accents and case', () => {
+    expect(filterTopics(groups, 'do AN').map((g) => g.topic.slug)).toEqual(['food'])
+    expect(filterTopics(groups, 'đồ ăn').map((g) => g.topic.slug)).toEqual(['food'])
+    expect(filterTopics(groups, 'anim').map((g) => g.topic.slug)).toEqual(['animals'])
+    expect(filterTopics(groups, '  ')).toHaveLength(2)
+    expect(filterTopics(groups, 'xyz')).toEqual([])
+  })
+
+  it('pages a list and clamps the page number', () => {
+    const list = Array.from({ length: 11 }, (_, i) => i)
+    expect(paginate(list, 2, 5)).toEqual({ items: [5, 6, 7, 8, 9], page: 2, pageCount: 3 })
+    expect(paginate(list, 9, 5)).toEqual({ items: [10], page: 3, pageCount: 3 })
+    expect(paginate([], 1, 5)).toEqual({ items: [], page: 1, pageCount: 1 })
   })
 })

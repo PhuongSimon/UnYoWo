@@ -60,3 +60,24 @@ function groupByTopic(sets: LearningSet[]): TopicGroup[] {
   }
   return [...groups.values()]
 }
+
+/** Lower case without accents, so "do an" finds "Đồ ăn" and "food" finds "Food & drink". */
+export const foldText = (text: string) =>
+  text.normalize('NFD').replace(/\p{M}/gu, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase().trim()
+
+/** Topics whose title (in either UI language) or slug contains the query as typed, accents ignored. */
+export function filterTopics(topics: TopicGroup[], query: string): TopicGroup[] {
+  const phrase = foldText(query).replace(/\s+/g, ' ')
+  if (!phrase) return topics
+  return topics.filter(({ topic }) => {
+    const titles = [topic.title.vi, topic.title.en, topic.slug].map((text) => foldText(text).replace(/\s+/g, ' '))
+    return titles.some((title) => title.includes(phrase))
+  })
+}
+
+/** The items of one page (1-based), clamping a page number past the end to the last page. */
+export function paginate<T>(items: T[], page: number, pageSize: number): { items: T[]; page: number; pageCount: number } {
+  const pageCount = Math.max(1, Math.ceil(items.length / pageSize))
+  const current = Math.min(Math.max(1, page), pageCount)
+  return { items: items.slice((current - 1) * pageSize, current * pageSize), page: current, pageCount }
+}
