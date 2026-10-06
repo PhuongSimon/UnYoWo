@@ -24,6 +24,7 @@ const kana = (id: string, text: string, romanization: string, extra: Partial<Pra
   romanization,
   acceptedAnswers: [],
   meaning: null,
+  partOfSpeech: null,
   emoji: null,
   attributes: null,
   components: [],
@@ -43,6 +44,7 @@ const word = (id: string, languageCode: string, text: string, en: string, emoji:
   romanization: null,
   acceptedAnswers: [],
   meaning: { en, vi: `vi:${en}` },
+  partOfSpeech: 'NOUN',
   emoji,
   attributes: null,
   components: [],
@@ -72,6 +74,20 @@ describe('pickDistractors', () => {
     // Shown "ji", both じ and ぢ would be right, so ぢ cannot be a wrong option either.
     expect(pickDistractors(ji, [ji, dji, zu], 'ROMANIZATION_TO_TEXT', 'en', 3, firstOrder).map((i) => i.id)).toEqual(['zu']);
   });
+
+  it('prefers words of the same part of speech, so a verb is not the odd one out', () => {
+    const essen = word('essen', 'de', 'essen', 'to eat', '🍴', { partOfSpeech: 'VERB' });
+    const pool = [
+      essen,
+      word('apfel', 'de', 'Apfel', 'apple', '🍎'),
+      word('trinken', 'de', 'trinken', 'to drink', '🥤', { partOfSpeech: 'VERB' }),
+      word('brot', 'de', 'Brot', 'bread', '🍞'),
+      word('kochen', 'de', 'kochen', 'to cook', '🍳', { partOfSpeech: 'VERB' }),
+    ];
+    const picked = pickDistractors(essen, pool, 'TEXT_TO_MEANING', 'vi', 3, firstOrder);
+    expect(picked.slice(0, 2).map((item) => item.partOfSpeech)).toEqual(['VERB', 'VERB']);
+    expect(picked).toHaveLength(3);
+  });
 });
 
 describe('generateMultipleChoice', () => {
@@ -97,6 +113,23 @@ describe('generateMultipleChoice', () => {
   it('shows a picture instead of a meaning when the word is in the UI language', () => {
     const pool = [word('apple', 'en', 'apple', 'apple', '🍎'), word('bread', 'en', 'bread', 'bread', '🍞')];
     expect(generateMultipleChoice(pool[0], context(pool))).toMatchObject({ kind: 'EMOJI_TO_TEXT', prompt: '🍎' });
+  });
+
+  it('asks about an English word in the English UI when its meaning is a definition, not the word itself', () => {
+    const pool = [
+      word('abandon', 'en', 'abandon', 'to leave for good', '', { emoji: null }),
+      word('absorb', 'en', 'absorb', 'to take in', '', { emoji: null }),
+    ];
+    expect(generateMultipleChoice(pool[0], context(pool, 'en', { next: () => 0 }))?.kind).toBe('MEANING_TO_TEXT');
+  });
+
+  it('skips a meaning question when the word has no meaning in the UI language', () => {
+    const pool = [
+      word('abandon', 'en', 'abandon', 'x', '', { emoji: null, meaning: { vi: 'bỏ rơi' } }),
+      word('absorb', 'en', 'absorb', 'x', '', { emoji: null, meaning: { vi: 'hấp thụ' } }),
+    ];
+    expect(generateMultipleChoice(pool[0], context(pool, 'en'))).toBeNull();
+    expect(generateMultipleChoice(pool[0], context(pool, 'vi', { next: () => 0 }))?.prompt).toBe('bỏ rơi');
   });
 
   it('returns null when there is nothing to choose from', () => {

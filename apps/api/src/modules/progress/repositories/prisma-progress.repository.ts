@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { Prisma } from '../../../generated/prisma/client.js';
 import { TransactionHost } from '../../../infrastructure/database/transaction-host.js';
-import { toLocalized } from '../../content/localized.js';
+import { toMeaning } from '../../content/localized.js';
 import type {
   Attempt,
   ConfusionPair,
@@ -29,16 +29,17 @@ const itemSummarySelect = {
   text: true,
   reading: true,
   romanization: true,
+  meaning: true,
   set: { select: { languageCode: true } },
   concept: { select: { gloss: true, emoji: true } },
 } satisfies Prisma.LearningItemSelect;
 
 type ItemSummaryRow = Prisma.LearningItemGetPayload<{ select: typeof itemSummarySelect }>;
 
-const toItemSummary = ({ set, concept, ...item }: ItemSummaryRow): ItemSummary => ({
+const toItemSummary = ({ set, concept, meaning, ...item }: ItemSummaryRow): ItemSummary => ({
   ...item,
   languageCode: set.languageCode,
-  meaning: concept ? toLocalized(concept.gloss) : null,
+  meaning: toMeaning(meaning, concept?.gloss),
   emoji: concept?.emoji ?? null,
 });
 

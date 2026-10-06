@@ -58,6 +58,7 @@ export const router = createBrowserRouter([
           { path: 'play/:sessionId', lazy: page(() => import('@/features/practice/pages/PlayPage')) },
           { path: 'review', lazy: page(() => import('@/features/progress/pages/ReviewPage')) },
           { path: 'progress', lazy: page(() => import('@/features/progress/pages/ProgressPage')) },
+          { path: 'translate', lazy: page(() => import('@/features/translate/pages/TranslatePage')) },
           {
             path: ':lang',
             lazy: page(() => import('@/features/learn/layouts/LanguageLayout')),
@@ -68,6 +69,8 @@ export const router = createBrowserRouter([
               { path: 'grammar', lazy: page(() => import('@/features/learn/pages/GrammarListPage')) },
               { path: 'grammar/:topicId', lazy: page(() => import('@/features/learn/pages/GrammarTopicPage')) },
               { path: 'practice', lazy: page(() => import('@/features/practice/pages/PracticeHubPage')) },
+              { path: 'practice/script', lazy: page(() => import('@/features/script-drill/pages/ScriptDrillPage')) },
+              { path: 'practice/sets/:setId', lazy: page(() => import('@/features/practice/pages/SetWordsPage')) },
               { path: '*', element: <NotFoundState /> },
             ],
           },

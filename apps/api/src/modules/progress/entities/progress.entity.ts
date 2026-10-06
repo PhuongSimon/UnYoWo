@@ -1,4 +1,5 @@
 import type { ReviewRating } from '../../../generated/prisma/enums.js';
+import type { Meaning } from '../../content/entities/content.entity.js';
 
 export interface ItemProgress {
   userId: string;
@@ -36,7 +37,7 @@ export interface ItemSummary {
   text: string;
   reading: string | null;
   romanization: string | null;
-  meaning: { en: string; vi: string } | null;
+  meaning: Meaning | null;
   emoji: string | null;
 }
 

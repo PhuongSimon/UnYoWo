@@ -10,6 +10,8 @@ const set = (id: string, slug: string): LearningSetSummary => ({
   kind: 'ALPHABET',
   script: 'hiragana',
   category: null,
+  level: null,
+  topic: null,
   title: { en: slug, vi: slug },
   itemCount: 3,
   buildable: false,
@@ -23,6 +25,7 @@ const item = (text: string): LearningItemView => ({
   romanization: null,
   ipa: null,
   meaning: null,
+  partOfSpeech: null,
   emoji: null,
   attributes: null,
   audioUrl: null,
@@ -52,6 +55,12 @@ class InMemoryContentRepository extends ContentRepository {
   }
   async findPracticeItems() {
     return [];
+  }
+  async lookupWords() {
+    return [];
+  }
+  async findSources(languageCode: string) {
+    return languageCode === 'ja' ? [{ id: 'jlpt-waller', name: 'JLPT', url: 'https://example.com', license: 'CC BY', attribution: 'Waller' }] : [];
   }
   async countSetProgress(userId: string, languageCode: string) {
     this.progressCalls.push({ userId, languageCode });
@@ -89,6 +98,11 @@ describe('ContentService', () => {
     const page = await service.listItems('s1', 2, 2);
     expect(page).toMatchObject({ page: 2, pageSize: 2, total: 3, set: { slug: 'hiragana-basic' } });
     expect(page.items.map((i) => i.text)).toEqual(['う']);
+  });
+
+  it('lists the data sources of a language for attribution', async () => {
+    await expect(service.listSources('ja')).resolves.toEqual([expect.objectContaining({ id: 'jlpt-waller', license: 'CC BY' })]);
+    await expect(service.listSources('xx')).rejects.toMatchObject({ response: { code: 'LANGUAGE_NOT_FOUND' } });
   });
 
   it('returns SET_NOT_FOUND for a set that does not exist', async () => {

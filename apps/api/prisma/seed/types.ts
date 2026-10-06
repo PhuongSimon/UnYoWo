@@ -3,6 +3,7 @@ import type {
   ItemRelationKind,
   LearningItemType,
   LearningSetKind,
+  PartOfSpeech,
 } from '../../src/generated/prisma/enums.js';
 
 // A type alias (not an interface) so it is assignable to Prisma's JSON input type.
@@ -33,6 +34,11 @@ export interface SeedItem {
   ipa?: string;
   acceptedAnswers?: string[];
   concept?: string;
+  /** The word's own meaning; a missing key falls back to the concept's gloss */
+  meaning?: Partial<Localized>;
+  partOfSpeech?: PartOfSpeech;
+  /** Content source id (see SOURCES) */
+  source?: string;
   attributes?: Record<string, string>;
   difficulty?: number;
   components?: SeedComponent[];
@@ -44,6 +50,8 @@ export interface SeedSet {
   kind: LearningSetKind;
   script?: string;
   category?: string;
+  /** Exam level (N5, B1…) of a vocabulary set built from a word list */
+  level?: string;
   title: Localized;
   items: SeedItem[];
 }
@@ -58,6 +66,28 @@ export interface SeedLanguage {
   code: string;
   nativeName: string;
   speechLang: string;
+}
+
+export interface SeedCategory {
+  slug: string;
+  emoji: string;
+  title: Localized;
+}
+
+export interface SeedLevel {
+  language: string;
+  code: string;
+  framework: string;
+  difficulty: number;
+  title: Localized;
+}
+
+export interface SeedSource {
+  id: string;
+  name: string;
+  url: string;
+  license: string;
+  attribution: string;
 }
 
 export interface SeedConcept {

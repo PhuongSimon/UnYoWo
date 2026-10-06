@@ -1,4 +1,4 @@
-import { LogOut, RotateCcw, Trophy } from 'lucide-react'
+import { Languages, LogOut, RotateCcw, Trophy } from 'lucide-react'
 import { useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router'
@@ -76,6 +76,7 @@ function UserMenu() {
           {[
             { to: '/app/review', Icon: RotateCcw, label: t('review.title') },
             { to: '/app/progress', Icon: Trophy, label: t('progress.title') },
+            { to: '/app/translate', Icon: Languages, label: t('translate.title') },
           ].map(({ to, Icon, label }) => (
             <Link
               key={to}

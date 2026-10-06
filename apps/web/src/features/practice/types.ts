@@ -22,6 +22,38 @@ export interface SetProgress {
   due: number
 }
 
+export type PartOfSpeech =
+  | 'NOUN'
+  | 'VERB'
+  | 'ADJECTIVE'
+  | 'ADVERB'
+  | 'PRONOUN'
+  | 'DETERMINER'
+  | 'NUMERAL'
+  | 'COUNTER'
+  | 'PREPOSITION'
+  | 'CONJUNCTION'
+  | 'PARTICLE'
+  | 'INTERJECTION'
+  | 'PHRASE'
+  | 'AFFIX'
+
+/** One step of an exam ladder: JLPT N5, CEFR B1, TOPIK I */
+export interface ProficiencyLevel {
+  code: string
+  framework: string
+  title: Localized
+  /** Easiest first */
+  sortOrder: number
+}
+
+/** A vocabulary topic shared by every language */
+export interface Topic {
+  slug: string
+  title: Localized
+  emoji: string | null
+}
+
 export interface LearningSet {
   id: string
   languageCode: string
@@ -29,11 +61,50 @@ export interface LearningSet {
   kind: 'ALPHABET' | 'VOCABULARY'
   script: string | null
   category: string | null
+  /** Exam level of a word-list set; null for alphabets and starter sets */
+  level: ProficiencyLevel | null
+  topic: Topic | null
   title: Localized
   itemCount: number
   /** Items are built from parts, so the character builder can use this set */
   buildable: boolean
   progress: SetProgress
+}
+
+/** A word's meaning per UI language; an English word has no English meaning. */
+export type Meaning = Partial<Localized>
+
+/** One entry of a set's word list */
+export interface SetItem {
+  id: string
+  type: 'CHARACTER' | 'SYLLABLE' | 'WORD'
+  text: string
+  reading: string | null
+  romanization: string | null
+  ipa: string | null
+  meaning: Meaning | null
+  partOfSpeech: PartOfSpeech | null
+  emoji: string | null
+  /** German { article, plural }, Japanese { hanViet, masu }, Korean { hanja } */
+  attributes: Record<string, string> | null
+  audioUrl: string | null
+}
+
+export interface SetItemsPage {
+  set: Omit<LearningSet, 'progress'>
+  items: SetItem[]
+  page: number
+  pageSize: number
+  total: number
+}
+
+/** A dataset the language's words came from, credited in the app */
+export interface ContentSource {
+  id: string
+  name: string
+  url: string
+  license: string
+  attribution: string
 }
 
 export interface QuestionReveal {

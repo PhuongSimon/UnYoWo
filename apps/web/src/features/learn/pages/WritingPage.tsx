@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import DrillEntryCard from '@/features/script-drill/components/DrillEntryCard'
 import GlyphCard from '../components/GlyphCard'
 import GlyphGrid from '../components/GlyphGrid'
 import HangulBuilder from '../components/HangulBuilder'
@@ -12,7 +13,7 @@ import type { ScriptChart } from '../types'
 
 function WritingPage() {
   const { t } = useTranslation()
-  const { content } = useStudy()
+  const { content, language } = useStudy()
   const loc = useLocalized()
   const { intro, charts } = content.writing
   useScrollToHash()
@@ -24,6 +25,7 @@ function WritingPage() {
           <RichText text={loc(intro)} />
         </p>
         <JumpLinks label={t('learn.jumpTo')} links={charts.map((chart) => ({ id: chart.id, label: loc(chart.title) }))} />
+        <DrillEntryCard language={language.code} />
       </header>
 
       {charts.map((chart) => (

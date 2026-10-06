@@ -11,6 +11,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module.js';
 import { GamificationModule } from './modules/gamification/gamification.module.js';
 import { ProgressModule } from './modules/progress/progress.module.js';
 import { HealthModule } from './modules/health/health.module.js';
+import { TranslationModule } from './modules/translation/translation.module.js';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { HealthModule } from './modules/health/health.module.js';
     ProgressModule,
     GamificationModule,
     DashboardModule,
+    TranslationModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

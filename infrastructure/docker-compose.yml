@@ -27,5 +27,20 @@ services:
       - "1025:1025"
       - "8025:8025"
 
+  # Optional self-hosted translator: `pnpm translate:up`, then LIBRETRANSLATE_URL=http://localhost:5000
+  # The first start downloads the language models (a few minutes, ~1 GB).
+  libretranslate:
+    image: libretranslate/libretranslate:latest
+    container_name: unyowo-libretranslate
+    restart: unless-stopped
+    profiles: ["translate"]
+    environment:
+      LT_LOAD_ONLY: en,vi,de,ja,ko
+    ports:
+      - "5000:5000"
+    volumes:
+      - libretranslate-models:/home/libretranslate/.local
+
 volumes:
   pgdata:
+  libretranslate-models:
