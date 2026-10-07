@@ -9,5 +9,6 @@ export function toPublicUser(user: User): PublicUser {
     emailVerified: user.emailVerifiedAt !== null,
     hasPassword: user.passwordHash !== null,
     timezone: user.timezone,
+    colorTheme: user.colorTheme,
   };
 }

@@ -44,6 +44,6 @@ import { TurnstileService } from './services/turnstile.service.js';
     { provide: OtpCodesRepository, useClass: PrismaOtpCodesRepository },
     { provide: RefreshTokensRepository, useClass: PrismaRefreshTokensRepository },
   ],
-  exports: [JwtAuthGuard, TokenService],
+  exports: [JwtAuthGuard, TokenService, PasswordService, OtpCodesRepository],
 })
 export class AuthModule {}

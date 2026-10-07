@@ -17,3 +17,6 @@ coverage/
 
 # Prisma generated client
 apps/api/src/generated/
+
+# User uploads (avatars) in local development
+apps/api/uploads/

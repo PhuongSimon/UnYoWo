@@ -5,7 +5,7 @@ import { TransactionHost } from '../../infrastructure/database/transaction-host.
 import type { PublicUser, User } from '../users/user.entity.js';
 import { toPublicUser } from '../users/user.mapper.js';
 import { UsersRepository } from '../users/repositories/users.repository.js';
-import type { LoginDto, RegisterDto, ResetPasswordDto, SendOtpDto, UpdateProfileDto, VerifyOtpDto } from './dto/auth.dto.js';
+import type { LoginDto, RegisterDto, ResetPasswordDto, SendOtpDto, VerifyOtpDto } from './dto/auth.dto.js';
 import { OtpPurpose } from './entities/otp-code.entity.js';
 import { OtpCodesRepository } from './repositories/otp-codes.repository.js';
 import type { GoogleProfile } from './services/google-oauth.service.js';
@@ -126,17 +126,6 @@ export class AuthService {
 
   async logout(refreshToken: string | undefined) {
     if (refreshToken) await this.tokens.revokeRefreshToken(refreshToken);
-  }
-
-  async me(userId: string) {
-    const user = await this.users.findById(userId);
-    if (!user) throw new ApiError(HttpStatus.UNAUTHORIZED, 'UNAUTHORIZED');
-    return toPublicUser(user);
-  }
-
-  async updateProfile(userId: string, dto: UpdateProfileDto) {
-    if (!(await this.users.findById(userId))) throw new ApiError(HttpStatus.UNAUTHORIZED, 'UNAUTHORIZED');
-    return toPublicUser(await this.users.update(userId, { timezone: dto.timezone }));
   }
 
   async loginWithGoogle(profile: GoogleProfile, client: ClientInfo): Promise<Session> {

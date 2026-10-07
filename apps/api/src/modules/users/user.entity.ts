@@ -8,6 +8,7 @@ export interface User {
   emailVerifiedAt: Date | null;
   lastLoginAt: Date | null;
   timezone: string;
+  colorTheme: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -21,6 +22,7 @@ export interface CreateUserData {
   emailVerifiedAt?: Date | null;
   lastLoginAt?: Date | null;
   timezone?: string;
+  colorTheme?: string | null;
 }
 
 export type UpdateUserData = Partial<Omit<CreateUserData, 'email'>>;
@@ -34,4 +36,5 @@ export interface PublicUser {
   emailVerified: boolean;
   hasPassword: boolean;
   timezone: string;
+  colorTheme: string | null;
 }

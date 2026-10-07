@@ -6,4 +6,6 @@ export abstract class UsersRepository {
   abstract findByGoogleId(googleId: string): Promise<User | null>;
   abstract create(data: CreateUserData): Promise<User>;
   abstract update(id: string, data: UpdateUserData): Promise<User>;
+  /** Related rows (sessions, progress, stats…) go with it through ON DELETE CASCADE. */
+  abstract delete(id: string): Promise<void>;
 }

@@ -32,4 +32,8 @@ export class PrismaUsersRepository extends UsersRepository {
   update(id: string, data: UpdateUserData): Promise<User> {
     return this.db.user.update({ where: { id }, data });
   }
+
+  async delete(id: string) {
+    await this.db.user.delete({ where: { id } });
+  }
 }

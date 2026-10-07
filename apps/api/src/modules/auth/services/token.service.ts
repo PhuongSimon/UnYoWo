@@ -87,6 +87,11 @@ export class TokenService {
     await this.refreshTokens.revokeAllForUser(userId);
   }
 
+  /** Signs out every other device but keeps the session that sent `currentToken`. */
+  async revokeOtherSessions(userId: string, currentToken: string | undefined) {
+    await this.refreshTokens.revokeAllForUser(userId, currentToken ? sha256(currentToken) : undefined);
+  }
+
   signResetToken(otpId: string, email: string) {
     const payload: ResetTokenPayload = { sub: otpId, email, purpose: 'reset' };
     return this.jwt.signAsync(payload, {

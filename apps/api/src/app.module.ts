@@ -4,6 +4,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { validateEnv } from './config/env.validation.js';
 import { PrismaModule } from './infrastructure/database/prisma.module.js';
+import { AccountModule } from './modules/account/account.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { ContentModule } from './modules/content/content.module.js';
 import { GamesModule } from './modules/games/games.module.js';
@@ -20,6 +21,7 @@ import { TranslationModule } from './modules/translation/translation.module.js';
     PrismaModule,
     HealthModule,
     AuthModule,
+    AccountModule,
     ContentModule,
     GamesModule,
     ProgressModule,
