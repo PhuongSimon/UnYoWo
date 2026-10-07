@@ -58,7 +58,7 @@ function TypingRound({ state, game, studyLang, speechLang, question }: GameScree
             maxLength={100}
             placeholder={t('practice.typing.placeholder')}
             aria-describedby={hint ? 'typed-answer-hint' : undefined}
-            className="min-h-14 min-w-0 flex-1 rounded-2xl border-2 border-line-soft bg-surface-raised px-4 text-lg font-semibold transition-colors outline-none placeholder:font-normal placeholder:text-muted focus:border-primary-500 disabled:opacity-70"
+            className="min-h-14 min-w-0 flex-1 rounded-2xl border-2 border-line-soft bg-surface-raised px-4 text-lg font-semibold transition-colors outline-none placeholder:font-normal placeholder:text-muted focus:border-accent disabled:opacity-70"
           />
           <Button type="submit" disabled={!playing || !text.trim()} loading={state.status === 'answering' && !state.failed} className="shrink-0">
             <ArrowRight size={20} aria-hidden="true" />
@@ -74,7 +74,7 @@ function TypingRound({ state, game, studyLang, speechLang, question }: GameScree
           <button
             type="button"
             onClick={() => game.answer({ text: '' })}
-            className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-lg text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+            className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-lg text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
           >
             <HelpCircle size={16} aria-hidden="true" />
             {t('practice.typing.dontKnow')}

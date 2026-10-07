@@ -47,7 +47,7 @@ export function NotFoundState({ title, backTo = '/app', backLabel }: NotFoundSta
       <p className="text-muted">{t('learn.notFound.description')}</p>
       <Link
         to={backTo}
-        className="mt-2 inline-flex items-center gap-2 rounded-xl border border-line-soft bg-surface-raised px-5 py-2.5 text-sm font-bold transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400"
+        className="mt-2 inline-flex items-center gap-2 rounded-xl border border-line-soft bg-surface-raised px-5 py-2.5 text-sm font-bold transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent"
       >
         <ArrowLeft size={18} />
         {backLabel ?? t('learn.notFound.back')}

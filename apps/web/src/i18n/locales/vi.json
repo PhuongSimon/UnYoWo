@@ -187,7 +187,16 @@
   },
   "userMenu": {
     "open": "Mở menu tài khoản",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "colorTheme": "Màu giao diện",
+    "themes": {
+      "warm": "Cam đất",
+      "violet": "Tím hoàng gia",
+      "lime": "Chanh ô liu",
+      "cobalt": "Lam đào",
+      "neon": "Neon",
+      "navy": "Navy ánh kim"
+    }
   },
   "learn": {
     "languagesNav": "Ngôn ngữ",

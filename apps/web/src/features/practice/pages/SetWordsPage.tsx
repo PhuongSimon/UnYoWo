@@ -107,7 +107,7 @@ function WordList({ data }: { data: SetItemsPage }) {
     <div className="space-y-6">
       <Link
         to={`/app/${language.code}/practice?shelf=${shelfOf(set)}`}
-        className="inline-flex min-h-11 items-center gap-1.5 rounded-lg text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+        className="inline-flex min-h-11 items-center gap-1.5 rounded-lg text-sm font-medium text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
       >
         <ArrowLeft size={16} aria-hidden="true" />
         {t('practice.words.back')}

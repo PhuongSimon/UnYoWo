@@ -32,9 +32,9 @@ export class PrismaRefreshTokensRepository extends RefreshTokensRepository {
     });
   }
 
-  async revokeAllForUser(userId: string) {
+  async revokeAllForUser(userId: string, exceptTokenHash?: string) {
     await this.db.refreshToken.updateMany({
-      where: { userId, revokedAt: null },
+      where: { userId, revokedAt: null, ...(exceptTokenHash && { tokenHash: { not: exceptTokenHash } }) },
       data: { revokedAt: new Date() },
     });
   }

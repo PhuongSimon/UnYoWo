@@ -69,7 +69,7 @@ function RuleCard({ rule, number }: { rule: Rule; number: number }) {
   return (
     <article className="rounded-2xl border border-line-soft bg-surface-raised p-4 shadow-sm sm:p-6">
       <h3 className="flex items-center gap-3 text-lg font-bold">
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-500 text-sm font-extrabold text-primary-950">{number}</span>
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-extrabold text-on-brand">{number}</span>
         {loc(rule.title)}
       </h3>
       <p className="mt-3 leading-relaxed text-fg/90">

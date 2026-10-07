@@ -10,13 +10,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses = {
   primary: `
-    bg-primary-500
-    text-primary-950
-    border-primary-700
-    hover:bg-primary-400
+    bg-brand
+    text-on-brand
+    border-brand-edge
+    hover:bg-brand-hover
     shadow-lg
-    shadow-primary-500/20
-    hover:shadow-primary-500/35
+    shadow-brand/20
+    hover:shadow-brand/35
   `,
 
   outline: `
@@ -69,7 +69,7 @@ function Button({
 
         focus:outline-none
         focus-visible:ring-2
-        focus-visible:ring-primary-400
+        focus-visible:ring-accent
         focus-visible:ring-offset-2
         focus-visible:ring-offset-surface
 

@@ -29,7 +29,7 @@ function RouteError() {
         </Button>
         <a
           href="/app"
-          className="inline-flex items-center justify-center gap-2 rounded-xl border border-b-4 border-line-soft bg-surface-raised px-6 py-3 text-sm font-bold hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="inline-flex items-center justify-center gap-2 rounded-xl border border-b-4 border-line-soft bg-surface-raised px-6 py-3 text-sm font-bold hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent"
         >
           <House size={18} aria-hidden="true" />
           {t('routeError.home')}

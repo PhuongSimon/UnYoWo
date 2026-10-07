@@ -44,7 +44,7 @@ function LanguageSwitcher() {
         aria-controls={menuId}
         aria-label={t('common.language')}
         title={t('common.language')}
-        className="flex h-8 items-center gap-1.5 rounded-full border border-line-soft bg-surface-raised px-2.5 text-muted shadow-sm transition-colors hover:border-primary-400 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400"
+        className="flex h-8 items-center gap-1.5 rounded-full border border-line-soft bg-surface-raised px-2.5 text-muted shadow-sm transition-colors hover:border-primary-400 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         <Languages size={16} />
         <current.Flag className="h-3 w-[18px] rounded-[2px]" />

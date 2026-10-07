@@ -15,7 +15,7 @@ function ProgressBadges() {
     <Link
       to="/app/progress"
       aria-label={`${t('progress.streakLabel', { count: streak.current })}, ${t('progress.xpLabel', { count: totalXp })}`}
-      className="flex min-h-9 items-center gap-2 rounded-full px-2 text-sm font-extrabold tabular-nums transition-colors hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-primary-400"
+      className="flex min-h-9 items-center gap-2 rounded-full px-2 text-sm font-extrabold tabular-nums transition-colors hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-accent"
     >
       <span className={`flex items-center gap-0.5 ${streak.studiedToday ? 'text-accent' : 'text-muted'}`}>
         <Flame size={18} aria-hidden="true" className={streak.studiedToday ? 'fill-primary-400/40' : ''} />

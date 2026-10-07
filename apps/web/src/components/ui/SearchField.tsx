@@ -33,14 +33,14 @@ function SearchField({ value, onChange, label, placeholder, className = '' }: Se
         placeholder={placeholder}
         autoComplete="off"
         enterKeyHint="search"
-        className="min-h-11 w-full rounded-xl border-2 border-line bg-surface py-2 pr-11 pl-10 text-base text-fg outline-none transition-colors placeholder:text-muted/60 hover:border-primary-400 focus:border-primary-500 [&::-webkit-search-cancel-button]:hidden"
+        className="min-h-11 w-full rounded-xl border-2 border-line bg-surface py-2 pr-11 pl-10 text-base text-fg outline-none transition-colors placeholder:text-muted/60 hover:border-primary-400 focus:border-accent [&::-webkit-search-cancel-button]:hidden"
       />
       {value && (
         <button
           type="button"
           onClick={() => onChange('')}
           aria-label={t('common.clearSearch')}
-          className="absolute top-1/2 right-0.5 flex size-11 -translate-y-1/2 items-center justify-center rounded-xl text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="absolute top-1/2 right-0.5 flex size-11 -translate-y-1/2 items-center justify-center rounded-xl text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
         >
           <X size={18} aria-hidden="true" />
         </button>

@@ -8,4 +8,5 @@ export abstract class OtpCodesRepository {
   abstract incrementAttempts(id: string): Promise<void>;
   abstract markConsumed(id: string): Promise<void>;
   abstract markResetUsed(id: string): Promise<void>;
+  abstract deleteByEmail(email: string): Promise<void>;
 }

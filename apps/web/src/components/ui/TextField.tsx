@@ -32,7 +32,7 @@ function TextField({ label, error, endAdornment, className = '', ...rest }: Text
           } ${
             error
               ? 'border-red-500'
-              : 'border-line hover:border-primary-400 focus:border-primary-500'
+              : 'border-line hover:border-primary-400 focus:border-accent'
           }`}
           {...rest}
         />

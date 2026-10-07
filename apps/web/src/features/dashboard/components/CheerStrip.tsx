@@ -44,7 +44,7 @@ function CheerStrip({
                 key={area.setId}
                 to="/app/review"
                 // Only the two weakest unless the screen is wide and tall, so the strip stays two lines.
-                className={`rounded-full bg-surface-raised/80 px-2.5 py-0.5 text-xs font-semibold text-fg transition-colors hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-primary-400 ${
+                className={`rounded-full bg-surface-raised/80 px-2.5 py-0.5 text-xs font-semibold text-fg transition-colors hover:bg-surface-raised focus-visible:outline-2 focus-visible:outline-accent ${
                   index >= 2 ? 'hidden xl:tall:inline' : ''
                 }`}
               >

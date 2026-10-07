@@ -72,7 +72,7 @@ function AuthLayout() {
         </header>
 
         <div className="flex flex-1 items-center justify-center pt-24 pb-10">
-          <div className="relative w-full max-w-sm rounded-2xl [view-transition-name:auth-card] border-2 border-line-soft bg-surface p-4 shadow-[0_6px_0_0_var(--color-primary-500),0_24px_40px_-12px_rgb(252_108_38/0.25)] sm:max-w-md sm:p-8 dark:shadow-[0_6px_0_0_var(--color-primary-500),0_24px_40px_-12px_rgb(0_0_0/0.6)]">
+          <div className="relative w-full max-w-sm rounded-2xl [view-transition-name:auth-card] border-2 border-line-soft bg-surface p-4 shadow-float sm:max-w-md sm:p-8">
             {showCardMascot && (
               <div className="absolute right-5 -top-[78px]">
                 <BunnyMascot size={84} />

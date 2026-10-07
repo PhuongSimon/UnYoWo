@@ -1,25 +1,22 @@
 import { randomBytes } from 'node:crypto';
-import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Logger, Post, Query, Req, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Throttle } from '@nestjs/throttler';
-import type { CookieOptions, Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { RequestLang, type Lang } from '../../common/lang.decorator.js';
 import { AuthService, type Session } from './auth.service.js';
-import { CurrentUser } from './current-user.decorator.js';
 import {
   ForgotPasswordDto,
   LoginDto,
   RegisterDto,
   ResetPasswordDto,
   SendOtpDto,
-  UpdateProfileDto,
   VerifyOtpDto,
 } from './dto/auth.dto.js';
-import { JwtAuthGuard } from './jwt-auth.guard.js';
+import { readRefreshCookie, REFRESH_COOKIE, refreshCookieOptions } from './refresh-cookie.js';
 import { GoogleOAuthService } from './services/google-oauth.service.js';
-import { TokenService, type AccessTokenPayload, type ClientInfo } from './services/token.service.js';
+import { TokenService, type ClientInfo } from './services/token.service.js';
 
-const REFRESH_COOKIE = 'refresh_token';
 const OAUTH_STATE_COOKIE = 'oauth_state';
 
 @Throttle({ default: { limit: 20, ttl: 60_000 } })
@@ -87,7 +84,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     try {
-      const session = await this.auth.refresh(this.readRefreshCookie(req), this.clientInfo(req));
+      const session = await this.auth.refresh(readRefreshCookie(req), this.clientInfo(req));
       return this.sendSession(res, session);
     } catch (error) {
       res.clearCookie(REFRESH_COOKIE, this.refreshCookieOptions());
@@ -98,20 +95,8 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    await this.auth.logout(this.readRefreshCookie(req));
+    await this.auth.logout(readRefreshCookie(req));
     res.clearCookie(REFRESH_COOKIE, this.refreshCookieOptions());
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('me')
-  me(@CurrentUser() user: AccessTokenPayload) {
-    return this.auth.me(user.sub);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Patch('me')
-  updateMe(@CurrentUser() user: AccessTokenPayload, @Body() dto: UpdateProfileDto) {
-    return this.auth.updateProfile(user.sub, dto);
   }
 
   @Get('google')
@@ -164,12 +149,8 @@ export class AuthController {
     res.cookie(REFRESH_COOKIE, token, { ...this.refreshCookieOptions(), maxAge: this.tokens.refreshTtlMs });
   }
 
-  private refreshCookieOptions(): CookieOptions {
-    return { httpOnly: true, sameSite: 'lax', secure: this.isProd, path: '/api/auth' };
-  }
-
-  private readRefreshCookie(req: Request) {
-    return (req.cookies as Record<string, string | undefined>)[REFRESH_COOKIE];
+  private refreshCookieOptions() {
+    return refreshCookieOptions(this.isProd);
   }
 
   private clientInfo(req: Request): ClientInfo {

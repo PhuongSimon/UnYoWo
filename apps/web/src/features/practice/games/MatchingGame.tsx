@@ -96,7 +96,7 @@ function MatchingGame({ state, studyLang, onPick, onRetry }: MatchingGameProps) 
                   disabled={entry.state === 'matched' || !playing}
                   aria-pressed={entry.state === 'selected'}
                   onClick={() => onPick(column.side, entry.id)}
-                  className={`relative flex min-h-14 w-full items-center justify-center gap-1.5 rounded-xl border-2 border-b-4 px-2 py-2 text-base font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400 disabled:cursor-default sm:text-lg ${CARD_CLASSES[entry.state]}`}
+                  className={`relative flex min-h-14 w-full items-center justify-center gap-1.5 rounded-xl border-2 border-b-4 px-2 py-2 text-base font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-default sm:text-lg ${CARD_CLASSES[entry.state]}`}
                 >
                   <kbd aria-hidden="true" className="absolute top-1 left-1.5 hidden font-sans text-[10px] font-bold text-muted sm:block">
                     {entry.key}

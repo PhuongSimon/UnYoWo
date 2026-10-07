@@ -39,7 +39,7 @@ function RecentResults({ sessions }: { sessions: RecentSession[] }) {
         <ul className="mt-3 divide-y divide-line-soft [scrollbar-width:thin] fit:min-h-0 fit:flex-1 fit:overflow-y-auto fit:pr-1">
           {sessions.map((session) => (
             <li key={session.id} className="flex items-center gap-3 py-2">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary-500/15 text-accent">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand/15 text-accent">
                 <GameIcon gameType={session.gameType} size={18} />
               </span>
               <div className="min-w-0 flex-1">

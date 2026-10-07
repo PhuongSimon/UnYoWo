@@ -49,7 +49,7 @@ function GamePicker({ set, title, open, onClose, onPick }: GamePickerProps) {
           type="button"
           onClick={onClose}
           aria-label={t('practice.picker.close')}
-          className="flex size-11 items-center justify-center rounded-full text-muted hover:bg-surface hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="flex size-11 items-center justify-center rounded-full text-muted hover:bg-surface hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
         >
           <X size={20} aria-hidden="true" />
         </button>
@@ -60,9 +60,9 @@ function GamePicker({ set, title, open, onClose, onPick }: GamePickerProps) {
             <button
               type="button"
               onClick={() => onPick(type)}
-              className="flex w-full items-center gap-3 rounded-2xl p-3 text-left transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-primary-400"
+              className="flex w-full items-center gap-3 rounded-2xl p-3 text-left transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-accent"
             >
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-500/15 text-accent">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-brand/15 text-accent">
                 <GameIcon gameType={type} size={22} />
               </span>
               <span className="min-w-0">

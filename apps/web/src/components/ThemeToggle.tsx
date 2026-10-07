@@ -16,7 +16,7 @@ function ThemeToggle() {
         aria-label={t('common.toggleTheme')}
       />
       <span
-        className="relative h-8 w-16 rounded-full border border-line-soft bg-surface-raised shadow-sm duration-300 peer-checked:bg-espresso-700 peer-focus-visible:ring-2 peer-focus-visible:ring-primary-400 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface after:absolute after:top-[3px] after:left-[3px] after:size-6 after:rounded-full after:bg-linear-to-r after:from-primary-500 after:to-secondary-300 after:shadow-md after:duration-300 after:content-[''] active:after:w-7 peer-checked:after:left-[calc(100%-3px)] peer-checked:after:-translate-x-full peer-checked:after:from-espresso-950 peer-checked:after:to-espresso-950"
+        className="relative h-8 w-16 rounded-full border border-line-soft bg-surface-raised shadow-sm duration-300 peer-checked:bg-espresso-700 peer-focus-visible:ring-2 peer-focus-visible:ring-accent peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface after:absolute after:top-[3px] after:left-[3px] after:size-6 after:rounded-full after:bg-linear-to-r after:from-primary-500 after:to-secondary-300 after:shadow-md after:duration-300 after:content-[''] active:after:w-7 peer-checked:after:left-[calc(100%-3px)] peer-checked:after:-translate-x-full peer-checked:after:from-espresso-950 peer-checked:after:to-espresso-950"
       />
       <svg
         viewBox="0 0 24 24"

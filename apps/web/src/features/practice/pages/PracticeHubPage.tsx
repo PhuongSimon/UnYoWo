@@ -83,7 +83,7 @@ function PracticeHubPage() {
         aria-labelledby="practice-review"
         className="flex flex-col gap-4 rounded-2xl border border-line-soft bg-surface-raised p-5 shadow-sm sm:flex-row sm:items-center"
       >
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-500/15 text-accent">
+        <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand/15 text-accent">
           <CalendarCheck size={24} aria-hidden="true" />
         </span>
         <div className="min-w-0 flex-1">
@@ -136,16 +136,16 @@ function ShelfPicker({ shelves, active, onPick }: { shelves: Shelf[]; active: Sh
                 aria-pressed={selected}
                 onClick={() => onPick(shelf.key)}
                 title={shelf.level ? loc(shelf.level.title) : undefined}
-                className={`flex min-h-11 flex-col items-start justify-center rounded-xl border px-4 py-1.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-primary-400 ${
+                className={`flex min-h-11 flex-col items-start justify-center rounded-xl border px-4 py-1.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-accent ${
                   selected
-                    ? 'border-primary-600 bg-primary-500 text-primary-950 shadow-sm'
+                    ? 'border-brand-edge bg-brand text-on-brand shadow-sm'
                     : 'border-line-soft bg-surface-raised hover:border-primary-400'
                 }`}
               >
                 <span className="text-sm font-bold whitespace-nowrap">
                   {shelf.level ? shelf.level.code : t(`practice.shelves.${shelf.kind}`)}
                 </span>
-                <span className={`text-xs whitespace-nowrap tabular-nums ${selected ? 'text-primary-950/80' : 'text-muted'}`}>
+                <span className={`text-xs whitespace-nowrap tabular-nums ${selected ? 'text-on-brand/80' : 'text-muted'}`}>
                   {t('practice.set.items', { count: shelf.itemCount })}
                 </span>
               </button>
@@ -267,8 +267,8 @@ function TopicChips({ sets, selected, onPick }: { sets: LearningSet[]; selected:
                 type="button"
                 aria-pressed={pressed}
                 onClick={() => onPick(pressed ? null : topic.slug)}
-                className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-primary-400 sm:min-h-9 ${
-                  pressed ? 'border-primary-600 bg-primary-500 text-primary-950' : 'border-line-soft bg-surface-raised hover:border-primary-400'
+                className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm font-semibold whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:outline-accent sm:min-h-9 ${
+                  pressed ? 'border-brand-edge bg-brand text-on-brand' : 'border-line-soft bg-surface-raised hover:border-primary-400'
                 }`}
               >
                 {topic.emoji && <span aria-hidden="true">{topic.emoji}</span>}

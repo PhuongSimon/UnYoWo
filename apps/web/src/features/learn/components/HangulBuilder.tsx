@@ -71,8 +71,8 @@ function JamoPicker({ label, items, value, onChange, emptyLabel }: JamoPickerPro
               type="button"
               aria-pressed={selected}
               onClick={() => onChange(index)}
-              className={`flex h-10 min-w-10 items-center justify-center rounded-lg border px-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary-400 ${
-                selected ? 'border-primary-600 bg-primary-500 text-primary-950' : 'border-line-soft bg-surface text-fg hover:border-primary-400'
+              className={`flex h-10 min-w-10 items-center justify-center rounded-lg border px-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent ${
+                selected ? 'border-brand-edge bg-brand text-on-brand' : 'border-line-soft bg-surface text-fg hover:border-primary-400'
               }`}
             >
               {item.char ? (

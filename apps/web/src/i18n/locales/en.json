@@ -187,7 +187,16 @@
   },
   "userMenu": {
     "open": "Open account menu",
-    "logout": "Sign out"
+    "logout": "Sign out",
+    "colorTheme": "Color theme",
+    "themes": {
+      "warm": "Terracotta",
+      "violet": "Royal violet",
+      "lime": "Olive lime",
+      "cobalt": "Cobalt peach",
+      "neon": "Neon",
+      "navy": "Navy gold"
+    }
   },
   "learn": {
     "languagesNav": "Languages",

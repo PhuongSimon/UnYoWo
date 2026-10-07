@@ -123,7 +123,7 @@ function DrillRound({ cells, lang, speechLang, mode, speak, onFinish, onQuit }: 
             maxLength={12}
             placeholder={t('drill.round.placeholder')}
             aria-describedby="drill-answer-hint"
-            className="min-h-14 min-w-0 flex-1 rounded-2xl border-2 border-line-soft bg-surface-raised px-4 text-center text-2xl font-semibold tracking-wide transition-colors outline-none placeholder:text-base placeholder:font-normal placeholder:tracking-normal placeholder:text-muted focus:border-primary-500"
+            className="min-h-14 min-w-0 flex-1 rounded-2xl border-2 border-line-soft bg-surface-raised px-4 text-center text-2xl font-semibold tracking-wide transition-colors outline-none placeholder:text-base placeholder:font-normal placeholder:tracking-normal placeholder:text-muted focus:border-accent"
           />
           <Button type="submit" disabled={!text.trim()} className="shrink-0" aria-label={t('drill.round.submit')}>
             <ArrowRight size={20} aria-hidden="true" />
@@ -138,7 +138,7 @@ function DrillRound({ cells, lang, speechLang, mode, speak, onFinish, onQuit }: 
         <button
           type="button"
           onClick={() => commit('')}
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-1 text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-1 text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
         >
           <SkipForward size={16} aria-hidden="true" />
           {t('drill.round.skip')}
@@ -146,7 +146,7 @@ function DrillRound({ cells, lang, speechLang, mode, speak, onFinish, onQuit }: 
         <button
           type="button"
           onClick={end}
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-1 text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg px-1 text-sm font-semibold text-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
         >
           <Flag size={16} aria-hidden="true" />
           {t('drill.round.end')}

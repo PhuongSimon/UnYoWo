@@ -51,7 +51,7 @@ function OptionGrid({ question, studyLang, pendingId, disabled, onSelect }: Opti
               type="button"
               disabled={disabled}
               onClick={() => onSelect(option.id)}
-              className={`relative flex min-h-16 w-full items-center justify-center gap-2 rounded-2xl border-2 border-b-4 px-3 py-3 text-lg font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400 disabled:cursor-default sm:min-h-20 sm:text-xl ${STATE_CLASSES[state]}`}
+              className={`relative flex min-h-16 w-full items-center justify-center gap-2 rounded-2xl border-2 border-b-4 px-3 py-3 text-lg font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-default sm:min-h-20 sm:text-xl ${STATE_CLASSES[state]}`}
             >
               <kbd
                 aria-hidden="true"

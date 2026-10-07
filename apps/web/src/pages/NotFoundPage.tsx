@@ -29,7 +29,7 @@ function NotFoundPage() {
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-surface px-4 py-6 sm:px-8">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/3 left-1/2 size-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-500/15 blur-3xl sm:size-[40rem]"
+        className="pointer-events-none absolute top-1/3 left-1/2 size-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/15 blur-3xl sm:size-[40rem]"
       />
 
       <header className="relative flex items-center justify-between">

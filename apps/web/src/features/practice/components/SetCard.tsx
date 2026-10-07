@@ -17,7 +17,7 @@ interface SetCardProps {
 }
 
 const BUTTON =
-  'inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-b-4 border-line-soft bg-surface px-2 text-sm font-bold whitespace-nowrap transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400 disabled:opacity-60'
+  'inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-b-4 border-line-soft bg-surface px-2 text-sm font-bold whitespace-nowrap transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-60'
 
 /** Flashcards one tap away; every other game in the picker, so the card stays small. */
 function SetCard({ set, starting, disabled, onStart }: SetCardProps) {
@@ -42,7 +42,7 @@ function SetCard({ set, starting, disabled, onStart }: SetCardProps) {
             {title}
           </h3>
           {due > 0 && (
-            <span className="shrink-0 rounded-full bg-primary-500/15 px-2 py-0.5 text-xs font-bold text-accent">
+            <span className="shrink-0 rounded-full bg-brand/15 px-2 py-0.5 text-xs font-bold text-accent">
               {t('practice.set.due', { count: due })}
             </span>
           )}
@@ -51,7 +51,7 @@ function SetCard({ set, starting, disabled, onStart }: SetCardProps) {
           to={`/app/${set.languageCode}/practice/sets/${set.id}`}
           aria-label={t('practice.words.open', { title })}
           title={t('practice.words.open', { title })}
-          className="-mt-1.5 -mr-1.5 inline-flex size-11 shrink-0 items-center justify-center rounded-xl text-accent transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-primary-400"
+          className="-mt-1.5 -mr-1.5 inline-flex size-11 shrink-0 items-center justify-center rounded-xl text-accent transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-accent"
         >
           <List size={20} aria-hidden="true" />
         </Link>

@@ -43,4 +43,8 @@ export class PrismaOtpCodesRepository extends OtpCodesRepository {
   async markResetUsed(id: string) {
     await this.db.otpCode.update({ where: { id }, data: { resetUsedAt: new Date() } });
   }
+
+  async deleteByEmail(email: string) {
+    await this.db.otpCode.deleteMany({ where: { email } });
+  }
 }

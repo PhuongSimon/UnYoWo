@@ -38,7 +38,7 @@ function savePair(pair: { source: Source; target: TranslationLanguage }) {
 }
 
 const SELECT =
-  'min-h-11 w-full rounded-xl border-2 border-line bg-surface px-3 text-base font-semibold text-fg outline-none transition-colors hover:border-primary-400 focus:border-primary-500'
+  'min-h-11 w-full rounded-xl border-2 border-line bg-surface px-3 text-base font-semibold text-fg outline-none transition-colors hover:border-primary-400 focus:border-accent'
 
 function TranslatePage() {
   const { t } = useTranslation()
@@ -79,7 +79,7 @@ function TranslatePage() {
   return (
     <div className="mx-auto w-full max-w-app px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
       <header className="flex items-center gap-3">
-        <span className="hidden size-12 shrink-0 items-center justify-center rounded-full bg-primary-500/15 text-accent sm:flex">
+        <span className="hidden size-12 shrink-0 items-center justify-center rounded-full bg-brand/15 text-accent sm:flex">
           <Languages size={24} aria-hidden="true" />
         </span>
         <div>
@@ -115,7 +115,7 @@ function TranslatePage() {
               disabled={pair.source === 'auto' && !result}
               aria-label={t('translate.swap')}
               title={t('translate.swap')}
-              className="flex size-11 items-center justify-center rounded-full border border-line-soft bg-surface text-accent transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400 disabled:opacity-40"
+              className="flex size-11 items-center justify-center rounded-full border border-line-soft bg-surface text-accent transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-40"
             >
               <ArrowLeftRight size={18} aria-hidden="true" />
             </button>
@@ -151,7 +151,7 @@ function TranslatePage() {
               rows={5}
               lang={pair.source === 'auto' ? undefined : pair.source}
               placeholder={t('translate.placeholder')}
-              className="w-full resize-y rounded-2xl border-2 border-line bg-surface p-4 pr-12 text-base text-fg outline-none transition-colors placeholder:text-muted/60 hover:border-primary-400 focus:border-primary-500"
+              className="w-full resize-y rounded-2xl border-2 border-line bg-surface p-4 pr-12 text-base text-fg outline-none transition-colors placeholder:text-muted/60 hover:border-primary-400 focus:border-accent"
             />
             {text && (
               <button
@@ -161,7 +161,7 @@ function TranslatePage() {
                   mutation.reset()
                 }}
                 aria-label={t('translate.clear')}
-                className="absolute top-1.5 right-1.5 flex size-11 items-center justify-center rounded-full text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-primary-400"
+                className="absolute top-1.5 right-1.5 flex size-11 items-center justify-center rounded-full text-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-accent"
               >
                 <X size={18} aria-hidden="true" />
               </button>
@@ -234,7 +234,7 @@ function TranslationCard({ result }: { result: TranslationResult }) {
               onClick={() => void copy()}
               aria-label={t('translate.copy')}
               title={t('translate.copy')}
-              className="inline-flex size-10 items-center justify-center rounded-full border border-line-soft bg-surface-raised text-accent transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400"
+              className="inline-flex size-10 items-center justify-center rounded-full border border-line-soft bg-surface-raised text-accent transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent"
             >
               <Copy size={18} aria-hidden="true" />
             </button>
@@ -279,14 +279,14 @@ function DictionaryCard({ entries }: { entries: DictionaryEntry[] }) {
                     {entry.text}
                   </span>
                   {pronunciation && <span className="text-sm text-muted">{pronunciation}</span>}
-                  {entry.level && <span className="rounded-full bg-primary-500/15 px-2 py-0.5 text-xs font-bold text-accent">{entry.level}</span>}
+                  {entry.level && <span className="rounded-full bg-brand/15 px-2 py-0.5 text-xs font-bold text-accent">{entry.level}</span>}
                 </p>
                 {meaning && <p className="font-medium">{meaning}</p>}
                 {entry.attributes?.hanViet && <p className="text-xs text-muted">{t('practice.words.hanViet', { value: entry.attributes.hanViet })}</p>}
               </div>
               <Link
                 to={`/app/${entry.language}/practice/sets/${entry.setId}`}
-                className="inline-flex min-h-11 shrink-0 items-center rounded-xl px-2 text-sm font-semibold text-accent hover:underline focus-visible:outline-2 focus-visible:outline-primary-400"
+                className="inline-flex min-h-11 shrink-0 items-center rounded-xl px-2 text-sm font-semibold text-accent hover:underline focus-visible:outline-2 focus-visible:outline-accent"
               >
                 {t('translate.dictionary.open')}
               </Link>

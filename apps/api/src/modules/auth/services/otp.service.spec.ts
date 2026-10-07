@@ -40,6 +40,9 @@ class InMemoryOtpCodesRepository extends OtpCodesRepository {
     const row = await this.findById(id);
     if (row) row.resetUsedAt = new Date();
   }
+  async deleteByEmail(email: string) {
+    this.rows = this.rows.filter((r) => r.email !== email);
+  }
 }
 
 describe('OtpService', () => {

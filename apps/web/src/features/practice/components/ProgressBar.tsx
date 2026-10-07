@@ -18,7 +18,7 @@ function ProgressBar({ value, max, label, className = '' }: ProgressBarProps) {
       className={`h-2.5 overflow-hidden rounded-full bg-line-soft/70 ${className}`}
     >
       <div
-        className="h-full rounded-full bg-primary-500 transition-[width] duration-500 ease-out motion-reduce:transition-none"
+        className="h-full rounded-full bg-brand transition-[width] duration-500 ease-out motion-reduce:transition-none"
         style={{ width: `${percent}%` }}
       />
     </div>

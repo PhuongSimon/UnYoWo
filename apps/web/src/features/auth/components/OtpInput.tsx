@@ -90,7 +90,7 @@ function OtpInput({ value, onChange, length = 6, error = false, disabled = false
           className={`h-12 min-w-0 flex-1 max-w-12 sm:h-14 sm:max-w-14 rounded-lg border text-center text-xl font-semibold outline-none focus:ring-3 disabled:opacity-50 ${
             error
               ? 'border-red-500 focus:ring-red-500/25'
-              : 'border-line bg-surface-raised text-fg hover:border-primary-400 focus:border-primary-500 focus:ring-primary-500/25'
+              : 'border-line bg-surface-raised text-fg hover:border-primary-400 focus:border-accent focus:ring-accent/25'
           }`}
         />
       ))}

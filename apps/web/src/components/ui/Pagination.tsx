@@ -12,7 +12,7 @@ interface PaginationProps {
 }
 
 const BUTTON =
-  'inline-flex size-11 items-center justify-center rounded-xl border border-line-soft bg-surface-raised text-sm font-bold tabular-nums transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-primary-400 disabled:pointer-events-none disabled:opacity-40'
+  'inline-flex size-11 items-center justify-center rounded-xl border border-line-soft bg-surface-raised text-sm font-bold tabular-nums transition-colors hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-40'
 
 /** Previous / next with page numbers; on a phone only "3 / 12" between the arrows. Renders nothing for a single page. */
 function Pagination({ page, pageCount, onChange, label, className = '' }: PaginationProps) {
@@ -41,7 +41,7 @@ function Pagination({ page, pageCount, onChange, label, className = '' }: Pagina
                 onClick={() => onChange(item)}
                 aria-current={item === page ? 'page' : undefined}
                 aria-label={t('pagination.page', { page: item })}
-                className={`${BUTTON} ${item === page ? 'border-primary-600 bg-primary-500 text-primary-950' : ''}`}
+                className={`${BUTTON} ${item === page ? 'border-brand-edge bg-brand text-on-brand' : ''}`}
               >
                 {item}
               </button>

@@ -28,7 +28,7 @@ function RatingButtons({ disabled, pending, onRate }: RatingButtonsProps) {
             type="button"
             disabled={disabled}
             onClick={() => onRate(rating)}
-            className={`flex min-h-16 flex-col items-center justify-center rounded-xl border border-b-4 px-1 py-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-400 disabled:cursor-default ${RATING_CLASSES[rating]} ${
+            className={`flex min-h-16 flex-col items-center justify-center rounded-xl border border-b-4 px-1 py-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-default ${RATING_CLASSES[rating]} ${
               pending && pending !== rating ? 'opacity-50' : ''
             } ${pending === rating ? 'ring-2 ring-primary-400' : ''}`}
           >
