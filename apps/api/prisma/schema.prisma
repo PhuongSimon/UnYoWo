@@ -20,6 +20,8 @@ model User {
   lastLoginAt     DateTime? @map("last_login_at")
   /// IANA zone (e.g. Asia/Ho_Chi_Minh): decides where the user's "today" starts for streaks and daily goals.
   timezone        String    @default("UTC")
+  /// UI color theme id picked in the web app (warm, violet…); null means the app default.
+  colorTheme      String?   @map("color_theme") @db.VarChar(20)
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
